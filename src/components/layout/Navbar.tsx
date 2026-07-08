@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
@@ -67,9 +68,19 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
-          <Button href="#involved" size="sm" className="hidden sm:inline-flex">
-            Join the Movement
-          </Button>
+          <div className="hidden flex-col items-end gap-1.5 sm:flex">
+            <Button href="#involved" size="sm">
+              Join the Movement
+            </Button>
+            <Image
+              src="/images/zimbabwe-flag.svg"
+              alt="Flag of Zimbabwe"
+              width={36}
+              height={24}
+              className="mt-2 mr-1 h-4 w-auto rounded-sm border border-neutral-200/70 shadow-sm"
+              priority
+            />
+          </div>
 
           <button
             type="button"
@@ -108,6 +119,15 @@ export function Navbar() {
                 <Button href="#involved" className="w-full">
                   Join the Movement
                 </Button>
+              </li>
+              <li className="flex justify-end pt-3">
+                <Image
+                  src="/images/zimbabwe-flag.svg"
+                  alt="Flag of Zimbabwe"
+                  width={36}
+                  height={24}
+                  className="mt-1 mr-1 h-4 w-auto rounded-sm border border-neutral-200/70 shadow-sm"
+                />
               </li>
             </ul>
           </motion.div>
