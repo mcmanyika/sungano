@@ -17,10 +17,7 @@ const playfair = Playfair_Display({
 });
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0F3D91" },
-    { media: "(prefers-color-scheme: dark)", color: "#030712" },
-  ],
+  themeColor: "#0F3D91",
   width: "device-width",
   initialScale: 1,
 };
@@ -83,7 +80,6 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable} ${playfair.variable} h-full scroll-smooth antialiased`}
-      suppressHydrationWarning
     >
       <body className="min-h-full bg-background text-foreground">
         <ClientProviders>{children}</ClientProviders>

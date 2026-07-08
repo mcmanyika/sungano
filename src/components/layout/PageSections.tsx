@@ -14,7 +14,6 @@ import { Mission } from "@/components/sections/Mission";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
 import { Pillars } from "@/components/sections/Pillars";
 import { Resources } from "@/components/sections/Resources";
-import { Testimonials } from "@/components/sections/Testimonials";
 import { WhatHappened } from "@/components/sections/WhatHappened";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
@@ -28,7 +27,6 @@ const sections = [
   NewsUpdates,
   Resources,
   GetInvolved,
-  Testimonials,
   FAQ,
   FinalCTA,
 ];

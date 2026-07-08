@@ -12,11 +12,6 @@
   --accent-light: #26a88a;
 }
 
-.dark {
-  --background: #030712;
-  --foreground: #f1f5f9;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

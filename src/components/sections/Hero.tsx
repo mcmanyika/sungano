@@ -90,16 +90,6 @@ export function Hero() {
               <span className="text-secondary">Peacefully. Lawfully. Together.</span>
             </motion.p>
 
-            <motion.p
-              variants={fadeUp}
-              transition={{ duration: 0.6, ease: easeOut }}
-              className="mt-6 max-w-xl text-lg leading-relaxed text-neutral-600 dark:text-neutral-400"
-            >
-              {siteConfig.name} is a peaceful national movement
-              committed to defending constitutional democracy through lawful action,
-              civic participation and justice.
-            </motion.p>
-
             <motion.div
               variants={fadeUp}
               transition={{ duration: 0.6, ease: easeOut }}

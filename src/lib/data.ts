@@ -207,44 +207,6 @@ export const getInvolvedActions = [
   },
 ];
 
-export const testimonials = [
-  {
-    quote:
-      "This movement reminds us that democracy is not given—it is defended peacefully, lawfully, and together.",
-    author: "Rev. Dr. James Chitando",
-    role: "Community Leader",
-    category: "Community Leaders",
-  },
-  {
-    quote:
-      "Constitutional supremacy is the foundation of justice. Civic participation must remain anchored in the rule of law.",
-    author: "Adv. Rumbidzai Mupfumi",
-    role: "Constitutional Lawyer",
-    category: "Legal Experts",
-  },
-  {
-    quote:
-      "Young people want a future built on rights, accountability, and peaceful engagement—not fear.",
-    author: "Takudzwa Mberi",
-    role: "Youth Advocate",
-    category: "Youth",
-  },
-  {
-    quote:
-      "Faith calls us to pursue justice with humility, unity, and respect for every citizen.",
-    author: "Bishop Grace Nyathi",
-    role: "Faith Leader",
-    category: "Faith Leaders",
-  },
-  {
-    quote:
-      "Women's voices belong at the center of constitutional restoration and democratic renewal.",
-    author: "Dr. Chipo Marufu",
-    role: "Women's Rights Advocate",
-    category: "Women Leaders",
-  },
-];
-
 export const faqItems = [
   {
     question: "What is Sungano Yevanhu?",

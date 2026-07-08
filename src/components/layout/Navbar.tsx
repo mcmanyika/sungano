@@ -1,10 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Moon, Sun, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useTheme } from "@/components/providers/ThemeProvider";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { Button } from "@/components/ui/Button";
 import { navLinks, siteConfig } from "@/lib/data";
@@ -16,7 +15,6 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const scrollY = useScrollPosition();
   const { isReady } = usePageLoad();
-  const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const isScrolled = scrollY > 20;
 
@@ -69,15 +67,6 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
-
           <Button href="#involved" size="sm" className="hidden sm:inline-flex">
             Join the Movement
           </Button>
