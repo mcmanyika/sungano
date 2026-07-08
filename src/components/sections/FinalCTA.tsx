@@ -24,7 +24,7 @@ export function FinalCTA() {
           justice, civic participation and the rule of law.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button href="#involved" variant="gold" size="lg">
+          <Button href="#contact" variant="gold" size="lg">
             Join the Movement
             <ArrowRight className="h-5 w-5" />
           </Button>

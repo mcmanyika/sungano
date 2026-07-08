@@ -22,7 +22,7 @@ const pillars = [
     description:
       "Through civic education, peaceful engagement, dialogue, petitions, prayer gatherings and lawful demonstrations, we empower citizens to participate in shaping our constitutional future.",
     cta: "Get Involved",
-    href: "#involved",
+    href: "#contact",
   },
 ];
 

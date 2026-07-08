@@ -3,7 +3,6 @@ import {
   FileText,
   Handshake,
   Heart,
-  Mail,
   Megaphone,
   MessageCircle,
   Users,
@@ -22,12 +21,8 @@ export const siteConfig = {
 
 export const navLinks = [
   { label: "About", href: "#timeline" },
-  { label: "Mission", href: "#mission" },
-  { label: "Pillars", href: "#pillars" },
-  { label: "Rights", href: "#rights" },
   { label: "Activities", href: "#activities" },
   { label: "News", href: "#news" },
-  { label: "Resources", href: "#resources" },
   { label: "FAQ", href: "#faq" },
 ];
 
@@ -164,49 +159,6 @@ export const newsArticles = [
   },
 ];
 
-export const resources = [
-  { title: "Constitution of Zimbabwe", type: "PDF", size: "2.4 MB" },
-  { title: "Harare Declaration", type: "PDF", size: "890 KB" },
-  { title: "Campaign Toolkit", type: "ZIP", size: "5.1 MB" },
-  { title: "FAQs", type: "PDF", size: "420 KB" },
-  { title: "Educational Materials", type: "ZIP", size: "8.3 MB" },
-];
-
-export const getInvolvedActions = [
-  {
-    title: "Volunteer",
-    description:
-      "Join provincial teams supporting civic education, events, and community outreach.",
-    icon: Users,
-    cta: "Sign Up",
-    href: "#contact",
-  },
-  {
-    title: "Partner",
-    description:
-      "Collaborate as an organization committed to constitutional democracy and the rule of law.",
-    icon: Handshake,
-    cta: "Partner With Us",
-    href: "#contact",
-  },
-  {
-    title: "Subscribe",
-    description:
-      "Receive updates on events, resources, and opportunities to participate peacefully.",
-    icon: Mail,
-    cta: "Subscribe",
-    href: "#contact",
-  },
-  {
-    title: "Donate",
-    description:
-      "Support civic education, legal advocacy, and community programs across the nation.",
-    icon: Heart,
-    cta: "Donate",
-    href: "#contact",
-  },
-];
-
 export const faqItems = [
   {
     question: "What is Sungano Yevanhu?",
@@ -216,7 +168,7 @@ export const faqItems = [
   {
     question: "How can I participate?",
     answer:
-      "You can volunteer in your province, attend civic education sessions, join community dialogues, sign petitions, participate in peaceful demonstrations, or partner as an organization. Visit the Get Involved section to connect with your local coordinator.",
+      "You can volunteer in your province, attend civic education sessions, join community dialogues, sign petitions, participate in peaceful demonstrations, or partner as an organization. Contact us to connect with your local coordinator.",
   },
   {
     question: "Is participation peaceful?",
@@ -231,7 +183,7 @@ export const faqItems = [
   {
     question: "How do I receive updates?",
     answer:
-      "Subscribe to our newsletter through the Get Involved section or contact your provincial coordinator. Follow us on social media for announcements about events, resources, and campaign activities.",
+      "Subscribe to our newsletter or contact your provincial coordinator. Follow us on social media for announcements about events, resources, and campaign activities.",
   },
 ];
 
@@ -243,9 +195,8 @@ export const footerLinks = {
     { label: "Events", href: "#activities" },
   ],
   resources: [
-    { label: "Legal Documents", href: "#resources" },
-    { label: "Resources", href: "#resources" },
-    { label: "Volunteer", href: "#involved" },
+    { label: "Legal Documents", href: "#declaration" },
+    { label: "Volunteer", href: "#contact" },
     { label: "Contact", href: "#contact" },
   ],
   legal: [{ label: "Privacy Policy", href: "#" }],

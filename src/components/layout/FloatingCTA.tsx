@@ -27,7 +27,7 @@ export function FloatingCTA() {
           >
             <ArrowUp className="h-5 w-5 text-primary" />
           </button>
-          <Button href="#involved" size="md" className="shadow-2xl">
+          <Button href="#contact" size="md" className="shadow-2xl">
             Join Movement
           </Button>
         </motion.div>

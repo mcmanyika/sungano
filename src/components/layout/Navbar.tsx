@@ -69,7 +69,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <div className="hidden flex-col items-end gap-1.5 sm:flex">
-            <Button href="#involved" size="sm">
+            <Button href="#contact" size="sm">
               Join the Movement
             </Button>
             <Image
@@ -116,7 +116,7 @@ export function Navbar() {
                 </li>
               ))}
               <li className="pt-2">
-                <Button href="#involved" className="w-full">
+                <Button href="#contact" className="w-full">
                   Join the Movement
                 </Button>
               </li>

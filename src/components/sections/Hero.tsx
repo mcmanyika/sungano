@@ -95,7 +95,7 @@ export function Hero() {
               transition={{ duration: 0.6, ease: easeOut }}
               className="mt-10 flex flex-col gap-4 sm:flex-row"
             >
-              <Button href="#involved" size="lg">
+              <Button href="#contact" size="lg">
                 Join the Movement
                 <ArrowRight className="h-5 w-5" />
               </Button>

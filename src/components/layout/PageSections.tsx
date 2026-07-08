@@ -7,13 +7,11 @@ import { CampaignActivities } from "@/components/sections/CampaignActivities";
 import { ConstitutionalRights } from "@/components/sections/ConstitutionalRights";
 import { FAQ } from "@/components/sections/FAQ";
 import { FinalCTA } from "@/components/sections/FinalCTA";
-import { GetInvolved } from "@/components/sections/GetInvolved";
 import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
 import { Mission } from "@/components/sections/Mission";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
 import { Pillars } from "@/components/sections/Pillars";
-import { Resources } from "@/components/sections/Resources";
 import { WhatHappened } from "@/components/sections/WhatHappened";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
@@ -25,8 +23,6 @@ const sections = [
   HarareDeclaration,
   CampaignActivities,
   NewsUpdates,
-  Resources,
-  GetInvolved,
   FAQ,
   FinalCTA,
 ];

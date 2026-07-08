@@ -44,7 +44,7 @@ export function HarareDeclaration() {
           </span>
         </blockquote>
         <div className="mt-10">
-          <Button href="#resources" variant="gold" size="lg">
+          <Button href="#contact" variant="gold" size="lg">
             Read Full Declaration
             <ArrowRight className="h-5 w-5" />
           </Button>
