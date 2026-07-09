@@ -98,8 +98,8 @@ export function DeclarationForm() {
           className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
         />
         <p className="mt-2 text-xs text-muted">
-          Use a new line for each sentence. These lines appear below the headline on
-          the homepage declaration section.
+          Short lines shown on the homepage subscribe section. The full text is
+          shown in the Read the Declaration modal.
         </p>
       </div>
 
