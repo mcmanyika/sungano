@@ -1,10 +1,9 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
-import { Button } from "@/components/ui/Button";
+import { EmailSubscribe } from "@/components/ui/EmailSubscribe";
 
 export function HarareDeclaration() {
   const ref = useRef<HTMLElement>(null);
@@ -54,10 +53,7 @@ export function HarareDeclaration() {
           Peacefully. Lawfully. Together.
         </p>
         <div className="mt-10">
-          <Button href="#contact" variant="gold" size="lg">
-            Read Full Declaration
-            <ArrowRight className="h-4 w-4" />
-          </Button>
+          <EmailSubscribe source="harare-declaration" />
         </div>
       </motion.div>
     </section>

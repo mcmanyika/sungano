@@ -5,8 +5,6 @@ import {
   Heart,
   Megaphone,
   MessageCircle,
-  Users,
-  Vote,
 } from "lucide-react";
 
 export const siteConfig = {
@@ -60,32 +58,24 @@ export const timelineEvents = [
 
 export const constitutionalRights = [
   {
-    section: "Section 58",
     title: "Freedom of Assembly",
     description:
       "Every person has the right to assemble and associate with others, and to form and belong to political parties and civil society organizations.",
-    icon: Users,
   },
   {
-    section: "Section 59",
     title: "Peaceful Demonstration",
     description:
       "Every person has the right to demonstrate and to present petitions, peacefully and unarmed, in accordance with the law.",
-    icon: Megaphone,
   },
   {
-    section: "Section 61",
     title: "Freedom of Expression",
     description:
       "Every person has the right to freedom of expression, which includes freedom to seek, receive and communicate ideas and information.",
-    icon: MessageCircle,
   },
   {
-    section: "Section 67",
     title: "Political Rights",
     description:
       "Every Zimbabwean citizen has the right to free, fair and regular elections and to make political choices freely.",
-    icon: Vote,
   },
 ];
 

@@ -1,0 +1,41 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == "admin";
+    }
+
+    function isValidNews(data) {
+      return data.title is string
+        && data.title.size() > 0
+        && data.category is string
+        && data.excerpt is string
+        && data.body is string
+        && data.image is string
+        && data.published is bool;
+    }
+
+    match /subscribers/{email} {
+      allow read: if isAdmin();
+      allow create, update: if request.resource.data.email == email
+        && request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && request.resource.data.keys().hasAll(['email', 'source', 'subscribedAt'])
+        && request.resource.data.source is string;
+    }
+
+    match /admins/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /news/{articleId} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create: if isAdmin() && isValidNews(request.resource.data);
+      allow update: if isAdmin() && isValidNews(request.resource.data);
+      allow delete: if isAdmin();
+    }
+  }
+}

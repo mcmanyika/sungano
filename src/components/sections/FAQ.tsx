@@ -6,7 +6,6 @@ export function FAQ() {
   return (
     <Section id="faq" variant="muted">
       <SectionHeader
-        eyebrow="Questions"
         title="Frequently Asked Questions"
         description="Find answers to common questions about the movement and how to participate."
       />
