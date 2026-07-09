@@ -20,8 +20,7 @@ export const siteConfig = {
 };
 
 export const navLinks = [
-  { label: "About", href: "#timeline" },
-  { label: "Activities", href: "#activities" },
+  { label: "About", href: "#rights" },
   { label: "News", href: "#news" },
   { label: "FAQ", href: "#faq" },
 ];
@@ -189,10 +188,9 @@ export const faqItems = [
 
 export const footerLinks = {
   about: [
-    { label: "About", href: "#mission" },
+    { label: "About", href: "#rights" },
     { label: "Leadership", href: "#contact" },
     { label: "News", href: "#news" },
-    { label: "Events", href: "#activities" },
   ],
   resources: [
     { label: "Legal Documents", href: "#declaration" },

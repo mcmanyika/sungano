@@ -29,6 +29,8 @@ export function HarareDeclaration() {
           src="/images/banner3.png"
           alt=""
           fill
+          loading="lazy"
+          fetchPriority="low"
           className="object-cover object-center"
           sizes="100vw"
         />

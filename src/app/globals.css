@@ -77,7 +77,6 @@ body::before {
 .eyebrow-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
   border-radius: 9999px;
   border: 1px solid rgba(31, 138, 112, 0.2);
   background: rgba(31, 138, 112, 0.06);
@@ -89,12 +88,10 @@ body::before {
   color: var(--accent);
 }
 
-.eyebrow-pill::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
+.eyebrow-pill.eyebrow-pill-hero {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
 }
 
 :focus-visible {

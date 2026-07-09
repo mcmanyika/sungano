@@ -37,9 +37,10 @@ export function Hero() {
           src="/images/banner2.png"
           alt=""
           fill
+          priority
+          fetchPriority="high"
           className="object-cover object-center"
           sizes="100vw"
-          priority
         />
         {/* Hero overlay — light left, deep primary right */}
         <div className="absolute inset-0 bg-gradient-to-r from-slate-50/92 via-[#0F3D91]/55 to-[#0a2d6b]/88" />
@@ -55,31 +56,29 @@ export function Hero() {
           className="max-w-3xl"
         >
             <motion.div variants={fadeUp} transition={{ duration: 0.6, ease: easeOut }}>
-              <span className="eyebrow-pill">{siteConfig.eyebrow}</span>
+              <span className="eyebrow-pill eyebrow-pill-hero text-white">{siteConfig.eyebrow}</span>
             </motion.div>
 
             <motion.h1
               variants={fadeUp}
               transition={{ duration: 0.7, ease: easeOut }}
-              className="mt-6 font-display text-[2.5rem] font-extrabold leading-[1.08] tracking-tight text-neutral-900 sm:text-5xl md:text-6xl lg:text-[4rem]"
+              className="mt-6 font-display text-[2.5rem] font-extrabold leading-[1.08] tracking-tight text-white drop-shadow-sm sm:text-5xl md:text-6xl lg:text-[4rem]"
             >
               Restore the Constitution.
               <br />
-              <span className="text-white drop-shadow-sm">
-                Restore Our Democracy.
-              </span>
+              Restore Our Democracy.
             </motion.h1>
 
             <motion.p
               variants={fadeUp}
               transition={{ duration: 0.6, ease: easeOut }}
-              className="mt-7 text-lg leading-relaxed text-muted md:text-xl"
+              className="mt-7 text-lg leading-relaxed text-white/90 md:text-xl"
             >
               Justice in the Courts.
               <br />
               Sovereignty with the People.
               <br />
-              <span className="font-semibold text-secondary">
+              <span className="font-semibold text-secondary-light">
                 Peacefully. Lawfully. Together.
               </span>
             </motion.p>
@@ -123,7 +122,7 @@ export function Hero() {
       </motion.div>
 
       <motion.a
-        href="#timeline"
+        href="#rights"
         variants={fadeUp}
         initial="hidden"
         animate={animateState}

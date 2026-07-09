@@ -3,24 +3,16 @@
 import { motion } from "framer-motion";
 import { Footer } from "@/components/layout/Footer";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
-import { CampaignActivities } from "@/components/sections/CampaignActivities";
 import { ConstitutionalRights } from "@/components/sections/ConstitutionalRights";
 import { FAQ } from "@/components/sections/FAQ";
 import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
-import { Mission } from "@/components/sections/Mission";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
-import { Pillars } from "@/components/sections/Pillars";
-import { WhatHappened } from "@/components/sections/WhatHappened";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
 const sections = [
-  WhatHappened,
-  Mission,
-  Pillars,
   ConstitutionalRights,
   HarareDeclaration,
-  CampaignActivities,
   NewsUpdates,
   FAQ,
 ];
