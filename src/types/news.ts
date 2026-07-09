@@ -1,6 +1,7 @@
 export interface NewsArticle {
   id: string;
   title: string;
+  author: string;
   category: string;
   excerpt: string;
   body: string;
@@ -13,6 +14,7 @@ export interface NewsArticle {
 
 export interface NewsArticleInput {
   title: string;
+  author: string;
   category: string;
   excerpt: string;
   body: string;
@@ -39,7 +41,7 @@ export function getNewsImage(article: Pick<NewsArticle, "image" | "category">): 
 }
 
 export function formatNewsDate(date: Date | null): string {
-  if (!date) {
+  if (!date || Number.isNaN(date.getTime())) {
     return "";
   }
 

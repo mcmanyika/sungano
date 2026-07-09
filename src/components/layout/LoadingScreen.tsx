@@ -61,9 +61,11 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.55, duration: 0.5, ease: easeOut }}
-            className="mt-4 text-sm text-neutral-500"
+            className="mt-4 max-w-xs text-center font-display text-sm font-semibold uppercase tracking-[0.12em] text-neutral-700"
           >
-            {siteConfig.name}
+            {siteConfig.name.toUpperCase()}
+            <span className="mx-2 text-neutral-300">/</span>
+            {siteConfig.eyebrow}
           </motion.p>
         </motion.div>
       )}

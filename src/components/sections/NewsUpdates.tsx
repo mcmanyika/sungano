@@ -1,32 +1,45 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Section, SectionHeader } from "@/components/ui/Section";
-import { Button } from "@/components/ui/Button";
-import { getPublishedNewsArticles } from "@/lib/firebase/news";
+import { isFirebaseConfigured } from "@/lib/firebase/config";
+import { subscribeToPublishedNewsArticles } from "@/lib/firebase/news";
 import { siteConfig } from "@/lib/data";
 import { cardSurfaceInteractive } from "@/lib/styles";
 import { cn } from "@/lib/utils";
 import {
   formatNewsDate,
-  getNewsImage,
   type NewsArticle,
 } from "@/types/news";
 
 export function NewsUpdates() {
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    async function loadArticles() {
-      setArticles(await getPublishedNewsArticles());
+    if (!isFirebaseConfigured()) {
+      setError("News is not available right now.");
       setLoading(false);
+      return;
     }
 
-    void loadArticles();
+    const unsubscribe = subscribeToPublishedNewsArticles(
+      (nextArticles) => {
+        setArticles(nextArticles);
+        setError("");
+        setLoading(false);
+      },
+      () => {
+        setError("Unable to load news from the database.");
+        setLoading(false);
+      },
+    );
+
+    return unsubscribe;
   }, []);
 
   return (
@@ -41,9 +54,17 @@ export function NewsUpdates() {
           {Array.from({ length: 3 }).map((_, index) => (
             <div
               key={index}
-              className={cn(cardSurfaceInteractive, "h-[22rem] animate-pulse rounded-2xl")}
+              className={cn(cardSurfaceInteractive, "h-48 animate-pulse rounded-2xl")}
             />
           ))}
+        </div>
+      ) : error ? (
+        <div className={cn(cardSurfaceInteractive, "p-8 text-center rounded-2xl")}>
+          <p className="text-sm font-medium text-red-600">{error}</p>
+        </div>
+      ) : articles.length === 0 ? (
+        <div className={cn(cardSurfaceInteractive, "p-8 text-center rounded-2xl")}>
+          <p className="text-neutral-700">No news articles published yet.</p>
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -54,24 +75,15 @@ export function NewsUpdates() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: index * 0.08, duration: 0.5 }}
-              className={cn(cardSurfaceInteractive, "group overflow-hidden")}
             >
-              <div className="relative h-44 overflow-hidden">
-                <Image
-                  src={getNewsImage(article)}
-                  alt={article.title}
-                  fill
-                  loading="lazy"
-                  fetchPriority="low"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </div>
-              <div className="p-5">
+              <Link
+                href={`/news/${article.id}`}
+                className={cn(cardSurfaceInteractive, "group block p-5")}
+              >
                 <div className="flex items-center gap-3 text-xs text-muted">
                   <span className="flex items-center gap-1">
                     <Calendar className="h-3.5 w-3.5" />
-                    {formatNewsDate(article.publishedAt)}
+                    {formatNewsDate(article.publishedAt ?? article.createdAt)}
                   </span>
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
                     {article.category}
@@ -83,11 +95,11 @@ export function NewsUpdates() {
                 <p className="mt-2 text-sm leading-relaxed text-muted">
                   {article.excerpt}
                 </p>
-                <Button variant="ghost" className="mt-3 -ml-2 px-3 text-sm" href="#">
+                <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
                   Read More
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Button>
-              </div>
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </Link>
             </motion.article>
           ))}
         </div>

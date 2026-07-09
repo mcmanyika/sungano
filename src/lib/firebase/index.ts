@@ -12,7 +12,9 @@ export {
   deleteNewsArticle,
   getAllNewsArticles,
   getNewsArticle,
+  getPublishedNewsArticle,
   getPublishedNewsArticles,
   seedNewsArticles,
+  subscribeToPublishedNewsArticles,
   updateNewsArticle,
 } from "@/lib/firebase/news";

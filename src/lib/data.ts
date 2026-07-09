@@ -182,10 +182,10 @@ export const footerLinks = {
     { label: "Leadership", href: "#contact" },
     { label: "News", href: "#news" },
   ],
-  resources: [
-    { label: "Legal Documents", href: "#declaration" },
-    { label: "Volunteer", href: "#contact" },
-    { label: "Contact", href: "#contact" },
+  links: [
+    { label: "Constitution Defenders Forum", href: "https://www.cdfzim.org" },
+    { label: "Defend the Constitution Platform", href: "https://www.dcpzim.com" },
+    { label: "National Constitutional Assembly", href: "#" },
   ],
   legal: [{ label: "Privacy Policy", href: "#" }],
 };

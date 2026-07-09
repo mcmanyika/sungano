@@ -135,6 +135,9 @@ export function NewsArticleList() {
                         {formatNewsDate(article.publishedAt)}
                       </span>
                     )}
+                    {article.author && (
+                      <span className="text-xs text-muted">By {article.author}</span>
+                    )}
                   </div>
                   <h3 className="mt-2 font-display text-base font-bold text-neutral-900">
                     {article.title}

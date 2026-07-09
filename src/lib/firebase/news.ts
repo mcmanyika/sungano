@@ -5,11 +5,13 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   orderBy,
   query,
   serverTimestamp,
   Timestamp,
   updateDoc,
+  where,
   type DocumentData,
 } from "firebase/firestore";
 import { newsArticles } from "@/lib/data";
@@ -18,6 +20,10 @@ import { isFirebaseConfigured } from "@/lib/firebase/config";
 import type { NewsArticle, NewsArticleInput } from "@/types/news";
 
 const NEWS_COLLECTION = "news";
+
+function publishedNewsQuery(db: ReturnType<typeof getClientFirestore>) {
+  return query(collection(db, NEWS_COLLECTION), where("published", "==", true));
+}
 
 function toDate(value: unknown): Date | null {
   if (value instanceof Timestamp) {
@@ -35,6 +41,7 @@ function mapNewsArticle(id: string, data: DocumentData): NewsArticle {
   return {
     id,
     title: String(data.title ?? ""),
+    author: String(data.author ?? ""),
     category: String(data.category ?? "General"),
     excerpt: String(data.excerpt ?? ""),
     body: String(data.body ?? ""),
@@ -50,6 +57,7 @@ function toStaticArticles(): NewsArticle[] {
   return newsArticles.map((article) => ({
     id: String(article.id),
     title: article.title,
+    author: "",
     category: article.category,
     excerpt: article.excerpt,
     body: article.excerpt,
@@ -63,25 +71,42 @@ function toStaticArticles(): NewsArticle[] {
 
 export async function getPublishedNewsArticles(): Promise<NewsArticle[]> {
   if (!isFirebaseConfigured()) {
-    return toStaticArticles();
+    return [];
   }
 
   try {
     const db = getClientFirestore();
-    const snapshot = await getDocs(
-      query(collection(db, NEWS_COLLECTION), orderBy("updatedAt", "desc")),
-    );
-
-    if (snapshot.empty) {
-      return toStaticArticles();
-    }
+    const snapshot = await getDocs(publishedNewsQuery(db));
 
     return snapshot.docs
       .map((document) => mapNewsArticle(document.id, document.data()))
-      .filter((article) => article.published);
+      .sort((a, b) => getSortDate(b).getTime() - getSortDate(a).getTime());
   } catch {
-    return toStaticArticles();
+    return [];
   }
+}
+
+function getSortDate(article: NewsArticle): Date {
+  return article.publishedAt ?? article.updatedAt ?? article.createdAt;
+}
+
+export function subscribeToPublishedNewsArticles(
+  onData: (articles: NewsArticle[]) => void,
+  onError?: (error: Error) => void,
+): () => void {
+  const db = getClientFirestore();
+
+  return onSnapshot(
+    publishedNewsQuery(db),
+    (snapshot) => {
+      const articles = snapshot.docs
+        .map((document) => mapNewsArticle(document.id, document.data()))
+        .sort((a, b) => getSortDate(b).getTime() - getSortDate(a).getTime());
+
+      onData(articles);
+    },
+    (error) => onError?.(error),
+  );
 }
 
 export async function getAllNewsArticles(): Promise<NewsArticle[]> {
@@ -106,6 +131,18 @@ export async function getNewsArticle(id: string): Promise<NewsArticle | null> {
   return mapNewsArticle(snapshot.id, snapshot.data());
 }
 
+export async function getPublishedNewsArticle(
+  id: string,
+): Promise<NewsArticle | null> {
+  const article = await getNewsArticle(id);
+
+  if (!article?.published) {
+    return null;
+  }
+
+  return article;
+}
+
 export async function createNewsArticle(
   input: NewsArticleInput,
 ): Promise<string> {
@@ -116,6 +153,7 @@ export async function createNewsArticle(
 
   const created = await addDoc(collection(db, NEWS_COLLECTION), {
     title: input.title.trim(),
+    author: input.author.trim(),
     category: input.category,
     excerpt: input.excerpt.trim(),
     body: input.body.trim(),
@@ -140,6 +178,7 @@ export async function updateNewsArticle(
 
   await updateDoc(doc(db, NEWS_COLLECTION, id), {
     title: input.title.trim(),
+    author: input.author.trim(),
     category: input.category,
     excerpt: input.excerpt.trim(),
     body: input.body.trim(),
@@ -167,6 +206,7 @@ export async function seedNewsArticles(): Promise<number> {
   for (const article of toStaticArticles()) {
     await createNewsArticle({
       title: article.title,
+      author: "",
       category: article.category,
       excerpt: article.excerpt,
       body: article.body,

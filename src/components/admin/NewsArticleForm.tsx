@@ -21,6 +21,7 @@ interface NewsArticleFormProps {
 function toInput(article?: NewsArticle): NewsArticleInput {
   return {
     title: article?.title ?? "",
+    author: article?.author ?? "",
     category: article?.category ?? "Campaign",
     excerpt: article?.excerpt ?? "",
     body: article?.body ?? "",
@@ -103,6 +104,19 @@ export function NewsArticleForm({ article, onDelete }: NewsArticleFormProps) {
             required
             value={form.title}
             onChange={(event) => updateField("title", event.target.value)}
+            className="h-11 w-full rounded-xl border border-neutral-200 bg-white px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+            Author
+          </label>
+          <input
+            required
+            value={form.author}
+            onChange={(event) => updateField("author", event.target.value)}
+            placeholder="Author name"
             className="h-11 w-full rounded-xl border border-neutral-200 bg-white px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
           />
         </div>

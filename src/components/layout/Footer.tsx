@@ -89,13 +89,19 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Resources links */}
+          {/* Links */}
           <div>
-            <h3 className="mb-4 font-semibold text-white">Resources</h3>
+            <h3 className="mb-4 font-semibold text-white">Links</h3>
             <ul className="space-y-2">
-              {footerLinks.resources.map((link) => (
+              {footerLinks.links.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-sm hover:text-white transition-colors">
+                  <a
+                    href={link.href}
+                    className="text-sm transition-colors hover:text-white"
+                    {...(link.href.startsWith("http")
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                  >
                     {link.label}
                   </a>
                 </li>
@@ -133,6 +139,17 @@ export function Footer() {
 
         <div className="mt-12 border-t border-neutral-800 pt-8 text-center text-sm text-neutral-500">
           <p>&copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
+          <p className="mt-2">
+            Developed by{" "}
+            <a
+              href="https://www.partsonmanyika.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-neutral-400 transition-colors hover:text-white"
+            >
+              Manyika
+            </a>
+          </p>
         </div>
       </div>
     </footer>

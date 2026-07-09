@@ -12,6 +12,7 @@ service cloud.firestore {
       return data.title is string
         && data.title.size() > 0
         && data.category is string
+        && data.author is string
         && data.excerpt is string
         && data.body is string
         && data.image is string
