@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { cardSurface } from "@/lib/styles";
 import { cn } from "@/lib/utils";
 
 interface AccordionItem {
@@ -14,31 +15,27 @@ interface AccordionProps {
   items: AccordionItem[];
 }
 
-/** Accessible accordion with smooth expand/collapse animations */
 export function Accordion({ items }: AccordionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2.5">
       {items.map((item, index) => {
         const isOpen = openIndex === index;
         return (
-          <div
-            key={item.question}
-            className="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900"
-          >
+          <div key={item.question} className={cn(cardSurface, "overflow-hidden")}>
             <button
               type="button"
               onClick={() => setOpenIndex(isOpen ? null : index)}
-              className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+              className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-neutral-50/80"
               aria-expanded={isOpen}
             >
-              <span className="font-semibold text-neutral-900 dark:text-white">
+              <span className="text-[15px] font-semibold tracking-tight text-neutral-900">
                 {item.question}
               </span>
               <ChevronDown
                 className={cn(
-                  "h-5 w-5 shrink-0 text-primary transition-transform duration-300",
+                  "h-4 w-4 shrink-0 text-primary transition-transform duration-300",
                   isOpen && "rotate-180",
                 )}
                 aria-hidden
@@ -52,10 +49,8 @@ export function Accordion({ items }: AccordionProps) {
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <div className="border-t border-neutral-100 px-6 py-5 dark:border-neutral-800">
-                    <p className="leading-relaxed text-neutral-600 dark:text-neutral-400">
-                      {item.answer}
-                    </p>
+                  <div className="border-t border-neutral-100/80 px-5 py-4">
+                    <p className="text-sm leading-relaxed text-muted">{item.answer}</p>
                   </div>
                 </motion.div>
               )}

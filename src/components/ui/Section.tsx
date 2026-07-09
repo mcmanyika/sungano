@@ -6,13 +6,12 @@ interface SectionProps {
   id?: string;
   className?: string;
   children: React.ReactNode;
-  /** Alternate background for visual rhythm */
   variant?: "default" | "muted" | "dark" | "primary";
 }
 
 const variantStyles = {
-  default: "bg-neutral-50 dark:bg-neutral-950",
-  muted: "bg-white dark:bg-neutral-900",
+  default: "bg-transparent",
+  muted: "bg-white/60 backdrop-blur-sm",
   dark: "bg-primary text-white",
   primary:
     "bg-gradient-to-br from-primary via-primary to-primary-dark text-white",
@@ -25,10 +24,11 @@ export function Section({
   variant = "default",
 }: SectionProps) {
   return (
-    <section id={id} className={cn("relative py-20 md:py-28", variantStyles[variant], className)}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {children}
-      </div>
+    <section
+      id={id}
+      className={cn("relative py-24 md:py-32", variantStyles[variant], className)}
+    >
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">{children}</div>
     </section>
   );
 }
@@ -51,24 +51,26 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        "mb-12 md:mb-16",
-        align === "center" && "mx-auto max-w-3xl text-center",
+        "mb-14 md:mb-20",
+        align === "center" && "mx-auto max-w-2xl text-center",
       )}
     >
       {eyebrow && (
-        <p
-          className={cn(
-            "mb-3 text-sm font-semibold uppercase tracking-widest",
-            light ? "text-secondary" : "text-accent",
-          )}
-        >
-          {eyebrow}
-        </p>
+        <div className={cn(align === "center" && "flex justify-center")}>
+          <span
+            className={cn(
+              "eyebrow-pill mb-5",
+              light && "border-secondary/30 bg-secondary/10 text-secondary before:bg-secondary",
+            )}
+          >
+            {eyebrow}
+          </span>
+        </div>
       )}
       <h2
         className={cn(
-          "font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl",
-          light ? "text-white" : "text-neutral-900 dark:text-white",
+          "font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-[2.75rem] md:leading-[1.15]",
+          light ? "text-white" : "text-neutral-900",
         )}
       >
         {title}
@@ -76,10 +78,8 @@ export function SectionHeader({
       {description && (
         <p
           className={cn(
-            "mt-4 text-lg leading-relaxed md:text-xl",
-            light
-              ? "text-white/80"
-              : "text-neutral-600 dark:text-neutral-400",
+            "mt-5 text-base leading-relaxed md:text-lg",
+            light ? "text-white/75" : "text-muted",
           )}
         >
           {description}

@@ -15,20 +15,19 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "bg-primary text-white shadow-lg shadow-primary/25 hover:bg-primary-light focus-visible:ring-primary",
+    "bg-primary text-white shadow-[0_2px_8px_rgba(15,61,145,0.25)] hover:bg-primary-light hover:shadow-[0_4px_16px_rgba(15,61,145,0.3)] focus-visible:ring-primary",
   secondary:
-    "bg-accent text-white shadow-lg shadow-accent/25 hover:bg-accent-light focus-visible:ring-accent",
-  gold: "bg-secondary text-neutral-900 shadow-lg shadow-secondary/25 hover:bg-secondary-light focus-visible:ring-secondary",
+    "bg-accent text-white shadow-[0_2px_8px_rgba(31,138,112,0.25)] hover:bg-accent-light focus-visible:ring-accent",
+  gold: "bg-secondary text-neutral-900 shadow-[0_2px_8px_rgba(201,162,39,0.3)] hover:bg-secondary-light focus-visible:ring-secondary",
   outline:
-    "border-2 border-primary/20 bg-white/80 text-primary backdrop-blur-sm hover:border-primary hover:bg-primary/5 dark:bg-neutral-900/80 dark:text-white dark:hover:bg-primary/10",
-  ghost:
-    "text-primary hover:bg-primary/10 dark:text-white dark:hover:bg-white/10",
+    "border border-neutral-200/80 bg-white/90 text-neutral-800 backdrop-blur-sm hover:border-primary/30 hover:bg-white hover:text-primary focus-visible:ring-primary",
+  ghost: "text-neutral-600 hover:bg-neutral-100 hover:text-primary",
 };
 
 const sizes: Record<ButtonSize, string> = {
   sm: "px-4 py-2 text-sm",
-  md: "px-6 py-3 text-base",
-  lg: "px-8 py-4 text-lg",
+  md: "px-5 py-2.5 text-sm",
+  lg: "px-7 py-3.5 text-base",
 };
 
 export function Button({
@@ -40,7 +39,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const classes = cn(
-    "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex items-center justify-center gap-2 rounded-full font-semibold tracking-tight transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
     variants[variant],
     sizes[size],
     className,
@@ -51,7 +50,7 @@ export function Button({
       <motion.a
         href={href}
         className={classes}
-        whileHover={{ scale: 1.02 }}
+        whileHover={{ y: -1 }}
         whileTap={{ scale: 0.98 }}
       >
         {children}
@@ -62,7 +61,7 @@ export function Button({
   return (
     <motion.button
       className={classes}
-      whileHover={{ scale: 1.02 }}
+      whileHover={{ y: -1 }}
       whileTap={{ scale: 0.98 }}
       {...props}
     >

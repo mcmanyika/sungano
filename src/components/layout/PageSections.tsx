@@ -6,7 +6,6 @@ import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { CampaignActivities } from "@/components/sections/CampaignActivities";
 import { ConstitutionalRights } from "@/components/sections/ConstitutionalRights";
 import { FAQ } from "@/components/sections/FAQ";
-import { FinalCTA } from "@/components/sections/FinalCTA";
 import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
 import { Mission } from "@/components/sections/Mission";
@@ -24,7 +23,6 @@ const sections = [
   CampaignActivities,
   NewsUpdates,
   FAQ,
-  FinalCTA,
 ];
 
 /** Staggered section reveal after the loading screen completes */

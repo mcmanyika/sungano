@@ -6,6 +6,8 @@ import Image from "next/image";
 import { newsArticles, siteConfig } from "@/lib/data";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
+import { cardSurfaceInteractive } from "@/lib/styles";
+import { cn } from "@/lib/utils";
 
 const newsImages = [
   "/images/news-civic-education.svg",
@@ -22,45 +24,44 @@ export function NewsUpdates() {
         description={`Latest news, events, and developments from ${siteConfig.name}.`}
       />
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {newsArticles.map((article, index) => (
           <motion.article
             key={article.id}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ y: -6 }}
-            className="group overflow-hidden rounded-2xl border border-neutral-200/80 bg-white shadow-sm transition-all hover:shadow-xl dark:border-neutral-800 dark:bg-neutral-900"
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ delay: index * 0.08, duration: 0.5 }}
+            className={cn(cardSurfaceInteractive, "group overflow-hidden")}
           >
-            <div className="relative h-48 overflow-hidden">
+            <div className="relative h-44 overflow-hidden">
               <Image
                 src={newsImages[index]}
                 alt={article.title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
-            <div className="p-6">
-              <div className="flex items-center gap-3 text-sm text-neutral-500">
+            <div className="p-5">
+              <div className="flex items-center gap-3 text-xs text-muted">
                 <span className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
+                  <Calendar className="h-3.5 w-3.5" />
                   {article.date}
                 </span>
-                <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary dark:bg-primary/20">
+                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
                   {article.category}
                 </span>
               </div>
-              <h3 className="mt-3 font-display text-lg font-bold text-neutral-900 group-hover:text-primary dark:text-white">
+              <h3 className="mt-3 font-display text-base font-bold tracking-tight text-neutral-900 transition-colors group-hover:text-primary">
                 {article.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+              <p className="mt-2 text-sm leading-relaxed text-muted">
                 {article.excerpt}
               </p>
-              <Button variant="ghost" className="mt-4 px-0" href="#">
+              <Button variant="ghost" className="mt-3 -ml-2 px-3 text-sm" href="#">
                 Read More
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </div>
           </motion.article>

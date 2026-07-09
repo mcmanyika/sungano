@@ -4,11 +4,12 @@ import { motion } from "framer-motion";
 import { ArrowRight, Scale, Users } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Section, SectionHeader } from "@/components/ui/Section";
+import { cardSurfaceInteractive } from "@/lib/styles";
+import { cn } from "@/lib/utils";
 
 const pillars = [
   {
     icon: Scale,
-    emoji: "⚖",
     title: "Restore Through Justice",
     description:
       "We seek constitutional review through the courts and promote constitutional supremacy. Justice is the lawful foundation upon which democracy is restored and protected for every citizen.",
@@ -17,7 +18,6 @@ const pillars = [
   },
   {
     icon: Users,
-    emoji: "🤝",
     title: "Restore Through the People",
     description:
       "Through civic education, peaceful engagement, dialogue, petitions, prayer gatherings and lawful demonstrations, we empower citizens to participate in shaping our constitutional future.",
@@ -35,41 +35,29 @@ export function Pillars() {
         description="Constitutional democracy is restored through the courts and through the people—working together, peacefully and lawfully."
       />
 
-      <div className="grid gap-8 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         {pillars.map((pillar, index) => (
           <motion.div
             key={pillar.title}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.15, duration: 0.5 }}
-            whileHover={{ y: -8 }}
-            className="group relative overflow-hidden rounded-3xl border border-white/60 bg-white/40 p-8 shadow-xl backdrop-blur-xl transition-shadow hover:shadow-2xl dark:border-neutral-700/60 dark:bg-neutral-900/40"
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ delay: index * 0.12, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className={cn(cardSurfaceInteractive, "group p-8 md:p-10")}
           >
-            <div className="relative">
-              <div className="mb-6 flex items-center gap-4">
-                <span className="text-3xl" aria-hidden>
-                  {pillar.emoji}
-                </span>
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-100 text-neutral-600 shadow-md dark:bg-neutral-800 dark:text-neutral-400">
-                  <pillar.icon className="h-7 w-7" />
-                </div>
-              </div>
-              <h3 className="font-display text-2xl font-bold text-neutral-900 dark:text-white">
-                {pillar.title}
-              </h3>
-              <p className="mt-4 leading-relaxed text-neutral-600 dark:text-neutral-400">
-                {pillar.description}
-              </p>
-              <Button
-                href={pillar.href}
-                variant="ghost"
-                className="mt-6 px-0"
-              >
-                {pillar.cta}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
+            <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-100 text-neutral-500 transition-colors group-hover:bg-primary/5 group-hover:text-primary">
+              <pillar.icon className="h-5 w-5" strokeWidth={1.75} />
             </div>
+            <h3 className="font-display text-xl font-bold tracking-tight text-neutral-900 md:text-2xl">
+              {pillar.title}
+            </h3>
+            <p className="mt-3 text-[15px] leading-relaxed text-muted">
+              {pillar.description}
+            </p>
+            <Button href={pillar.href} variant="ghost" className="mt-6 -ml-2 px-3">
+              {pillar.cta}
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Button>
           </motion.div>
         ))}
       </div>
