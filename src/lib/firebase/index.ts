@@ -8,6 +8,11 @@ export {
 } from "@/lib/firebase/client";
 export { subscribeEmail, getAllSubscribers } from "@/lib/firebase/subscribers";
 export {
+  getDeclaration,
+  saveDeclaration,
+  subscribeToDeclaration,
+} from "@/lib/firebase/declaration";
+export {
   createNewsArticle,
   deleteNewsArticle,
   getAllNewsArticles,

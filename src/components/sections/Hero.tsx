@@ -3,15 +3,17 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { Button } from "@/components/ui/Button";
+import { DeclarationModal } from "@/components/ui/DeclarationModal";
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 import { easeOut, fadeUp, staggerContainer } from "@/lib/animations";
 import { stats, siteConfig } from "@/lib/data";
 
 export function Hero() {
   const { isReady } = usePageLoad();
+  const [declarationOpen, setDeclarationOpen] = useState(false);
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -86,7 +88,12 @@ export function Hero() {
               transition={{ duration: 0.6, ease: easeOut }}
               className="mt-9"
             >
-              <Button href="#declaration" variant="outline" size="lg">
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                onClick={() => setDeclarationOpen(true)}
+              >
                 Read the Declaration
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -130,6 +137,11 @@ export function Hero() {
       >
         <ChevronDown className="h-5 w-5 animate-bounce" />
       </motion.a>
+
+      <DeclarationModal
+        open={declarationOpen}
+        onClose={() => setDeclarationOpen(false)}
+      />
     </section>
   );
 }
