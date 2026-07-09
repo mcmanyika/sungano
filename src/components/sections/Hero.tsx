@@ -64,8 +64,6 @@ export function Hero() {
               transition={{ duration: 0.7, ease: easeOut }}
               className="mt-6 font-display text-[2.5rem] font-extrabold leading-[1.08] tracking-tight text-white drop-shadow-sm sm:text-5xl md:text-6xl lg:text-[4rem]"
             >
-              Restore the Constitution.
-              <br />
               Restore Our Democracy.
             </motion.h1>
 
