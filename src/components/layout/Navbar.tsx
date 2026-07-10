@@ -55,6 +55,7 @@ export function Navbar() {
             width={200}
             height={80}
             className="h-14 w-auto shrink-0 rounded-md bg-white/95 object-contain p-0.5 shadow-sm transition-transform group-hover:scale-[1.02] sm:h-16"
+            style={{ width: "auto" }}
             priority
           />
           <span

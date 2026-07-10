@@ -47,6 +47,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
               width={200}
               height={80}
               className="h-20 w-auto object-contain"
+              style={{ width: "auto" }}
               priority
             />
           </motion.div>

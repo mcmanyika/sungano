@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { footerLinks, siteConfig } from "@/lib/data";
@@ -51,6 +50,7 @@ export function Footer() {
                 width={168}
                 height={67}
                 className="h-12 w-auto shrink-0 rounded-md bg-white object-contain p-0.5 shadow-sm transition-transform group-hover:scale-[1.02] sm:h-14"
+              style={{ width: "auto" }}
               />
               <span className="whitespace-nowrap font-display text-base font-bold leading-none text-white sm:text-lg">
                 Sungano Ubambano
@@ -59,17 +59,6 @@ export function Footer() {
             <p className="mt-4 text-sm leading-relaxed text-neutral-400">
               A peaceful national movement committed to defending constitutional democracy through lawful action and civic participation.
             </p>
-            <div className="mt-6 space-y-2 text-sm">
-              <a href={`mailto:${siteConfig.email}`} className="flex items-center gap-2 hover:text-white">
-                <Mail className="h-4 w-4" /> {siteConfig.email}
-              </a>
-              <p className="flex items-center gap-2">
-                <Phone className="h-4 w-4" /> +263 4 123 4567
-              </p>
-              <p className="flex items-center gap-2">
-                <MapPin className="h-4 w-4" /> Harare, Zimbabwe
-              </p>
-            </div>
           </div>
 
           {/* About links */}
@@ -139,17 +128,6 @@ export function Footer() {
 
         <div className="mt-12 border-t border-neutral-800 pt-8 text-center text-sm text-neutral-500">
           <p>&copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
-          <p className="mt-2">
-            Developed by{" "}
-            <a
-              href="https://www.partsonmanyika.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-neutral-400 transition-colors hover:text-white"
-            >
-              Manyika
-            </a>
-          </p>
         </div>
       </div>
     </footer>
