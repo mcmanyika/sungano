@@ -19,6 +19,14 @@ service cloud.firestore {
         && data.published is bool;
     }
 
+    function isValidWelcomeVideo(data) {
+      return data.title is string
+        && data.title.size() > 0
+        && data.description is string
+        && data.youtubeId is string
+        && data.published is bool;
+    }
+
     function isValidDeclaration(data) {
       return data.headline is string
         && data.headline.size() > 0
@@ -50,6 +58,11 @@ service cloud.firestore {
     match /content/declaration {
       allow read: if true;
       allow create, update: if isAdmin() && isValidDeclaration(request.resource.data);
+    }
+
+    match /content/welcome-video {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidWelcomeVideo(request.resource.data);
     }
   }
 }

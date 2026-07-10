@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { navLinks, siteConfig } from "@/lib/data";
+import { siteContainer } from "@/lib/layout";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { easeOut, slideDown } from "@/lib/animations";
 import { cn } from "@/lib/utils";
@@ -38,20 +39,35 @@ export function Navbar() {
       )}
     >
       <nav
-        className="mx-auto flex max-w-6xl items-center justify-between px-5 sm:px-8"
+        className={cn(
+          siteContainer,
+          "grid grid-cols-[1fr_auto] items-center gap-4 lg:grid-cols-[1fr_auto_1fr]",
+        )}
         aria-label="Main navigation"
       >
         <Link
           href="/"
-          className="group flex items-center gap-2.5 font-display text-[15px] font-bold tracking-tight text-neutral-900"
+          className="group flex shrink-0 items-center gap-3 justify-self-start sm:gap-3.5"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-xs font-bold text-white shadow-[0_2px_8px_rgba(15,61,145,0.3)] transition-transform group-hover:scale-105">
-            {siteConfig.initials}
+          <Image
+            src="/images/logo.jpeg"
+            alt=""
+            width={200}
+            height={80}
+            className="h-14 w-auto shrink-0 rounded-md bg-white/95 object-contain p-0.5 shadow-sm transition-transform group-hover:scale-[1.02] sm:h-16"
+            priority
+          />
+          <span
+            className={cn(
+              "whitespace-nowrap font-display text-base font-bold leading-none tracking-tight sm:text-lg lg:text-xl",
+              isScrolled ? "text-neutral-900" : "text-white",
+            )}
+          >
+            Sungano Ubambano
           </span>
-          <span className="hidden sm:inline">{siteConfig.shortName}</span>
         </Link>
 
-        <ul className="hidden items-center gap-0.5 rounded-full border border-neutral-200/60 bg-white/70 p-1 shadow-sm backdrop-blur-md lg:flex">
+        <ul className="hidden items-center gap-0.5 justify-self-center rounded-full border border-neutral-200/60 bg-white/70 p-1 shadow-sm backdrop-blur-md lg:flex">
           {navLinks.map((link) => (
             <li key={link.label}>
               <a
@@ -64,13 +80,13 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-self-end gap-2">
           <Image
             src="/images/zimbabwe-flag.svg"
             alt="Flag of Zimbabwe"
             width={36}
             height={24}
-            className="mr-1 hidden h-3.5 w-auto rounded-[3px] border border-neutral-200/70 shadow-sm sm:block"
+            className="hidden h-3.5 w-auto rounded-[3px] border border-neutral-200/70 shadow-sm sm:block"
             priority
           />
 
@@ -92,9 +108,9 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden border-t border-neutral-200/60 bg-white/95 backdrop-blur-xl lg:hidden"
+            className="overflow-hidden border-t border-neutral-200/60 bg-white/95 px-5 backdrop-blur-xl sm:px-8 lg:hidden"
           >
-            <ul className="flex flex-col gap-0.5 px-5 py-4">
+            <ul className="flex flex-col gap-0.5 py-4">
               {navLinks.map((link) => (
                 <li key={link.label}>
                   <a
@@ -112,7 +128,7 @@ export function Navbar() {
                   alt="Flag of Zimbabwe"
                   width={36}
                   height={24}
-                  className="mr-1 h-3.5 w-auto rounded-[3px] border border-neutral-200/70 shadow-sm"
+                  className="h-3.5 w-auto rounded-[3px] border border-neutral-200/70 shadow-sm"
                 />
               </li>
             </ul>

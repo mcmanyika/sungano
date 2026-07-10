@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { easeOut } from "@/lib/animations";
 import { siteConfig } from "@/lib/data";
@@ -38,9 +39,16 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
             initial={{ scale: 0.6, opacity: 0, rotate: -8 }}
             animate={{ scale: 1, opacity: 1, rotate: 0 }}
             transition={{ duration: 0.7, ease: easeOut }}
-            className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-white shadow-xl"
+            className="overflow-hidden rounded-2xl bg-white shadow-xl"
           >
-            {siteConfig.initials}
+            <Image
+              src="/images/logo.jpeg"
+              alt={siteConfig.name}
+              width={200}
+              height={80}
+              className="h-20 w-auto object-contain"
+              priority
+            />
           </motion.div>
 
           <motion.div

@@ -44,6 +44,18 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+a[href],
+[role="link"],
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 /* Subtle page-wide mesh gradient */
 body::before {
   content: "";

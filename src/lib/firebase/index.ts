@@ -13,6 +13,11 @@ export {
   subscribeToDeclaration,
 } from "@/lib/firebase/declaration";
 export {
+  getWelcomeVideo,
+  saveWelcomeVideo,
+  subscribeToWelcomeVideo,
+} from "@/lib/firebase/welcome-video";
+export {
   createNewsArticle,
   deleteNewsArticle,
   getAllNewsArticles,
