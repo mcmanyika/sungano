@@ -179,7 +179,6 @@ export const faqItems = [
 export const footerLinks = {
   about: [
     { label: "About", href: "#rights" },
-    { label: "Leadership", href: "#contact" },
     { label: "News", href: "#news" },
   ],
   links: [
