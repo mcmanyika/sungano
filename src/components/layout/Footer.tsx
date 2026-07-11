@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { footerLinks, siteConfig } from "@/lib/data";
+import { footerLinks } from "@/lib/data";
 
 function FacebookIcon({ className }: { className?: string }) {
   return (
@@ -142,7 +142,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 border-t border-neutral-800 pt-8 text-center text-sm text-neutral-500">
-          <p>&copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Sungano Ubumbano. All rights reserved.</p>
         </div>
       </div>
     </footer>
