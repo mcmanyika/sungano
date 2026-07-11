@@ -64,7 +64,7 @@ export function Navbar() {
               isScrolled ? "text-neutral-900" : "text-white",
             )}
           >
-            Sungano Ubambano
+            Sungano Ubumbano
           </span>
         </Link>
 

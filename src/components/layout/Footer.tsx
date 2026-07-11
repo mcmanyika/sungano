@@ -53,12 +53,9 @@ export function Footer() {
               style={{ width: "auto" }}
               />
               <span className="whitespace-nowrap font-display text-base font-bold leading-none text-white sm:text-lg">
-                Sungano Ubambano
+                Sungano Ubumbano
               </span>
             </Link>
-            <p className="mt-4 text-sm leading-relaxed text-neutral-400">
-              A peaceful national movement committed to defending constitutional democracy through lawful action and civic participation.
-            </p>
           </div>
 
           {/* About links */}
