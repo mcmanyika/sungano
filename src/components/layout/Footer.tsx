@@ -131,7 +131,7 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-            <div className="flex flex-wrap gap-3">
+            <div className="grid w-fit grid-cols-3 gap-3">
               {socialLinks.map((social) => (
                 <motion.a
                   key={social.label}
