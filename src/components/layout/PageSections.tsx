@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Footer } from "@/components/layout/Footer";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { ConstitutionalRights } from "@/components/sections/ConstitutionalRights";
-import { FAQ } from "@/components/sections/FAQ";
 import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
@@ -14,7 +13,6 @@ const sections = [
   ConstitutionalRights,
   HarareDeclaration,
   NewsUpdates,
-  FAQ,
 ];
 
 /** Staggered section reveal after the loading screen completes */

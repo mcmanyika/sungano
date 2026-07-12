@@ -20,7 +20,6 @@ export const siteConfig = {
 export const navLinks = [
   { label: "About", href: "#rights" },
   { label: "News", href: "#news" },
-  { label: "FAQ", href: "#faq" },
 ];
 
 export const timelineEvents = [
@@ -145,34 +144,6 @@ export const newsArticles = [
     excerpt:
       "Faith, youth, and civic leaders unite behind a shared commitment to peaceful constitutional restoration.",
     image: "/images/news-declaration.jpg",
-  },
-];
-
-export const faqItems = [
-  {
-    question: "What is Sungano Yevanhu?",
-    answer:
-      "Sungano Yevanhu is a peaceful national civic movement committed to defending constitutional democracy through lawful action, civic participation, and justice. We seek to restore constitutional supremacy and strengthen democratic governance.",
-  },
-  {
-    question: "How can I participate?",
-    answer:
-      "You can volunteer in your province, attend civic education sessions, join community dialogues, sign petitions, participate in peaceful demonstrations, or partner as an organization. Contact us to connect with your local coordinator.",
-  },
-  {
-    question: "Is participation peaceful?",
-    answer:
-      "Yes. Peaceful, lawful engagement is a core principle of our movement. All activities are conducted in accordance with the Constitution and applicable laws, with respect for the rights of all citizens.",
-  },
-  {
-    question: "Can organizations partner?",
-    answer:
-      "Yes. Churches, civil society organizations, professional associations, and community groups that share our commitment to constitutional democracy are welcome to partner with us.",
-  },
-  {
-    question: "How do I receive updates?",
-    answer:
-      "Subscribe to our newsletter or contact your provincial coordinator. Follow us on social media for announcements about events, resources, and campaign activities.",
   },
 ];
 
