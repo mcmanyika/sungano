@@ -72,16 +72,16 @@ body::before {
 /* Premium card surface */
 .card-surface {
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
   box-shadow: var(--card-shadow);
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1),
     border-color 0.35s ease;
 }
 
 .card-surface:hover {
-  border-color: rgba(15, 61, 145, 0.14);
+  border-color: rgba(15, 61, 145, 0.16);
   box-shadow: var(--card-shadow-hover);
 }
 

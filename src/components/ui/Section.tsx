@@ -1,6 +1,9 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { siteContainer } from "@/lib/layout";
+import { easeOut } from "@/lib/animations";
 
 interface SectionProps {
   id?: string;
@@ -11,7 +14,7 @@ interface SectionProps {
 
 const variantStyles = {
   default: "bg-transparent",
-  muted: "bg-white/60 backdrop-blur-sm",
+  muted: "bg-white/50 backdrop-blur-sm",
   dark: "bg-primary text-white",
   primary:
     "bg-gradient-to-br from-primary via-primary to-primary-dark text-white",
@@ -28,7 +31,7 @@ export function Section({
       id={id}
       className={cn("relative py-24 md:py-32", variantStyles[variant], className)}
     >
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">{children}</div>
+      <div className={siteContainer}>{children}</div>
     </section>
   );
 }
@@ -49,9 +52,13 @@ export function SectionHeader({
   light = false,
 }: SectionHeaderProps) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.65, ease: easeOut }}
       className={cn(
-        "mb-14 md:mb-20",
+        "mb-14 md:mb-16",
         align === "center" && "mx-auto max-w-2xl text-center",
       )}
     >
@@ -60,7 +67,7 @@ export function SectionHeader({
           <span
             className={cn(
               "eyebrow-pill mb-5",
-              light && "border-secondary/30 bg-secondary/10 text-secondary before:bg-secondary",
+              light && "border-secondary/30 bg-secondary/10 text-secondary",
             )}
           >
             {eyebrow}
@@ -75,6 +82,13 @@ export function SectionHeader({
       >
         {title}
       </h2>
+      <div
+        className={cn(
+          "mt-5 h-px w-12 bg-secondary",
+          align === "center" && "mx-auto",
+        )}
+        aria-hidden
+      />
       {description && (
         <p
           className={cn(
@@ -85,6 +99,6 @@ export function SectionHeader({
           {description}
         </p>
       )}
-    </div>
+    </motion.div>
   );
 }

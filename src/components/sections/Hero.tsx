@@ -120,7 +120,7 @@ export function Hero() {
             <motion.p
               variants={fadeUp}
               transition={{ duration: 0.6, ease: easeOut }}
-              className="mt-7 text-lg leading-relaxed text-white/90 md:text-xl"
+              className="mt-7 text-lg leading-[1.55] text-white/90 md:text-xl"
             >
               Justice in the Courts.
               <br />
@@ -141,6 +141,7 @@ export function Hero() {
                 variant="outline"
                 size="lg"
                 onClick={() => setDeclarationOpen(true)}
+                className="border-white/40 bg-white/15 text-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-md hover:border-white/70 hover:bg-white hover:text-primary"
               >
                 Read the Declaration
                 <ArrowRight className="h-4 w-4" />
@@ -157,21 +158,26 @@ export function Hero() {
         </div>
       </motion.div>
 
-      <div className="relative z-10 mt-auto w-full border-t border-white/15 bg-primary-dark/80 backdrop-blur-md">
+      <div className="relative z-10 mt-auto w-full border-t border-white/10 bg-primary-dark/85 backdrop-blur-xl">
         <div className={siteContainer}>
-          <div className="grid grid-cols-2 divide-white/15 md:grid-cols-4 md:divide-x">
+          <div className="grid grid-cols-2 md:grid-cols-4">
             {stats.map((stat, index) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 16 }}
                 animate={isReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
                 transition={{ duration: 0.5, delay: 0.6 + index * 0.08, ease: easeOut }}
-                className="px-6 py-7 text-center"
+                className={cn(
+                  "px-5 py-7 text-center sm:px-6",
+                  index % 2 === 1 && "border-l border-white/10",
+                  index >= 2 && "border-t border-white/10 md:border-t-0",
+                  index >= 1 && "md:border-l md:border-white/10",
+                )}
               >
                 <p className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
                   <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </p>
-                <p className="mt-1.5 text-xs font-semibold uppercase tracking-wider text-white/90">
+                <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/75">
                   {stat.label}
                 </p>
               </motion.div>
