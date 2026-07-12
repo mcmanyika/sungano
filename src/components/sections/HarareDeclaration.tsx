@@ -36,11 +36,11 @@ export function HarareDeclaration() {
         />
       </motion.div>
       <div
-        className="absolute inset-0 bg-gradient-to-r from-primary-dark/92 via-primary/80 to-primary-dark/88"
+        className="absolute inset-0 bg-gradient-to-r from-primary/70 via-primary-light/55 to-primary/65"
         aria-hidden
       />
       <div
-        className="absolute inset-0 bg-gradient-to-t from-primary-dark/50 via-transparent to-primary-dark/30"
+        className="absolute inset-0 bg-gradient-to-t from-primary-dark/35 via-transparent to-primary/20"
         aria-hidden
       />
 

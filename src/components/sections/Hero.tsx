@@ -83,9 +83,9 @@ export function Hero() {
           className="object-cover object-center"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-50/92 via-[#0F3D91]/55 to-[#0a2d6b]/88" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0F3D91]/15 to-[#0a2d6b]/40" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#1F8A70]/20 via-transparent to-[#C9A227]/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-50/85 via-[#0F3D91]/40 to-[#0a2d6b]/65" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0F3D91]/10 to-[#0a2d6b]/28" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#1F8A70]/25 via-transparent to-[#C9A227]/18" />
       </motion.div>
 
       <motion.div
@@ -158,7 +158,7 @@ export function Hero() {
         </div>
       </motion.div>
 
-      <div className="relative z-10 mt-auto w-full border-t border-white/10 bg-primary-dark/85 backdrop-blur-xl">
+      <div className="relative z-10 mt-auto w-full border-t border-white/15 bg-primary-dark/70 backdrop-blur-xl">
         <div className={siteContainer}>
           <div className="grid grid-cols-2 md:grid-cols-4">
             {stats.map((stat, index) => (

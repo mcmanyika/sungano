@@ -68,8 +68,8 @@ export function YouTubeEmbed({
         className={cn(
           "absolute inset-0",
           isHero
-            ? "bg-gradient-to-t from-[#0a2d6b]/85 via-[#0F3D91]/30 to-black/10"
-            : "bg-gradient-to-t from-primary-dark/70 via-primary/25 to-transparent",
+            ? "bg-gradient-to-t from-[#0a2d6b]/55 via-[#0F3D91]/20 to-transparent"
+            : "bg-gradient-to-t from-primary-dark/55 via-primary/20 to-transparent",
         )}
       />
       <span className="absolute inset-0 flex items-center justify-center">
