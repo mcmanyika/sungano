@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { isFirebaseConfigured } from "@/lib/firebase/config";
@@ -10,10 +10,7 @@ import { subscribeToPublishedNewsArticles } from "@/lib/firebase/news";
 import { siteConfig } from "@/lib/data";
 import { cardSurfaceInteractive } from "@/lib/styles";
 import { cn } from "@/lib/utils";
-import {
-  formatNewsDate,
-  type NewsArticle,
-} from "@/types/news";
+import { formatNewsDate, type NewsArticle } from "@/types/news";
 
 export function NewsUpdates() {
   const [articles, setArticles] = useState<NewsArticle[]>([]);
@@ -50,11 +47,11 @@ export function NewsUpdates() {
       />
 
       {loading ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, index) => (
             <div
               key={index}
-              className={cn(cardSurfaceInteractive, "h-48 animate-pulse rounded-2xl")}
+              className={cn(cardSurfaceInteractive, "h-20 animate-pulse rounded-2xl")}
             />
           ))}
         </div>
@@ -67,7 +64,7 @@ export function NewsUpdates() {
           <p className="text-neutral-700">No news articles published yet.</p>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {articles.map((article, index) => (
             <motion.article
               key={article.id}
@@ -92,13 +89,9 @@ export function NewsUpdates() {
                 <h3 className="mt-3 font-display text-base font-bold tracking-tight text-neutral-900 transition-colors group-hover:text-primary">
                   {article.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
+                <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted">
                   {article.excerpt}
                 </p>
-                <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-                  Read More
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                </span>
               </Link>
             </motion.article>
           ))}
