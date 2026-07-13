@@ -4,19 +4,22 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
-import { navLinks, siteConfig } from "@/lib/data";
+import { navLinks } from "@/lib/data";
 import { siteContainer } from "@/lib/layout";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { easeOut, slideDown } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
+  const pathname = usePathname();
   const scrollY = useScrollPosition();
   const { isReady } = usePageLoad();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const isScrolled = scrollY > 16;
+  const isHome = pathname === "/";
+  const isSolid = !isHome || scrollY > 16;
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
@@ -33,7 +36,7 @@ export function Navbar() {
       transition={{ duration: 0.65, delay: 0.05, ease: easeOut }}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-        isScrolled
+        isSolid
           ? "border-b border-neutral-200/60 bg-white/80 py-3 shadow-[0_1px_0_rgba(15,61,145,0.04)] backdrop-blur-xl"
           : "bg-transparent py-5",
       )}
@@ -61,7 +64,7 @@ export function Navbar() {
           <span
             className={cn(
               "whitespace-nowrap font-display text-base font-bold leading-none tracking-tight sm:text-lg lg:text-xl",
-              isScrolled ? "text-neutral-900" : "text-white",
+              isSolid ? "text-neutral-900" : "text-white",
             )}
           >
             Sungano Ubumbano
@@ -72,7 +75,7 @@ export function Navbar() {
           {navLinks.map((link) => (
             <li key={link.label}>
               <a
-                href={link.href}
+                href={isHome ? link.href : `/${link.href}`}
                 className="rounded-full px-3.5 py-1.5 text-[13px] font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-primary"
               >
                 {link.label}
@@ -115,7 +118,7 @@ export function Navbar() {
               {navLinks.map((link) => (
                 <li key={link.label}>
                   <a
-                    href={link.href}
+                    href={isHome ? link.href : `/${link.href}`}
                     onClick={() => setMobileOpen(false)}
                     className="block rounded-xl px-3 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
                   >
