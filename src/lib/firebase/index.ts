@@ -6,7 +6,21 @@ export {
   getClientStorage,
   getFirebaseApp,
 } from "@/lib/firebase/client";
+export {
+  createEvent,
+  deleteEvent,
+  getAllEvents,
+  getEvent,
+  getPublishedEvents,
+  subscribeToPublishedEvents,
+  updateEvent,
+} from "@/lib/firebase/events";
 export { subscribeEmail, getAllSubscribers } from "@/lib/firebase/subscribers";
+export {
+  deleteVolunteer,
+  getAllVolunteers,
+  registerVolunteer,
+} from "@/lib/firebase/volunteers";
 export {
   getDeclaration,
   saveDeclaration,

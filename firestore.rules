@@ -27,6 +27,32 @@ service cloud.firestore {
         && data.published is bool;
     }
 
+    function isValidVolunteer(data) {
+      return data.fullName is string
+        && data.fullName.size() > 0
+        && data.fullName.size() <= 120
+        && data.email is string
+        && data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && data.phone is string
+        && data.phone.size() > 0
+        && data.phone.size() <= 40
+        && data.province is string
+        && data.province.size() > 0
+        && data.interest is string
+        && data.interest.size() > 0
+        && data.message is string
+        && data.message.size() <= 2000;
+    }
+
+    function isValidEvent(data) {
+      return data.title is string
+        && data.title.size() > 0
+        && data.description is string
+        && data.location is string
+        && data.location.size() > 0
+        && data.published is bool;
+    }
+
     function isValidDeclaration(data) {
       return data.headline is string
         && data.headline.size() > 0
@@ -63,6 +89,28 @@ service cloud.firestore {
     match /content/welcome-video {
       allow read: if true;
       allow create, update: if isAdmin() && isValidWelcomeVideo(request.resource.data);
+    }
+
+    match /volunteers/{volunteerId} {
+      allow read: if isAdmin();
+      allow create: if isValidVolunteer(request.resource.data)
+        && request.resource.data.keys().hasAll([
+          'fullName',
+          'email',
+          'phone',
+          'province',
+          'interest',
+          'message',
+          'registeredAt'
+        ]);
+      allow delete: if isAdmin();
+    }
+
+    match /events/{eventId} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create: if isAdmin() && isValidEvent(request.resource.data);
+      allow update: if isAdmin() && isValidEvent(request.resource.data);
+      allow delete: if isAdmin();
     }
   }
 }

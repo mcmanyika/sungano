@@ -7,12 +7,14 @@ import { ConstitutionalRights } from "@/components/sections/ConstitutionalRights
 import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
+import { VolunteerRegistration } from "@/components/sections/VolunteerRegistration";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
 const sections = [
   ConstitutionalRights,
   HarareDeclaration,
   NewsUpdates,
+  VolunteerRegistration,
 ];
 
 /** Staggered section reveal after the loading screen completes */

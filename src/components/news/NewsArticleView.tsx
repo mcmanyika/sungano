@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/layout/Footer";
+import { ShareButtons } from "@/components/news/ShareButtons";
+import { siteConfig } from "@/lib/data";
 import { getPublishedNewsArticle } from "@/lib/firebase/news";
 import { cardSurface } from "@/lib/styles";
 import { formatNewsDate, type NewsArticle } from "@/types/news";
@@ -85,6 +87,14 @@ export function NewsArticleView() {
                   {article.excerpt}
                 </p>
               )}
+
+              <div className="mt-6 border-y border-neutral-200/80 py-4">
+                <ShareButtons
+                  url={`${siteConfig.url}/news/${article.id}`}
+                  title={article.title}
+                  description={article.excerpt}
+                />
+              </div>
 
               <div className="mt-8 whitespace-pre-wrap text-base leading-relaxed text-neutral-700">
                 {article.body || article.excerpt}

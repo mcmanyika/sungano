@@ -20,6 +20,7 @@ export const siteConfig = {
 export const navLinks = [
   { label: "About", href: "#rights" },
   { label: "News", href: "#news" },
+  { label: "Volunteer", href: "#volunteer" },
 ];
 
 export const timelineEvents = [
@@ -151,6 +152,7 @@ export const footerLinks = {
   about: [
     { label: "About", href: "#rights" },
     { label: "News", href: "#news" },
+    { label: "Volunteer", href: "#volunteer" },
   ],
   links: [
     { label: "Constitution Defenders Forum", href: "https://www.cdfzim.org" },
