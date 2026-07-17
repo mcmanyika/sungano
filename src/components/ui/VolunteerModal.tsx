@@ -9,9 +9,18 @@ import { easeOut } from "@/lib/animations";
 interface VolunteerModalProps {
   open: boolean;
   onClose: () => void;
+  eyebrow?: string;
+  title?: string;
+  description?: string;
 }
 
-export function VolunteerModal({ open, onClose }: VolunteerModalProps) {
+export function VolunteerModal({
+  open,
+  onClose,
+  eyebrow = "Support the Coalition",
+  title = "Volunteer registration",
+  description = "Register to support Coalition programmes and peaceful, lawful constitutional work in your community.",
+}: VolunteerModalProps) {
   useEffect(() => {
     if (!open) {
       return;
@@ -35,7 +44,12 @@ export function VolunteerModal({ open, onClose }: VolunteerModalProps) {
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[120]" role="dialog" aria-modal="true" aria-labelledby="volunteer-modal-title">
+        <div
+          className="fixed inset-0 z-[120]"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="volunteer-modal-title"
+        >
           <motion.button
             type="button"
             initial={{ opacity: 0 }}
@@ -43,7 +57,7 @@ export function VolunteerModal({ open, onClose }: VolunteerModalProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             className="absolute inset-0 bg-primary-dark/45 backdrop-blur-[2px]"
-            aria-label="Close volunteer form"
+            aria-label="Close registration form"
             onClick={onClose}
           />
 
@@ -57,13 +71,13 @@ export function VolunteerModal({ open, onClose }: VolunteerModalProps) {
             <div className="flex items-start justify-between gap-4 border-b border-neutral-200/80 px-5 py-5 sm:px-7">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
-                  Join the movement
+                  {eyebrow}
                 </p>
                 <h2
                   id="volunteer-modal-title"
                   className="mt-1 font-display text-2xl font-bold tracking-tight text-neutral-900"
                 >
-                  Volunteer registration
+                  {title}
                 </h2>
               </div>
               <button
@@ -78,8 +92,7 @@ export function VolunteerModal({ open, onClose }: VolunteerModalProps) {
 
             <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-7 sm:py-8">
               <p className="mb-6 text-sm leading-relaxed text-muted">
-                Register to support peaceful, lawful constitutional restoration
-                in your community.
+                {description}
               </p>
               <VolunteerRegisterForm />
             </div>

@@ -16,7 +16,15 @@ service cloud.firestore {
         && data.excerpt is string
         && data.body is string
         && data.image is string
-        && data.published is bool;
+        && data.published is bool
+        && (!('views' in data) || (data.views is int && data.views >= 0));
+    }
+
+    function isNewsViewIncrement() {
+      return resource.data.published == true
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['views'])
+        && request.resource.data.views is int
+        && request.resource.data.views == resource.data.get('views', 0) + 1;
     }
 
     function isValidWelcomeVideo(data) {
@@ -77,7 +85,8 @@ service cloud.firestore {
     match /news/{articleId} {
       allow read: if resource.data.published == true || isAdmin();
       allow create: if isAdmin() && isValidNews(request.resource.data);
-      allow update: if isAdmin() && isValidNews(request.resource.data);
+      allow update: if (isAdmin() && isValidNews(request.resource.data))
+        || isNewsViewIncrement();
       allow delete: if isAdmin();
     }
 

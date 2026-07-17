@@ -138,6 +138,9 @@ export function NewsArticleList() {
                     {article.author && (
                       <span className="text-xs text-muted">By {article.author}</span>
                     )}
+                    <span className="text-xs text-muted">
+                      {article.views} {article.views === 1 ? "view" : "views"}
+                    </span>
                   </div>
                   <h3 className="mt-2 font-display text-base font-bold text-neutral-900">
                     {article.title}

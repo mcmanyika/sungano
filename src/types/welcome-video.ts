@@ -14,7 +14,7 @@ export interface WelcomeVideoInput {
 }
 
 export const DEFAULT_WELCOME_VIDEO: WelcomeVideoInput = {
-  title: "Welcome to Sungano Yevanhu",
+  title: "Welcome to Sungano yeVanhu",
   description:
     "A message on our commitment to peaceful, lawful constitutional restoration — justice in the courts, sovereignty with the people.",
   youtubeId: process.env.NEXT_PUBLIC_WELCOME_VIDEO_ID ?? "",

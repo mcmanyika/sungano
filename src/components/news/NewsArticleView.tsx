@@ -1,15 +1,26 @@
 "use client";
 
-import { ArrowLeft, Calendar, Loader2 } from "lucide-react";
+import { ArrowLeft, Calendar, Eye, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { ShareButtons } from "@/components/news/ShareButtons";
 import { siteConfig } from "@/lib/data";
-import { getPublishedNewsArticle } from "@/lib/firebase/news";
+import {
+  getPublishedNewsArticle,
+  incrementNewsArticleViews,
+} from "@/lib/firebase/news";
 import { cardSurface } from "@/lib/styles";
-import { formatNewsDate, type NewsArticle } from "@/types/news";
+import {
+  formatNewsDate,
+  formatNewsViews,
+  type NewsArticle,
+} from "@/types/news";
+
+function viewSessionKey(id: string) {
+  return `sungano-news-viewed:${id}`;
+}
 
 export function NewsArticleView() {
   const params = useParams<{ id: string }>();
@@ -18,6 +29,8 @@ export function NewsArticleView() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
+
     async function loadArticle() {
       setLoading(true);
       setError("");
@@ -25,20 +38,52 @@ export function NewsArticleView() {
       try {
         const nextArticle = await getPublishedNewsArticle(params.id);
 
+        if (cancelled) {
+          return;
+        }
+
         if (!nextArticle) {
           setError("This article could not be found.");
           return;
         }
 
         setArticle(nextArticle);
-      } catch {
-        setError("Unable to load this article.");
-      } finally {
         setLoading(false);
+
+        const alreadyCounted =
+          window.sessionStorage.getItem(viewSessionKey(params.id)) === "1";
+
+        if (alreadyCounted) {
+          return;
+        }
+
+        const views = await incrementNewsArticleViews(params.id);
+
+        if (cancelled || views == null) {
+          return;
+        }
+
+        window.sessionStorage.setItem(viewSessionKey(params.id), "1");
+        setArticle((current) =>
+          current ? { ...current, views } : current,
+        );
+      } catch {
+        if (!cancelled) {
+          setError("Unable to load this article.");
+          setLoading(false);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
 
     void loadArticle();
+
+    return () => {
+      cancelled = true;
+    };
   }, [params.id]);
 
   return (
@@ -73,6 +118,11 @@ export function NewsArticleView() {
                 {article.author && (
                   <span>By {article.author}</span>
                 )}
+                <span className="flex items-center gap-1">
+                  <Eye className="h-3.5 w-3.5" />
+                  {formatNewsViews(article.views)}{" "}
+                  {article.views === 1 ? "view" : "views"}
+                </span>
                 <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
                   {article.category}
                 </span>

@@ -8,8 +8,10 @@ import {
 } from "lucide-react";
 
 export const siteConfig = {
-  name: "Sungano Yevanhu",
-  shortName: "Sungano Yevanhu",
+  name: "Sungano yeVanhu",
+  shortName: "Sungano yeVanhu",
+  fullName: "Sungano yeVanhu – Ubumbano Lomphakathi",
+  translation: "The People's Coalition",
   initials: "SY",
   eyebrow: "UBUMBANO LOMPHAKATHI",
   tagline: "Restore the Constitution. Restore Our Democracy.",
@@ -18,9 +20,9 @@ export const siteConfig = {
 };
 
 export const navLinks = [
-  { label: "About", href: "#rights" },
+  { label: "About", href: "/about" },
   { label: "News", href: "#news" },
-  { label: "Volunteer", href: "#volunteer" },
+  { label: "Organisations", href: "#organisations" },
 ];
 
 export const timelineEvents = [
@@ -52,7 +54,7 @@ export const timelineEvents = [
     year: "2025",
     title: "Movement Launched",
     description:
-      "Sungano Yevanhu was launched as a peaceful, lawful response committed to democratic restoration.",
+      "Sungano yeVanhu was launched as a peaceful, lawful response committed to democratic restoration.",
   },
 ];
 
@@ -150,13 +152,13 @@ export const newsArticles = [
 
 export const footerLinks = {
   about: [
-    { label: "About", href: "#rights" },
+    { label: "About", href: "/about" },
     { label: "News", href: "#news" },
-    { label: "Volunteer", href: "#volunteer" },
+    { label: "Organisations", href: "#organisations" },
   ],
   links: [
-    { label: "Constitution Defenders Forum", href: "https://www.cdfzim.org" },
     { label: "Defend the Constitution Platform", href: "https://www.dcpzim.com" },
+    { label: "Constitution Defenders Forum", href: "https://www.cdfzim.org" },
     { label: "National Constitutional Assembly", href: "#" },
   ],
   legal: [{ label: "Privacy Policy", href: "#" }],
@@ -166,5 +168,5 @@ export const stats = [
   { label: "Provinces Active", value: 10, suffix: "" },
   { label: "Community Events", value: 150, suffix: "+" },
   { label: "Citizens Engaged", value: 25000, suffix: "+" },
-  { label: "Partner Organizations", value: 85, suffix: "+" },
+  { label: "Partner Organizations", value: 10, suffix: "+" },
 ];

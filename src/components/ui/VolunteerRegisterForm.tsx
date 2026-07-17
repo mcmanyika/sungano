@@ -39,7 +39,7 @@ export function VolunteerRegisterForm({ className }: { className?: string }) {
 
     if (result.ok) {
       setStatus("success");
-      setMessage("Thank you. Your volunteer registration was received.");
+      setMessage("Thank you. Your registration was received.");
       setForm(emptyForm);
       return;
     }
@@ -76,7 +76,7 @@ export function VolunteerRegisterForm({ className }: { className?: string }) {
               setForm((current) => ({ ...current, fullName: event.target.value }))
             }
             className={fieldClassName}
-            placeholder="Your full name"
+            placeholder="Authorised representative"
           />
         </div>
         <div>

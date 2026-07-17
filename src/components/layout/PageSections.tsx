@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Footer } from "@/components/layout/Footer";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
-import { ConstitutionalRights } from "@/components/sections/ConstitutionalRights";
+import { AboutTeaser } from "@/components/sections/AboutTeaser";
 import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
@@ -11,7 +11,7 @@ import { VolunteerRegistration } from "@/components/sections/VolunteerRegistrati
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
 const sections = [
-  ConstitutionalRights,
+  AboutTeaser,
   HarareDeclaration,
   NewsUpdates,
   VolunteerRegistration,

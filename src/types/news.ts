@@ -6,6 +6,7 @@ export interface NewsArticle {
   excerpt: string;
   body: string;
   image: string;
+  views: number;
   published: boolean;
   publishedAt: Date | null;
   createdAt: Date;
@@ -50,4 +51,9 @@ export function formatNewsDate(date: Date | null): string {
     day: "numeric",
     year: "numeric",
   }).format(date);
+}
+
+export function formatNewsViews(views: number): string {
+  const count = Math.max(0, Math.floor(views));
+  return new Intl.NumberFormat("en-US").format(count);
 }

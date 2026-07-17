@@ -91,7 +91,12 @@ export function Footer() {
             <ul className="space-y-2">
               {footerLinks.about.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-sm hover:text-white transition-colors">
+                  <a
+                    href={
+                      link.href.startsWith("#") ? `/${link.href}` : link.href
+                    }
+                    className="text-sm hover:text-white transition-colors"
+                  >
                     {link.label}
                   </a>
                 </li>

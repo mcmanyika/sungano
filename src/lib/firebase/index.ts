@@ -38,6 +38,7 @@ export {
   getNewsArticle,
   getPublishedNewsArticle,
   getPublishedNewsArticles,
+  incrementNewsArticleViews,
   seedNewsArticles,
   subscribeToPublishedNewsArticles,
   updateNewsArticle,

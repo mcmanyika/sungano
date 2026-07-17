@@ -44,7 +44,7 @@ export function NewsUpdates() {
     <Section id="news" variant="muted">
       <SectionHeader
         title="News & Updates"
-        description={`Latest news, events, and developments from ${siteConfig.name}.`}
+        description={`Latest news and developments from ${siteConfig.name}.`}
       />
 
       {loading ? (

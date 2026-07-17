@@ -33,6 +33,7 @@ export const VOLUNTEER_PROVINCES = [
 ] as const;
 
 export const VOLUNTEER_INTERESTS = [
+  "Institutional Membership",
   "Civic Education",
   "Community Mobilisation",
   "Communications & Media",

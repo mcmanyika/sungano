@@ -23,15 +23,16 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.shortName}`,
   },
   description:
-    "Sungano Yevanhu is a peaceful national movement committed to defending constitutional democracy through lawful action, civic participation and justice.",
+    "Sungano yeVanhu – Ubumbano Lomphakathi (The People's Coalition) is a broad, voluntary and institution-based national coalition committed to constitutional democracy, the rule of law and the sovereignty of the people of Zimbabwe.",
   keywords: [
     "constitutional restoration",
     "democracy",
     "Zimbabwe",
+    "People's Coalition",
     "civic participation",
     "rule of law",
-    "constitutional rights",
-    "peaceful movement",
+    "constitutional democracy",
+    "Sungano yeVanhu",
   ],
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
@@ -57,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.name,
     description:
-      "A peaceful national movement committed to constitutional democracy, justice, and civic participation.",
+      "A People's Coalition committed to constitutional democracy, justice, and the sovereignty of the people of Zimbabwe.",
     images: ["/opengraph-image"],
   },
   robots: {

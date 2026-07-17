@@ -13,6 +13,18 @@ import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { easeOut, slideDown } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 
+function resolveNavHref(href: string, isHome: boolean) {
+  if (href.startsWith("/") || href.startsWith("http")) {
+    return href;
+  }
+
+  if (href.startsWith("#")) {
+    return isHome ? href : `/${href}`;
+  }
+
+  return href;
+}
+
 export function Navbar() {
   const pathname = usePathname();
   const scrollY = useScrollPosition();
@@ -75,7 +87,7 @@ export function Navbar() {
           {navLinks.map((link) => (
             <li key={link.label}>
               <a
-                href={isHome ? link.href : `/${link.href}`}
+                href={resolveNavHref(link.href, isHome)}
                 className="rounded-full px-3.5 py-1.5 text-[13px] font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-primary"
               >
                 {link.label}
@@ -118,7 +130,7 @@ export function Navbar() {
               {navLinks.map((link) => (
                 <li key={link.label}>
                   <a
-                    href={isHome ? link.href : `/${link.href}`}
+                    href={resolveNavHref(link.href, isHome)}
                     onClick={() => setMobileOpen(false)}
                     className="block rounded-xl px-3 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
                   >

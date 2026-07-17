@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  increment,
   onSnapshot,
   orderBy,
   query,
@@ -38,6 +39,8 @@ function toDate(value: unknown): Date | null {
 }
 
 function mapNewsArticle(id: string, data: DocumentData): NewsArticle {
+  const views = Number(data.views ?? 0);
+
   return {
     id,
     title: String(data.title ?? ""),
@@ -46,6 +49,7 @@ function mapNewsArticle(id: string, data: DocumentData): NewsArticle {
     excerpt: String(data.excerpt ?? ""),
     body: String(data.body ?? ""),
     image: String(data.image ?? ""),
+    views: Number.isFinite(views) && views > 0 ? Math.floor(views) : 0,
     published: Boolean(data.published),
     publishedAt: toDate(data.publishedAt),
     createdAt: toDate(data.createdAt) ?? new Date(),
@@ -62,6 +66,7 @@ function toStaticArticles(): NewsArticle[] {
     excerpt: article.excerpt,
     body: article.excerpt,
     image: article.image,
+    views: 0,
     published: true,
     publishedAt: new Date(article.date),
     createdAt: new Date(article.date),
@@ -158,6 +163,7 @@ export async function createNewsArticle(
     excerpt: input.excerpt.trim(),
     body: input.body.trim(),
     image: input.image.trim(),
+    views: 0,
     published: input.published,
     publishedAt,
     createdAt: serverTimestamp(),
@@ -165,6 +171,31 @@ export async function createNewsArticle(
   });
 
   return created.id;
+}
+
+export async function incrementNewsArticleViews(id: string): Promise<number | null> {
+  if (!isFirebaseConfigured()) {
+    return null;
+  }
+
+  try {
+    const db = getClientFirestore();
+    const articleRef = doc(db, NEWS_COLLECTION, id);
+
+    await updateDoc(articleRef, {
+      views: increment(1),
+    });
+
+    const snapshot = await getDoc(articleRef);
+
+    if (!snapshot.exists()) {
+      return null;
+    }
+
+    return mapNewsArticle(snapshot.id, snapshot.data()).views;
+  } catch {
+    return null;
+  }
 }
 
 export async function updateNewsArticle(
