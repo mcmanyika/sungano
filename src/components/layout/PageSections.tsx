@@ -6,6 +6,7 @@ import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { AboutTeaser } from "@/components/sections/AboutTeaser";
 import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
+import { LatestFromX } from "@/components/sections/LatestFromX";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
 import { VolunteerRegistration } from "@/components/sections/VolunteerRegistration";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
@@ -14,6 +15,7 @@ const sections = [
   AboutTeaser,
   HarareDeclaration,
   NewsUpdates,
+  LatestFromX,
   VolunteerRegistration,
 ];
 
