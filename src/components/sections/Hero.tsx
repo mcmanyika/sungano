@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { Button } from "@/components/ui/Button";
 import { DeclarationModal } from "@/components/ui/DeclarationModal";
+import { LatestTweetModal } from "@/components/ui/LatestTweetModal";
 import { HeroVideoCard } from "@/components/ui/HeroVideoCard";
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 import { easeOut, fadeUp, staggerContainer } from "@/lib/animations";
@@ -20,9 +21,18 @@ import { siteContainer } from "@/lib/layout";
 import { cn } from "@/lib/utils";
 import type { WelcomeVideo } from "@/types/welcome-video";
 
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
 export function Hero() {
   const { isReady } = usePageLoad();
   const [declarationOpen, setDeclarationOpen] = useState(false);
+  const [tweetOpen, setTweetOpen] = useState(false);
   const [welcomeVideo, setWelcomeVideo] = useState<WelcomeVideo>(getDefaultWelcomeVideo());
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -198,9 +208,26 @@ export function Hero() {
         <ChevronDown className="h-5 w-5 animate-bounce" />
       </motion.a>
 
+      <motion.button
+        type="button"
+        onClick={() => setTweetOpen(true)}
+        variants={fadeUp}
+        initial="hidden"
+        animate={animateState}
+        transition={{ duration: 0.6, delay: 0.85, ease: easeOut }}
+        className="absolute bottom-5 right-5 z-30 flex h-12 w-12 items-center justify-center rounded-full border border-white/25 bg-neutral-900/90 text-white shadow-[0_10px_30px_rgba(0,0,0,0.28)] backdrop-blur-md transition hover:scale-105 hover:bg-neutral-900 sm:bottom-6 sm:right-8"
+        aria-label="View latest post on X"
+      >
+        <XIcon className="h-5 w-5" />
+      </motion.button>
+
       <DeclarationModal
         open={declarationOpen}
         onClose={() => setDeclarationOpen(false)}
+      />
+      <LatestTweetModal
+        open={tweetOpen}
+        onClose={() => setTweetOpen(false)}
       />
     </section>
   );
