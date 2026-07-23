@@ -27,7 +27,7 @@ export function NewsUpdates() {
 
     const unsubscribe = subscribeToPublishedNewsArticles(
       (nextArticles) => {
-        setArticles(nextArticles);
+        setArticles(nextArticles.slice(0, 3));
         setError("");
         setLoading(false);
       },

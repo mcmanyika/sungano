@@ -8,8 +8,8 @@ import {
 } from "lucide-react";
 
 export const siteConfig = {
-  name: "Sungano yeVanhu",
-  shortName: "Sungano yeVanhu",
+  name: "Sungano Ubumbano",
+  shortName: "Sungano Ubumbano",
   fullName: "Sungano yeVanhu – Ubumbano Lomphakathi",
   translation: "The People's Coalition",
   initials: "SY",
