@@ -16,7 +16,7 @@ import {
   getWelcomeVideo,
   subscribeToWelcomeVideo,
 } from "@/lib/firebase/welcome-video";
-import { stats, siteConfig } from "@/lib/data";
+import { stats } from "@/lib/data";
 import { siteContainer } from "@/lib/layout";
 import { cn } from "@/lib/utils";
 import type { WelcomeVideo } from "@/types/welcome-video";
@@ -115,14 +115,10 @@ export function Hero() {
             animate={animateState}
             className={showVideo ? "min-w-0" : "max-w-3xl"}
           >
-            <motion.div variants={fadeUp} transition={{ duration: 0.6, ease: easeOut }}>
-              <span className="eyebrow-pill eyebrow-pill-hero text-white">{siteConfig.eyebrow}</span>
-            </motion.div>
-
             <motion.h1
               variants={fadeUp}
               transition={{ duration: 0.7, ease: easeOut }}
-              className="mt-6 font-display text-[2.5rem] font-extrabold leading-[1.08] tracking-tight text-white drop-shadow-sm sm:text-5xl md:text-6xl lg:text-[3.5rem] xl:text-[4rem]"
+              className="font-display text-[2.5rem] font-extrabold leading-[1.08] tracking-tight text-white drop-shadow-sm sm:text-5xl md:text-6xl lg:text-[3.5rem] xl:text-[4rem]"
             >
               Restore Our Democracy.
             </motion.h1>

@@ -13,7 +13,6 @@ export function VolunteerRegistration() {
     <>
       <Section id="organisations" className="scroll-mt-28" variant="default">
         <SectionHeader
-          eyebrow="For organisations"
           title="Join the Coalition"
           description="Membership is institutional. Duly constituted organisations that share our principles can register interest through an authorised representative."
         />

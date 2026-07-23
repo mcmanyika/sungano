@@ -246,27 +246,6 @@ export function AboutPageView() {
             </AboutBlock>
 
             <JoinCoalitionCta />
-
-            <section
-              id="enduring-message"
-              className="rounded-2xl border border-primary/10 bg-primary px-6 py-10 text-center text-white sm:px-10 md:py-12"
-            >
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-secondary-light">
-                Our Enduring Message
-              </p>
-              <p className="mt-5 font-display text-2xl font-bold tracking-tight sm:text-3xl">
-                {about.enduringMessage.vernacular}
-              </p>
-              <p className="mt-3 text-lg text-white/85">
-                {about.enduringMessage.english}
-              </p>
-              <div className="mx-auto mt-6 h-px w-12 bg-secondary" aria-hidden />
-              <div className="mt-6 space-y-2 text-base text-white/90 sm:text-lg">
-                {about.enduringMessage.lines.map((line) => (
-                  <p key={line}>{line}</p>
-                ))}
-              </div>
-            </section>
           </div>
         </div>
       </main>
