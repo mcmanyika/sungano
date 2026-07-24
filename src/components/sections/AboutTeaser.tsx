@@ -65,10 +65,6 @@ export function AboutTeaser() {
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
               Founding Member Institutions
             </p>
-            <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted">
-              Six institutions established the Coalition and provide its
-              executive leadership.
-            </p>
 
             <ul className="mt-8 space-y-0">
               {aboutContent.foundingMembers.map((member, index) => {
