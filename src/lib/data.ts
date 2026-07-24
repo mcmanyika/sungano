@@ -22,6 +22,7 @@ export const siteConfig = {
 export const navLinks = [
   { label: "About", href: "/about" },
   { label: "News", href: "#news" },
+  { label: "Videos", href: "#videos" },
   { label: "Organisations", href: "#organisations" },
 ];
 
@@ -154,6 +155,7 @@ export const footerLinks = {
   about: [
     { label: "About", href: "/about" },
     { label: "News", href: "#news" },
+    { label: "Videos", href: "#videos" },
     { label: "Organisations", href: "#organisations" },
   ],
   links: [

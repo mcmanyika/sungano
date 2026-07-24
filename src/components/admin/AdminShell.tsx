@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Calendar, Loader2, LogOut, Mail, Newspaper, ScrollText, UserPlus, Video } from "lucide-react";
+import { Calendar, Clapperboard, Loader2, LogOut, Mail, Newspaper, ScrollText, UserPlus, Video } from "lucide-react";
 import { useEffect } from "react";
 import { logout, useAuth } from "@/hooks/useAuth";
 import { siteConfig } from "@/lib/data";
@@ -11,7 +11,8 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/admin/news", label: "News", icon: Newspaper },
   { href: "/admin/events", label: "Events", icon: Calendar },
-  { href: "/admin/video", label: "Video", icon: Video },
+  { href: "/admin/videos", label: "Videos", icon: Clapperboard },
+  { href: "/admin/video", label: "Hero video", icon: Video },
   { href: "/admin/declaration", label: "Declaration", icon: ScrollText },
   { href: "/admin/volunteers", label: "Volunteers", icon: UserPlus },
   { href: "/admin/subscribers", label: "Subscribers", icon: Mail },
@@ -95,7 +96,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <nav className="space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const active = pathname.startsWith(item.href);
+              const active =
+                item.href === "/admin/video"
+                  ? pathname === "/admin/video"
+                  : pathname.startsWith(item.href);
 
               return (
                 <Link

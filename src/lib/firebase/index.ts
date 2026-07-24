@@ -32,6 +32,15 @@ export {
   subscribeToWelcomeVideo,
 } from "@/lib/firebase/welcome-video";
 export {
+  createVideo,
+  deleteVideo,
+  getAllVideos,
+  getPublishedVideos,
+  getVideo,
+  subscribeToPublishedVideos,
+  updateVideo,
+} from "@/lib/firebase/videos";
+export {
   createNewsArticle,
   deleteNewsArticle,
   getAllNewsArticles,

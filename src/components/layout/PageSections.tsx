@@ -7,6 +7,7 @@ import { AboutTeaser } from "@/components/sections/AboutTeaser";
 import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
+import { VideoGallery } from "@/components/sections/VideoGallery";
 import { VolunteerRegistration } from "@/components/sections/VolunteerRegistration";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
@@ -14,6 +15,7 @@ const sections = [
   AboutTeaser,
   HarareDeclaration,
   NewsUpdates,
+  VideoGallery,
   VolunteerRegistration,
 ];
 

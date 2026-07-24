@@ -61,6 +61,15 @@ service cloud.firestore {
         && data.published is bool;
     }
 
+    function isValidGalleryVideo(data) {
+      return data.title is string
+        && data.title.size() > 0
+        && data.description is string
+        && data.youtubeId is string
+        && data.youtubeId.size() > 0
+        && data.published is bool;
+    }
+
     function isValidDeclaration(data) {
       return data.headline is string
         && data.headline.size() > 0
@@ -119,6 +128,13 @@ service cloud.firestore {
       allow read: if resource.data.published == true || isAdmin();
       allow create: if isAdmin() && isValidEvent(request.resource.data);
       allow update: if isAdmin() && isValidEvent(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /videos/{videoId} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create: if isAdmin() && isValidGalleryVideo(request.resource.data);
+      allow update: if isAdmin() && isValidGalleryVideo(request.resource.data);
       allow delete: if isAdmin();
     }
   }

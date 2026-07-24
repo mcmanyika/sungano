@@ -1,17 +1,17 @@
-import { WelcomeVideoForm } from "@/components/admin/WelcomeVideoForm";
+import { VideoForm } from "@/components/admin/VideoForm";
 
-export default function AdminVideoPage() {
+export default function AdminNewVideoPage() {
   return (
     <div className="space-y-6">
       <div>
         <h2 className="font-display text-2xl font-bold text-neutral-900">
-          Hero video
+          New video
         </h2>
         <p className="mt-1 text-sm text-muted">
-          Manage the welcome video shown in the homepage hero.
+          Add a YouTube video to the homepage gallery.
         </p>
       </div>
-      <WelcomeVideoForm />
+      <VideoForm />
     </div>
   );
 }
