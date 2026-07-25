@@ -54,7 +54,7 @@ export function useAuth(): AuthState {
     let cancelled = false;
     setAdminLoading(true);
 
-    void resolveAdminAccess(user.uid, user.email).then((allowed) => {
+    void resolveAdminAccess(user.uid).then((allowed) => {
       if (!cancelled) {
         setIsAdmin(allowed);
         setAdminLoading(false);

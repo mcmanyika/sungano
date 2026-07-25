@@ -4,7 +4,9 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { loginWithEmail } from "@/hooks/useAuth";
+import { loginWithEmail, logout } from "@/hooks/useAuth";
+import { checkIsAdmin } from "@/lib/admin";
+import { getClientAuth } from "@/lib/firebase/client";
 import { siteConfig } from "@/lib/data";
 import { cardSurface } from "@/lib/styles";
 
@@ -22,6 +24,19 @@ export function AdminLoginForm() {
 
     try {
       await loginWithEmail(email, password);
+
+      // Donor/partner accounts can sign in with these same credentials, so
+      // confirm admin rights before entering the dashboard and drop the
+      // session immediately if the account is not an admin.
+      const uid = getClientAuth().currentUser?.uid ?? "";
+
+      if (!(await checkIsAdmin(uid))) {
+        await logout();
+        setError("This account does not have admin access.");
+        setLoading(false);
+        return;
+      }
+
       router.replace("/admin/news");
     } catch {
       setError("Invalid email or password.");

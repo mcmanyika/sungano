@@ -33,9 +33,17 @@ export function EmailSubscribe({
     const result = await subscribeEmail(email, source);
 
     if (result.ok) {
+      const subscribedEmail = email.trim().toLowerCase();
       setStatus("success");
       setMessage("You're subscribed. Thank you!");
       setEmail("");
+      void fetch("/api/email/welcome", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: subscribedEmail }),
+      }).catch(() => {
+        // Subscription already succeeded; welcome email is best-effort.
+      });
       return;
     }
 

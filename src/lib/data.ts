@@ -16,7 +16,7 @@ export const siteConfig = {
   eyebrow: "UBUMBANO LOMPHAKATHI",
   tagline: "Restore the Constitution. Restore Our Democracy.",
   url: "https://sunganoyevanhu.org",
-  email: "info@sunganoyevanhu.org",
+  email: "info@sungano-ubumbano.org",
 };
 
 export const navLinks = [

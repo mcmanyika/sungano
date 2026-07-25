@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Calendar, Clapperboard, HandCoins, Loader2, LogOut, Mail, Newspaper, ScrollText, UserPlus, Video } from "lucide-react";
+import { Calendar, Clapperboard, HandCoins, Loader2, LogOut, Mail, Newspaper, ScrollText, Send, UserPlus, Video } from "lucide-react";
 import { useEffect } from "react";
 import { logout, useAuth } from "@/hooks/useAuth";
 import { siteConfig } from "@/lib/data";
@@ -17,6 +17,7 @@ const navItems = [
   { href: "/admin/donations", label: "Donations", icon: HandCoins },
   { href: "/admin/volunteers", label: "Volunteers", icon: UserPlus },
   { href: "/admin/subscribers", label: "Subscribers", icon: Mail },
+  { href: "/admin/emails", label: "Emails", icon: Send },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {

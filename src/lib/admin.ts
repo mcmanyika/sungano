@@ -4,25 +4,17 @@ import { isFirebaseConfigured } from "@/lib/firebase/config";
 
 const ADMINS_COLLECTION = "admins";
 
-export function getAdminEmails(): string[] {
-  const raw = process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? "";
-
-  return raw
-    .split(",")
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean);
-}
-
-export function isAdminEmail(email: string | null | undefined): boolean {
-  if (!email) {
-    return false;
-  }
-
-  return getAdminEmails().includes(email.trim().toLowerCase());
-}
-
+/**
+ * Admin access is granted solely by an `admins/{uid}` document with
+ * `role == "admin"`. This mirrors the `isAdmin()` check in firestore.rules, so
+ * the UI can never show more than the database will actually serve.
+ *
+ * Never grant admin from an email allowlist: partner/donor accounts are
+ * self-registered with an arbitrary email, so an email check would let a donor
+ * claim admin simply by signing up with the right address.
+ */
 export async function checkIsAdmin(uid: string): Promise<boolean> {
-  if (!isFirebaseConfigured()) {
+  if (!isFirebaseConfigured() || !uid) {
     return false;
   }
 
@@ -34,22 +26,12 @@ export async function checkIsAdmin(uid: string): Promise<boolean> {
       return false;
     }
 
-    const data = snapshot.data();
-    return data.role === "admin";
+    return snapshot.data().role === "admin";
   } catch {
     return false;
   }
 }
 
-export async function resolveAdminAccess(
-  uid: string,
-  email: string | null | undefined,
-): Promise<boolean> {
-  const fromFirestore = await checkIsAdmin(uid);
-
-  if (fromFirestore) {
-    return true;
-  }
-
-  return isAdminEmail(email);
+export async function resolveAdminAccess(uid: string): Promise<boolean> {
+  return checkIsAdmin(uid);
 }

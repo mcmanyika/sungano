@@ -40,6 +40,13 @@ export function VolunteerRegisterForm({ className }: { className?: string }) {
     if (result.ok) {
       setStatus("success");
       setMessage("Thank you. Your registration was received.");
+      void fetch("/api/email/volunteer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      }).catch(() => {
+        // Registration already succeeded; email is best-effort.
+      });
       setForm(emptyForm);
       return;
     }

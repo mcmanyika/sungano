@@ -10,30 +10,53 @@ import { getFirestore, type Firestore } from "firebase-admin/firestore";
 
 let adminApp: App | undefined;
 
-function resolveCredential() {
-  const projectId = process.env.FIREBASE_ADMIN_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
+function normalizePrivateKey(value: string): string {
+  // Vercel / env UIs often wrap values in quotes or leave literal \n sequences.
+  let key = value.trim();
+  if (
+    (key.startsWith('"') && key.endsWith('"')) ||
+    (key.startsWith("'") && key.endsWith("'"))
+  ) {
+    key = key.slice(1, -1);
+  }
+  return key.replace(/\\n/g, "\n");
+}
 
-  if (projectId && clientEmail && privateKey) {
-    return cert({
+function resolveCredential() {
+  const projectId =
+    process.env.FIREBASE_ADMIN_PROJECT_ID?.trim() ||
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID?.trim();
+  const clientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL?.trim();
+  const privateKeyRaw = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
+
+  if (projectId && clientEmail && privateKeyRaw) {
+    return {
+      credential: cert({
+        projectId,
+        clientEmail,
+        privateKey: normalizePrivateKey(privateKeyRaw),
+      }),
       projectId,
-      clientEmail,
-      // Support keys stored with escaped newlines in env files.
-      privateKey: privateKey.replace(/\\n/g, "\n"),
-    });
+    };
   }
 
-  // Fall back to Application Default Credentials (Firebase App Hosting / Cloud Run).
-  return applicationDefault();
+  return {
+    credential: applicationDefault(),
+    projectId,
+  };
 }
 
 export function getAdminApp(): App {
   if (!adminApp) {
-    adminApp =
-      getApps().length > 0
-        ? getApps()[0]
-        : initializeApp({ credential: resolveCredential() });
+    if (getApps().length > 0) {
+      adminApp = getApps()[0];
+    } else {
+      const { credential, projectId } = resolveCredential();
+      adminApp = initializeApp({
+        credential,
+        ...(projectId ? { projectId } : {}),
+      });
+    }
   }
 
   return adminApp;
