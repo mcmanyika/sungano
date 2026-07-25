@@ -7,7 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
-import { navLinks } from "@/lib/data";
+import { navLinks, donateNavLink } from "@/lib/data";
 import { siteContainer } from "@/lib/layout";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { easeOut, slideDown } from "@/lib/animations";
@@ -97,6 +97,12 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center justify-self-end gap-2">
+          <a
+            href={donateNavLink.href}
+            className="rounded-full bg-red-600 px-3.5 py-2 text-[13px] font-semibold text-white shadow-sm transition hover:bg-red-700 sm:px-4"
+          >
+            {donateNavLink.label}
+          </a>
           <Image
             src="/images/zimbabwe-flag.svg"
             alt="Flag of Zimbabwe"
@@ -138,6 +144,15 @@ export function Navbar() {
                   </a>
                 </li>
               ))}
+              <li className="pt-2">
+                <a
+                  href={donateNavLink.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="block rounded-full bg-red-600 px-3 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-red-700"
+                >
+                  {donateNavLink.label}
+                </a>
+              </li>
               <li className="flex justify-end pt-3 sm:hidden">
                 <Image
                   src="/images/zimbabwe-flag.svg"

@@ -60,12 +60,12 @@ const socialLinks = [
   { label: "YouTube", href: "https://www.youtube.com/@SunganoUbumbano", icon: YoutubeIcon },
   { label: "Instagram", href: "https://www.instagram.com/SunganoUbumbano", icon: InstagramIcon },
   { label: "TikTok", href: "https://www.tiktok.com/@ubumbanosungano", icon: TikTokIcon },
-  { label: "WhatsApp", href: "https://wa.me/18327860457", icon: WhatsAppIcon },
+  { label: "WhatsApp", href: "https://wa.me/14697992071", icon: WhatsAppIcon },
 ];
 
 export function Footer() {
   return (
-    <footer id="contact" className="border-t border-neutral-200 bg-neutral-900 text-neutral-300 dark:border-neutral-800">
+    <footer className="border-t border-neutral-200 bg-neutral-900 text-neutral-300 dark:border-neutral-800">
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}

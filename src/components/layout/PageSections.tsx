@@ -4,9 +4,11 @@ import { motion } from "framer-motion";
 import { Footer } from "@/components/layout/Footer";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { AboutTeaser } from "@/components/sections/AboutTeaser";
+import { ContactUs } from "@/components/sections/ContactUs";
 import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
+import { Polls } from "@/components/sections/Polls";
 import { VideoGallery } from "@/components/sections/VideoGallery";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
@@ -15,6 +17,8 @@ const sections = [
   HarareDeclaration,
   NewsUpdates,
   VideoGallery,
+  Polls,
+  ContactUs,
 ];
 
 /** Staggered section reveal after the loading screen completes */

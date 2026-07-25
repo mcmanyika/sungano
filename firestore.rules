@@ -124,6 +124,225 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    function isValidComment(data) {
+      return data.articleId is string
+        && data.articleId.size() > 0
+        && data.articleTitle is string
+        && data.articleTitle.size() <= 200
+        && data.authorName is string
+        && data.authorName.size() > 0
+        && data.authorName.size() <= 80
+        && data.email is string
+        && data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && data.body is string
+        && data.body.size() >= 2
+        && data.body.size() <= 2000
+        && data.approved is bool;
+    }
+
+    function isValidPollOption(option, expectedId) {
+      return option.keys().hasOnly(['id', 'label'])
+        && option.id == expectedId
+        && option.label is string
+        && option.label.size() > 0
+        && option.label.size() <= 120;
+    }
+
+    function isValidPollOptions(options) {
+      return options is list
+        && options.size() >= 2
+        && options.size() <= 6
+        && isValidPollOption(options[0], 'o0')
+        && isValidPollOption(options[1], 'o1')
+        && (options.size() < 3 || isValidPollOption(options[2], 'o2'))
+        && (options.size() < 4 || isValidPollOption(options[3], 'o3'))
+        && (options.size() < 5 || isValidPollOption(options[4], 'o4'))
+        && (options.size() < 6 || isValidPollOption(options[5], 'o5'));
+    }
+
+    function pollVotesSum(data) {
+      return data.votes.get('o0', 0)
+        + data.votes.get('o1', 0)
+        + (data.options.size() >= 3 ? data.votes.get('o2', 0) : 0)
+        + (data.options.size() >= 4 ? data.votes.get('o3', 0) : 0)
+        + (data.options.size() >= 5 ? data.votes.get('o4', 0) : 0)
+        + (data.options.size() >= 6 ? data.votes.get('o5', 0) : 0);
+    }
+
+    function votesMatchOptionCount(data) {
+      return data.votes is map
+        && data.votes.size() == data.options.size()
+        && data.votes.keys().hasAll(['o0', 'o1'])
+        && data.votes.o0 is int && data.votes.o0 >= 0
+        && data.votes.o1 is int && data.votes.o1 >= 0
+        && (data.options.size() < 3
+          || (data.votes.keys().hasAll(['o2'])
+            && data.votes.o2 is int && data.votes.o2 >= 0))
+        && (data.options.size() < 4
+          || (data.votes.keys().hasAll(['o3'])
+            && data.votes.o3 is int && data.votes.o3 >= 0))
+        && (data.options.size() < 5
+          || (data.votes.keys().hasAll(['o4'])
+            && data.votes.o4 is int && data.votes.o4 >= 0))
+        && (data.options.size() < 6
+          || (data.votes.keys().hasAll(['o5'])
+            && data.votes.o5 is int && data.votes.o5 >= 0))
+        && data.votes.keys().hasOnly(
+          data.options.size() == 2 ? ['o0', 'o1']
+          : data.options.size() == 3 ? ['o0', 'o1', 'o2']
+          : data.options.size() == 4 ? ['o0', 'o1', 'o2', 'o3']
+          : data.options.size() == 5 ? ['o0', 'o1', 'o2', 'o3', 'o4']
+          : ['o0', 'o1', 'o2', 'o3', 'o4', 'o5']
+        );
+    }
+
+    function isValidPoll(data) {
+      return data.keys().hasAll([
+          'question',
+          'options',
+          'votes',
+          'totalVotes',
+          'published',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'question',
+          'options',
+          'votes',
+          'totalVotes',
+          'published',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.question is string
+        && data.question.size() > 0
+        && data.question.size() <= 200
+        && isValidPollOptions(data.options)
+        && votesMatchOptionCount(data)
+        && data.totalVotes is int
+        && data.totalVotes >= 0
+        && data.totalVotes == pollVotesSum(data)
+        && data.published is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isSingleVoteBump(optionId) {
+      return optionId in resource.data.votes
+        && optionId in request.resource.data.votes
+        && request.resource.data.votes[optionId] == resource.data.votes[optionId] + 1
+        && request.resource.data.votes.diff(resource.data.votes).affectedKeys().hasOnly([optionId]);
+    }
+
+    function isPollVoteUpdate() {
+      return resource.data.published == true
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes', 'totalVotes'])
+        && request.resource.data.totalVotes is int
+        && request.resource.data.totalVotes == resource.data.totalVotes + 1
+        && request.resource.data.votes is map
+        && request.resource.data.votes.keys().hasOnly(resource.data.votes.keys())
+        && resource.data.votes.keys().hasOnly(request.resource.data.votes.keys())
+        && (
+          isSingleVoteBump('o0')
+          || isSingleVoteBump('o1')
+          || isSingleVoteBump('o2')
+          || isSingleVoteBump('o3')
+          || isSingleVoteBump('o4')
+          || isSingleVoteBump('o5')
+        );
+    }
+
+    // Published polls are public; draft polls and writes (except vote bumps)
+    // are admin-only.
+    match /polls/{pollId} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create: if isAdmin() && isValidPoll(request.resource.data);
+      allow update: if (isAdmin() && isValidPoll(request.resource.data))
+        || isPollVoteUpdate();
+      allow delete: if isAdmin();
+    }
+
+    function isValidContactMessage(data) {
+      return data.keys().hasAll([
+          'fullName',
+          'email',
+          'phone',
+          'topic',
+          'subject',
+          'message',
+          'status',
+          'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'fullName',
+          'email',
+          'phone',
+          'topic',
+          'subject',
+          'message',
+          'status',
+          'createdAt'
+        ])
+        && data.fullName is string
+        && data.fullName.size() > 0
+        && data.fullName.size() <= 120
+        && data.email is string
+        && data.email.size() <= 200
+        && data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && data.phone is string
+        && data.phone.size() <= 40
+        && data.topic in [
+          'General enquiry',
+          'Media enquiry',
+          'Partnership',
+          'Events',
+          'Donations',
+          'Technical support'
+        ]
+        && data.subject is string
+        && data.subject.size() > 0
+        && data.subject.size() <= 160
+        && data.message is string
+        && data.message.size() >= 10
+        && data.message.size() <= 4000
+        && data.status in ['new', 'resolved']
+        && data.createdAt is timestamp;
+    }
+
+    // Contact messages contain PII and are readable only by admins.
+    match /contactMessages/{messageId} {
+      allow read: if isAdmin();
+      allow create: if isValidContactMessage(request.resource.data)
+        && request.resource.data.status == 'new'
+        && request.resource.data.createdAt == request.time;
+      allow update: if isAdmin()
+        && isValidContactMessage(request.resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+      allow delete: if isAdmin();
+    }
+
+    // Public can post comments (pending moderation). Only approved comments
+    // are readable publicly; admins can approve, reject, and delete.
+    match /comments/{commentId} {
+      allow read: if resource.data.approved == true || isAdmin();
+      allow create: if isValidComment(request.resource.data)
+        && request.resource.data.approved == false
+        && request.resource.data.keys().hasAll([
+          'articleId',
+          'articleTitle',
+          'authorName',
+          'email',
+          'body',
+          'approved',
+          'createdAt'
+        ]);
+      allow update: if isAdmin()
+        && isValidComment(request.resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['approved']);
+      allow delete: if isAdmin();
+    }
+
     match /events/{eventId} {
       allow read: if resource.data.published == true || isAdmin();
       allow create: if isAdmin() && isValidEvent(request.resource.data);

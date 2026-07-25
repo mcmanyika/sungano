@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { ShareButtons } from "@/components/news/ShareButtons";
+import { CommentSection } from "@/components/news/CommentSection";
 import { siteConfig } from "@/lib/data";
 import {
   getPublishedNewsArticle,
@@ -149,6 +150,11 @@ export function NewsArticleView() {
               <div className="mt-8 whitespace-pre-wrap text-base leading-relaxed text-neutral-700">
                 {article.body || article.excerpt}
               </div>
+
+              <CommentSection
+                articleId={article.id}
+                articleTitle={article.title}
+              />
             </article>
           )}
         </div>

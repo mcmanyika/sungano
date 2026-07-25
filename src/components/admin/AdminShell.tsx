@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Calendar, Clapperboard, HandCoins, Inbox, Loader2, LogOut, Mail, Newspaper, ScrollText, UserPlus, Video } from "lucide-react";
+import { BarChart3, Calendar, Clapperboard, Contact, HandCoins, Inbox, Loader2, LogOut, Mail, MessageSquare, Newspaper, ScrollText, UserPlus, Video } from "lucide-react";
 import { useEffect } from "react";
 import { logout, useAuth } from "@/hooks/useAuth";
 import { siteConfig } from "@/lib/data";
@@ -10,6 +10,9 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/admin/news", label: "News", icon: Newspaper },
+  { href: "/admin/comments", label: "Comments", icon: MessageSquare },
+  { href: "/admin/contact", label: "Contact", icon: Contact },
+  { href: "/admin/polls", label: "Polls", icon: BarChart3 },
   { href: "/admin/events", label: "Events", icon: Calendar },
   { href: "/admin/videos", label: "Videos", icon: Clapperboard },
   { href: "/admin/video", label: "Hero video", icon: Video },

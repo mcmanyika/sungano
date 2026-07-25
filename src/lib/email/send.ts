@@ -7,6 +7,8 @@ import {
 } from "@/lib/email/client";
 import {
   broadcastEmail,
+  contactAdminNoticeEmail,
+  contactConfirmationEmail,
   donationThankYouEmail,
   subscriberWelcomeEmail,
   volunteerAdminNoticeEmail,
@@ -97,6 +99,36 @@ export async function sendVolunteerEmails(input: {
   }
 
   return toVolunteer;
+}
+
+export async function sendContactEmails(input: {
+  fullName: string;
+  email: string;
+  phone: string;
+  topic: string;
+  subject: string;
+  message: string;
+}): Promise<SendEmailResult> {
+  const confirmation = contactConfirmationEmail(input);
+  const toSender = await sendOne({
+    to: input.email,
+    subject: confirmation.subject,
+    html: confirmation.html,
+    replyTo: getAdminNotifyEmail() || undefined,
+  });
+
+  const adminTo = getAdminNotifyEmail();
+  if (adminTo) {
+    const notice = contactAdminNoticeEmail(input);
+    await sendOne({
+      to: adminTo,
+      subject: notice.subject,
+      html: notice.html,
+      replyTo: input.email,
+    });
+  }
+
+  return toSender;
 }
 
 export async function sendSubscriberWelcome(

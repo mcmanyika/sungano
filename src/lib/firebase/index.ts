@@ -46,6 +46,31 @@ export {
 } from "@/lib/firebase/donations";
 export { getPartnerProfile, registerPartner } from "@/lib/firebase/partners";
 export {
+  createComment,
+  deleteComment,
+  getAllComments,
+  setCommentApproved,
+  subscribeToAllComments,
+  subscribeToApprovedComments,
+} from "@/lib/firebase/comments";
+export {
+  deleteContactMessage,
+  setContactStatus,
+  submitContactMessage,
+  subscribeToContactMessages,
+} from "@/lib/firebase/contacts";
+export {
+  castVote,
+  createPoll,
+  deletePoll,
+  getAllPolls,
+  getPoll,
+  setPollPublished,
+  subscribeToAllPolls,
+  subscribeToPublishedPolls,
+  updatePoll,
+} from "@/lib/firebase/polls";
+export {
   createNewsArticle,
   deleteNewsArticle,
   getAllNewsArticles,

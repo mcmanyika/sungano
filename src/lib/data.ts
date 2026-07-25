@@ -15,7 +15,7 @@ export const siteConfig = {
   initials: "SY",
   eyebrow: "UBUMBANO LOMPHAKATHI",
   tagline: "Restore the Constitution. Restore Our Democracy.",
-  url: "https://sunganoyevanhu.org",
+  url: "https://sungano-ubumbano.org",
   email: "info@sungano-ubumbano.org",
 };
 
@@ -23,9 +23,10 @@ export const navLinks = [
   { label: "About", href: "/about" },
   { label: "News", href: "#news" },
   { label: "Videos", href: "#videos" },
-  { label: "Organisations", href: "/about#join" },
-  { label: "Donate", href: "/donate" },
+  { label: "Contact", href: "#contact" },
 ];
+
+export const donateNavLink = { label: "Donate", href: "/donate" };
 
 export const timelineEvents = [
   {

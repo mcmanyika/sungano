@@ -76,6 +76,68 @@ export function volunteerAdminNoticeEmail(input: {
   return { subject, html };
 }
 
+export function contactConfirmationEmail(input: {
+  fullName: string;
+  subject: string;
+}): { subject: string; html: string } {
+  const subject = `We received your message — ${siteConfig.shortName}`;
+  const html = emailLayout({
+    title: subject,
+    preview: "Our team has received your enquiry.",
+    bodyHtml: [
+      paragraph(`Dear ${input.fullName},`),
+      paragraph(
+        `Thank you for contacting ${siteConfig.name}. We received your message about “${input.subject}”.`,
+      ),
+      paragraph("A member of our team will respond as soon as possible."),
+    ].join(""),
+  });
+
+  return { subject, html };
+}
+
+export function contactAdminNoticeEmail(input: {
+  fullName: string;
+  email: string;
+  phone: string;
+  topic: string;
+  subject: string;
+  message: string;
+}): { subject: string; html: string } {
+  const subject = `New contact message: ${input.subject}`;
+  const rows = [
+    ["Name", input.fullName],
+    ["Email", input.email],
+    ["Phone", input.phone || "—"],
+    ["Topic", input.topic],
+  ]
+    .map(
+      ([label, value]) =>
+        `<tr>
+          <td style="padding:8px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#5B6475;width:120px;">${escapeHtml(label)}</td>
+          <td style="padding:8px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1a1f2c;">${escapeHtml(value)}</td>
+        </tr>`,
+    )
+    .join("");
+  const siteUrl = (
+    process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url
+  ).replace(/\/$/, "");
+
+  const html = emailLayout({
+    title: subject,
+    preview: `${input.fullName} sent a ${input.topic.toLowerCase()} message.`,
+    bodyHtml: `
+      ${paragraph("A new message was submitted through the website contact form.")}
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">${rows}</table>
+      <p style="margin:16px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#5B6475;">Message</p>
+      <p style="margin:6px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#1a1f2c;white-space:pre-wrap;">${escapeHtml(input.message)}</p>
+      ${button(`${siteUrl}/admin/contact`, "Open contact messages")}
+    `,
+  });
+
+  return { subject, html };
+}
+
 export function subscriberWelcomeEmail(): { subject: string; html: string } {
   const subject = `Welcome to ${siteConfig.shortName}`;
   const html = emailLayout({
