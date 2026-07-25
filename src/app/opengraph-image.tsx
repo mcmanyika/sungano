@@ -1,13 +1,20 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 import { siteConfig } from "@/lib/data";
 
-export const runtime = "edge";
 export const alt = siteConfig.name;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OgImage() {
+export default async function OgImage() {
+  const logoData = await readFile(
+    join(process.cwd(), "public/images/logo.jpeg"),
+    "base64",
+  );
+  const logoSrc = `data:image/jpeg;base64,${logoData}`;
+
   return new ImageResponse(
     (
       <div
@@ -18,7 +25,8 @@ export default function OgImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #0a2d6b 0%, #0F3D91 50%, #1F8A70 100%)",
+          background:
+            "linear-gradient(135deg, #0a2d6b 0%, #0F3D91 50%, #1F8A70 100%)",
           padding: 60,
         }}
       >
@@ -27,17 +35,24 @@ export default function OgImage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: 80,
-            height: 80,
-            borderRadius: 16,
-            background: "#C9A227",
-            color: "#0a2d6b",
-            fontSize: 32,
-            fontWeight: 700,
-            marginBottom: 32,
+            padding: 16,
+            borderRadius: 20,
+            background: "white",
+            marginBottom: 36,
+            boxShadow: "0 12px 40px rgba(0,0,0,0.2)",
           }}
         >
-          {siteConfig.initials}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={logoSrc}
+            alt=""
+            height={120}
+            style={{
+              height: 120,
+              width: "auto",
+              objectFit: "contain",
+            }}
+          />
         </div>
         <div
           style={{

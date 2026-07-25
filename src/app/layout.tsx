@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description:
       "A People's Coalition committed to constitutional democracy, justice, and the sovereignty of the people of Zimbabwe.",
-    images: ["/opengraph-image"],
+    images: ["/twitter-image"],
   },
   robots: {
     index: true,
