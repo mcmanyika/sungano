@@ -8,7 +8,6 @@ import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
 import { VideoGallery } from "@/components/sections/VideoGallery";
-import { VolunteerRegistration } from "@/components/sections/VolunteerRegistration";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
 const sections = [
@@ -16,7 +15,6 @@ const sections = [
   HarareDeclaration,
   NewsUpdates,
   VideoGallery,
-  VolunteerRegistration,
 ];
 
 /** Staggered section reveal after the loading screen completes */

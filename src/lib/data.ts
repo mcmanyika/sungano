@@ -23,7 +23,8 @@ export const navLinks = [
   { label: "About", href: "/about" },
   { label: "News", href: "#news" },
   { label: "Videos", href: "#videos" },
-  { label: "Organisations", href: "#organisations" },
+  { label: "Organisations", href: "/about#join" },
+  { label: "Donate", href: "/donate" },
 ];
 
 export const timelineEvents = [
@@ -156,7 +157,7 @@ export const footerLinks = {
     { label: "About", href: "/about" },
     { label: "News", href: "#news" },
     { label: "Videos", href: "#videos" },
-    { label: "Organisations", href: "#organisations" },
+    { label: "Organisations", href: "/about#join" },
   ],
   links: [
     { label: "Defend the Constitution Platform", href: "https://www.dcpzim.com" },

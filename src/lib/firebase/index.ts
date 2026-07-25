@@ -41,6 +41,11 @@ export {
   updateVideo,
 } from "@/lib/firebase/videos";
 export {
+  subscribeToAllDonations,
+  subscribeToDonationsByEmail,
+} from "@/lib/firebase/donations";
+export { getPartnerProfile, registerPartner } from "@/lib/firebase/partners";
+export {
   createNewsArticle,
   deleteNewsArticle,
   getAllNewsArticles,
