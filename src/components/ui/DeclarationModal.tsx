@@ -3,8 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { easeOut } from "@/lib/animations";
 import { getDeclaration } from "@/lib/firebase/declaration";
-import { cardSurface } from "@/lib/styles";
 import {
   DEFAULT_DECLARATION,
   getDeclarationModalContent,
@@ -70,63 +70,64 @@ export function DeclarationModal({ open, onClose }: DeclarationModalProps) {
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6"
+        <div
+          className="fixed inset-0 z-[120] flex items-end justify-center p-4 sm:items-center sm:p-6"
           role="dialog"
           aria-modal="true"
           aria-labelledby="declaration-modal-title"
         >
-          <button
+          <motion.button
             type="button"
-            className="absolute inset-0 bg-neutral-950/70 backdrop-blur-sm"
-            onClick={onClose}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="absolute inset-0 bg-primary-dark/55 backdrop-blur-[3px]"
             aria-label="Close declaration"
+            onClick={onClose}
           />
 
           <motion.div
             initial={{ opacity: 0, y: 24, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className={`relative z-10 max-h-[85vh] w-full max-w-4xl overflow-hidden ${cardSurface} rounded-2xl`}
+            transition={{ duration: 0.35, ease: easeOut }}
+            className="relative z-10 max-h-[85vh] w-full max-w-4xl overflow-hidden rounded-2xl border border-white/15 bg-primary-dark/75 text-white shadow-[0_24px_60px_rgba(10,45,107,0.45)] backdrop-blur-xl"
           >
-            <div className="flex items-start justify-between gap-4 border-b border-neutral-200/80 px-6 py-5">
+            <div className="flex items-start justify-between gap-4 border-b border-white/10 px-5 py-4 sm:px-6">
               <h2
                 id="declaration-modal-title"
-                className="font-display text-xl font-bold tracking-tight text-neutral-900 sm:text-2xl"
+                className="font-display text-xl font-bold tracking-tight text-white sm:text-2xl"
               >
                 {declaration.headline}
               </h2>
               <button
                 type="button"
                 onClick={onClose}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-neutral-200 text-neutral-500 transition hover:border-neutral-300 hover:text-neutral-900"
+                className="rounded-full border border-white/20 bg-white/5 p-2 text-white/70 transition hover:border-white/40 hover:bg-white/10 hover:text-white"
                 aria-label="Close"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="max-h-[calc(85vh-5rem)] overflow-y-auto px-6 py-6">
+            <div className="max-h-[calc(85vh-5rem)] overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
               {loading ? (
                 <div className="flex justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <Loader2 className="h-8 w-8 animate-spin text-secondary-light" />
                 </div>
               ) : error ? (
-                <p className="text-sm font-medium text-red-600" role="alert">
+                <p className="text-sm font-medium text-red-200" role="alert">
                   {error}
                 </p>
               ) : (
-                <div className="whitespace-pre-wrap text-base leading-relaxed text-neutral-700">
+                <div className="whitespace-pre-wrap text-base leading-relaxed text-white/90">
                   {modalContent}
                 </div>
               )}
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );

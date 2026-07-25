@@ -1,4 +1,5 @@
 import {
+  cleanTweetText,
   formatTweetDate,
   X_USERNAME,
   type LatestTweet,
@@ -113,7 +114,7 @@ export async function getLatestTweet(): Promise<LatestTweetResult> {
       ok: true,
       tweet: {
         id: tweet.id,
-        text: tweet.text,
+        text: cleanTweetText(tweet.text),
         createdAt: tweet.created_at ?? null,
         url: `https://x.com/${username}/status/${tweet.id}`,
         username,
