@@ -13,6 +13,8 @@ import {
   volunteerConfirmationEmail,
   volunteerReplyEmail,
 } from "@/lib/email/templates";
+import { buildUnsubscribeUrl } from "@/lib/email/unsubscribe-token";
+import { siteConfig } from "@/lib/data";
 import type { DonationInterval } from "@/types/donation";
 
 export type SendEmailResult =
@@ -150,11 +152,8 @@ export async function sendBroadcast(input: {
     return { sent: 0, failed: 0, error: "No recipients." };
   }
 
-  const content = broadcastEmail({
-    subject: input.subject,
-    body: input.body,
-  });
-
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || siteConfig.url;
   const resend = getResend();
   const from = getEmailFrom();
   const replyTo = getAdminNotifyEmail() || undefined;
@@ -169,13 +168,26 @@ export async function sendBroadcast(input: {
 
     try {
       const { data, error } = await resend.batch.send(
-        chunk.map((to) => ({
-          from,
-          to,
-          subject: content.subject,
-          html: content.html,
-          ...(replyTo ? { replyTo } : {}),
-        })),
+        chunk.map((to) => {
+          const unsubscribeUrl = buildUnsubscribeUrl(to, siteUrl);
+          const content = broadcastEmail({
+            subject: input.subject,
+            body: input.body,
+            unsubscribeUrl,
+          });
+
+          return {
+            from,
+            to,
+            subject: content.subject,
+            html: content.html,
+            headers: {
+              "List-Unsubscribe": `<${unsubscribeUrl}>`,
+              "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+            },
+            ...(replyTo ? { replyTo } : {}),
+          };
+        }),
       );
 
       if (error) {

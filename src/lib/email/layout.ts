@@ -16,6 +16,7 @@ export function emailLayout(options: {
   title: string;
   preview?: string;
   bodyHtml: string;
+  footerExtraHtml?: string;
 }): string {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || siteConfig.url;
@@ -76,6 +77,7 @@ export function emailLayout(options: {
                 Questions? Write to
                 <a href="mailto:${escapeHtml(siteConfig.email)}" style="color:${PRIMARY};text-decoration:none;">${escapeHtml(siteConfig.email)}</a>
               </p>
+              ${options.footerExtraHtml ?? ""}
             </td>
           </tr>
         </table>

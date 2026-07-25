@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
-import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getResend, isEmailConfigured } from "@/lib/email/client";
-import { getAdminFirestore } from "@/lib/firebase/admin";
+import {
+  hydrateInboundEmail,
+  upsertInboundEmailFromMeta,
+} from "@/lib/email/inbound";
+import { isInboxRecipient } from "@/types/inbound-email";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -50,6 +53,12 @@ export async function POST(request: Request) {
     subject?: string;
     message_id?: string;
     created_at?: string;
+    attachments?: Array<{
+      id?: string;
+      filename?: string | null;
+      content_type?: string;
+      size?: number;
+    }>;
   };
 
   const emailId = meta.email_id;
@@ -58,47 +67,39 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing email_id." }, { status: 400 });
   }
 
-  try {
-    const { data: email, error } = await resend.emails.receiving.get(emailId);
+  // Only keep mail addressed to the public inbox address.
+  if (!isInboxRecipient([...(meta.to ?? []), ...(meta.cc ?? [])])) {
+    return NextResponse.json({ received: true, ignored: "recipient" });
+  }
 
-    if (error || !email) {
-      console.error("Failed to fetch received email", error);
-      return NextResponse.json(
-        { error: "Could not fetch email content." },
-        { status: 502 },
-      );
+  try {
+    // Always persist metadata first so the inbox updates even if the API key
+    // cannot read full receiving content (send-only keys).
+    await upsertInboundEmailFromMeta({
+      emailId,
+      from: meta.from,
+      to: meta.to,
+      cc: meta.cc,
+      subject: meta.subject,
+      messageId: meta.message_id,
+      createdAt: meta.created_at,
+      attachments: meta.attachments,
+    });
+
+    const hydrated = await hydrateInboundEmail(emailId);
+
+    if (!hydrated.ok) {
+      console.error("Failed to hydrate received email", hydrated.error);
+      // Still 200 so Resend does not keep retrying forever for a key restriction.
+      return NextResponse.json({
+        received: true,
+        id: emailId,
+        contentPending: true,
+        warning: hydrated.error,
+      });
     }
 
-    const receivedAt = email.created_at
-      ? Timestamp.fromDate(new Date(email.created_at))
-      : FieldValue.serverTimestamp();
-
-    await getAdminFirestore()
-      .collection("inboundEmails")
-      .doc(email.id)
-      .set(
-        {
-          from: email.from ?? meta.from ?? "",
-          to: email.to ?? meta.to ?? [],
-          cc: email.cc ?? meta.cc ?? [],
-          subject: email.subject ?? meta.subject ?? "(no subject)",
-          text: email.text ?? "",
-          html: email.html ?? "",
-          messageId: email.message_id ?? meta.message_id ?? "",
-          attachments: (email.attachments ?? []).map((attachment) => ({
-            id: attachment.id,
-            filename: attachment.filename ?? "attachment",
-            contentType: attachment.content_type,
-            size: attachment.size ?? 0,
-          })),
-          read: false,
-          receivedAt,
-          updatedAt: FieldValue.serverTimestamp(),
-        },
-        { merge: true },
-      );
-
-    return NextResponse.json({ received: true, id: email.id });
+    return NextResponse.json({ received: true, id: emailId });
   } catch (error) {
     console.error("Inbound email handling failed", error);
     return NextResponse.json(

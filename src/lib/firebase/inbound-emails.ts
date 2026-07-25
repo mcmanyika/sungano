@@ -8,7 +8,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { getClientFirestore } from "@/lib/firebase/client";
-import type { InboundEmail } from "@/types/inbound-email";
+import { isInboxRecipient, type InboundEmail } from "@/types/inbound-email";
 
 const COLLECTION = "inboundEmails";
 
@@ -38,6 +38,7 @@ function mapInboundEmail(
       };
     }),
     read: Boolean(data.read),
+    contentPending: Boolean(data.contentPending),
     receivedAt: receivedAt instanceof Timestamp ? receivedAt.toDate() : null,
   };
 }
@@ -56,9 +57,9 @@ export function subscribeToInboundEmails(
     emailsQuery,
     (snapshot) => {
       onData(
-        snapshot.docs.map((document) =>
-          mapInboundEmail(document.id, document.data()),
-        ),
+        snapshot.docs
+          .map((document) => mapInboundEmail(document.id, document.data()))
+          .filter((email) => isInboxRecipient([...email.to, ...email.cc])),
       );
     },
     (error) => onError?.(error),

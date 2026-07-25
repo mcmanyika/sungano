@@ -129,6 +129,7 @@ export function donationThankYouEmail(input: {
 export function broadcastEmail(input: {
   subject: string;
   body: string;
+  unsubscribeUrl: string;
 }): { subject: string; html: string } {
   const bodyHtml = input.body
     .split(/\n{2,}/)
@@ -147,6 +148,10 @@ export function broadcastEmail(input: {
     title: input.subject,
     preview: input.body.replace(/\s+/g, " ").slice(0, 120),
     bodyHtml,
+    footerExtraHtml: `<p style="margin:16px 0 0;">
+      You are receiving this because you subscribed to updates from ${escapeHtml(siteConfig.shortName)}.
+      <a href="${escapeHtml(input.unsubscribeUrl)}" style="color:#0F3D91;text-decoration:underline;">Unsubscribe</a>
+    </p>`,
   });
 
   return { subject: input.subject.trim(), html };
