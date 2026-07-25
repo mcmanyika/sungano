@@ -72,6 +72,7 @@ export async function sendVolunteerEmails(input: {
     to: input.email,
     subject: confirmation.subject,
     html: confirmation.html,
+    replyTo: getAdminNotifyEmail() || undefined,
   });
 
   const adminTo = getAdminNotifyEmail();
@@ -104,6 +105,7 @@ export async function sendSubscriberWelcome(
     to: email,
     subject: welcome.subject,
     html: welcome.html,
+    replyTo: getAdminNotifyEmail() || undefined,
   });
 }
 
@@ -123,6 +125,7 @@ export async function sendDonationThankYou(input: {
     to: input.email,
     subject: thankYou.subject,
     html: thankYou.html,
+    replyTo: getAdminNotifyEmail() || undefined,
   });
 }
 
@@ -154,6 +157,7 @@ export async function sendBroadcast(input: {
 
   const resend = getResend();
   const from = getEmailFrom();
+  const replyTo = getAdminNotifyEmail() || undefined;
   let sent = 0;
   let failed = 0;
 
@@ -170,6 +174,7 @@ export async function sendBroadcast(input: {
           to,
           subject: content.subject,
           html: content.html,
+          ...(replyTo ? { replyTo } : {}),
         })),
       );
 

@@ -169,5 +169,15 @@ service cloud.firestore {
             && resource.data.partnerId == request.auth.uid);
       allow write: if false;
     }
+
+    // Inbound emails are written by the Resend webhook (Admin SDK). Admins can
+    // read them and mark them as read; no other client writes are allowed.
+    match /inboundEmails/{emailId} {
+      allow read: if isAdmin();
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
+        && request.resource.data.read is bool;
+      allow create, delete: if false;
+    }
   }
 }

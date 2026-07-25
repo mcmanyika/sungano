@@ -1,5 +1,5 @@
-import { EmailBroadcastForm } from "@/components/admin/EmailBroadcastForm";
+import { AdminEmailsView } from "@/components/admin/AdminEmailsView";
 
 export default function AdminEmailsPage() {
-  return <EmailBroadcastForm />;
+  return <AdminEmailsView />;
 }

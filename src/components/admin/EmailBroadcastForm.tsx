@@ -7,7 +7,12 @@ import { getClientAuth } from "@/lib/firebase/client";
 import { getAllSubscribers } from "@/lib/firebase/subscribers";
 import { cardSurface } from "@/lib/styles";
 
-export function EmailBroadcastForm() {
+interface EmailBroadcastFormProps {
+  /** Hide the page heading when embedded in the Emails tabs view. */
+  embedded?: boolean;
+}
+
+export function EmailBroadcastForm({ embedded = false }: EmailBroadcastFormProps) {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [testEmail, setTestEmail] = useState("");
@@ -96,15 +101,24 @@ export function EmailBroadcastForm() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="font-display text-2xl font-bold text-neutral-900">
-          Email broadcast
-        </h2>
-        <p className="mt-1 text-sm text-muted">
+      {!embedded && (
+        <div>
+          <h2 className="font-display text-2xl font-bold text-neutral-900">
+            Email broadcast
+          </h2>
+          <p className="mt-1 text-sm text-muted">
+            Send an update to everyone on the website subscriber list
+            {subscriberCount !== null ? ` (${subscriberCount})` : ""}.
+          </p>
+        </div>
+      )}
+
+      {embedded && (
+        <p className="text-sm text-muted">
           Send an update to everyone on the website subscriber list
           {subscriberCount !== null ? ` (${subscriberCount})` : ""}.
         </p>
-      </div>
+      )}
 
       <form
         onSubmit={handleSubmit}

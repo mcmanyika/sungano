@@ -34,6 +34,6 @@ export function getAdminNotifyEmail(): string | null {
   return (
     process.env.EMAIL_ADMIN_TO?.trim() ||
     process.env.NEXT_PUBLIC_ADMIN_NOTIFY_EMAIL?.trim() ||
-    null
+    "info@sungano-ubumbano.org"
   );
 }
