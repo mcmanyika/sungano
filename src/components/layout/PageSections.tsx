@@ -14,10 +14,10 @@ import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
 const sections = [
   AboutTeaser,
-  HarareDeclaration,
   ImageGallery,
   NewsUpdates,
   Polls,
+  HarareDeclaration,
   ContactUs,
 ];
 
