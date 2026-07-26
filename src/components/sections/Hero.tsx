@@ -3,23 +3,16 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { Button } from "@/components/ui/Button";
 import { DeclarationModal } from "@/components/ui/DeclarationModal";
 import { LatestTweetModal } from "@/components/ui/LatestTweetModal";
-import { HeroVideoCard } from "@/components/ui/HeroVideoCard";
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 import { easeOut, fadeUp, staggerContainer } from "@/lib/animations";
-import {
-  getDefaultWelcomeVideo,
-  getWelcomeVideo,
-  subscribeToWelcomeVideo,
-} from "@/lib/firebase/welcome-video";
 import { stats } from "@/lib/data";
 import { siteContainer } from "@/lib/layout";
 import { cn } from "@/lib/utils";
-import type { WelcomeVideo } from "@/types/welcome-video";
 
 function XIcon({ className }: { className?: string }) {
   return (
@@ -33,7 +26,6 @@ export function Hero() {
   const { isReady } = usePageLoad();
   const [declarationOpen, setDeclarationOpen] = useState(false);
   const [tweetOpen, setTweetOpen] = useState(false);
-  const [welcomeVideo, setWelcomeVideo] = useState<WelcomeVideo>(getDefaultWelcomeVideo());
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -43,35 +35,6 @@ export function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
 
   const animateState = isReady ? "visible" : "hidden";
-  const showVideo =
-    Boolean(welcomeVideo.youtubeId.trim()) && welcomeVideo.published;
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadVideo() {
-      try {
-        const video = await getWelcomeVideo();
-        if (!cancelled) {
-          setWelcomeVideo(video);
-        }
-      } catch {
-        // Subscription below will retry live updates.
-      }
-    }
-
-    void loadVideo();
-    const unsubscribe = subscribeToWelcomeVideo((video) => {
-      if (!cancelled) {
-        setWelcomeVideo(video);
-      }
-    });
-
-    return () => {
-      cancelled = true;
-      unsubscribe();
-    };
-  }, []);
 
   return (
     <section
@@ -103,17 +66,11 @@ export function Hero() {
         className={cn(siteContainer, "relative z-10 flex flex-1 flex-col")}
       >
         <div className="flex flex-1 flex-col justify-center py-4 md:py-6">
-          <div
-            className={cn(
-              showVideo &&
-                "grid items-center gap-6 max-lg:[&>*:last-child]:order-first md:gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-8 xl:gap-10",
-            )}
-          >
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             animate={animateState}
-            className={showVideo ? "min-w-0" : "max-w-3xl"}
+            className="max-w-3xl"
           >
             <motion.h1
               variants={fadeUp}
@@ -156,13 +113,6 @@ export function Hero() {
               </Button>
             </motion.div>
           </motion.div>
-
-          {showVideo && (
-            <div className="relative z-10 w-full min-w-0">
-              <HeroVideoCard video={welcomeVideo} />
-            </div>
-          )}
-          </div>
         </div>
       </motion.div>
 
@@ -195,7 +145,7 @@ export function Hero() {
       </div>
 
       <motion.a
-        href="#rights"
+        href="#about"
         variants={fadeUp}
         initial="hidden"
         animate={animateState}
