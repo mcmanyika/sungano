@@ -106,7 +106,7 @@ export function Hero() {
           <div
             className={cn(
               showVideo &&
-                "grid items-center gap-6 max-lg:[&>*:last-child]:order-first md:gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8 xl:gap-10",
+                "grid items-center gap-6 max-lg:[&>*:last-child]:order-first md:gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-8 xl:gap-10",
             )}
           >
           <motion.div
@@ -118,9 +118,11 @@ export function Hero() {
             <motion.h1
               variants={fadeUp}
               transition={{ duration: 0.7, ease: easeOut }}
-              className="font-display text-[2.5rem] font-extrabold leading-[1.08] tracking-tight text-white drop-shadow-sm sm:text-5xl md:text-6xl lg:text-[3.5rem] xl:text-[4rem]"
+              className="font-display text-[1.9rem] font-extrabold leading-[1.12] tracking-tight text-white drop-shadow-sm sm:text-[2.4rem] md:text-[2.75rem] lg:text-[3rem] xl:text-[3.25rem]"
             >
-              Restore Our Democracy.
+              People&apos;s Coalition for
+              <br />
+              Constitutional Democracy
             </motion.h1>
 
             <motion.p

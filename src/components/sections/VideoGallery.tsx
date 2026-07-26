@@ -46,10 +46,7 @@ export function VideoGallery() {
 
   return (
     <Section id="videos" variant="default" className="scroll-mt-28">
-      <SectionHeader
-        title="Videos"
-        description="Watch messages and updates from the Coalition."
-      />
+      <SectionHeader title="Videos" />
 
       {loading ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
