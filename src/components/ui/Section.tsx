@@ -29,7 +29,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={cn("relative py-24 md:py-32", variantStyles[variant], className)}
+      className={cn("relative py-14 md:py-20", variantStyles[variant], className)}
     >
       <div className={siteContainer}>{children}</div>
     </section>
@@ -58,7 +58,7 @@ export function SectionHeader({
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.65, ease: easeOut }}
       className={cn(
-        "mb-14 md:mb-16",
+        "mb-8 md:mb-10",
         align === "center" && "mx-auto max-w-2xl text-center",
       )}
     >
@@ -66,7 +66,7 @@ export function SectionHeader({
         <div className={cn(align === "center" && "flex justify-center")}>
           <span
             className={cn(
-              "eyebrow-pill mb-5",
+              "eyebrow-pill mb-3",
               light && "border-secondary/30 bg-secondary/10 text-secondary",
             )}
           >
@@ -76,7 +76,7 @@ export function SectionHeader({
       )}
       <h2
         className={cn(
-          "font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-[2.75rem] md:leading-[1.15]",
+          "font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-[2.5rem] md:leading-[1.15]",
           light ? "text-white" : "text-neutral-900",
         )}
       >
@@ -84,7 +84,7 @@ export function SectionHeader({
       </h2>
       <div
         className={cn(
-          "mt-5 h-px w-12 bg-secondary",
+          "mt-3 h-px w-12 bg-secondary",
           align === "center" && "mx-auto",
         )}
         aria-hidden
@@ -92,7 +92,7 @@ export function SectionHeader({
       {description && (
         <p
           className={cn(
-            "mt-5 text-base leading-relaxed md:text-lg",
+            "mt-3 text-base leading-relaxed md:text-lg",
             light ? "text-white/75" : "text-muted",
           )}
         >

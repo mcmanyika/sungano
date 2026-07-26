@@ -102,11 +102,11 @@ export function Hero() {
         style={{ opacity }}
         className={cn(siteContainer, "relative z-10 flex flex-1 flex-col")}
       >
-        <div className="flex flex-1 flex-col justify-center py-6 md:py-8">
+        <div className="flex flex-1 flex-col justify-center py-4 md:py-6">
           <div
             className={cn(
               showVideo &&
-                "grid items-center gap-8 max-lg:[&>*:last-child]:order-first md:gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8 xl:gap-12",
+                "grid items-center gap-6 max-lg:[&>*:last-child]:order-first md:gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8 xl:gap-10",
             )}
           >
           <motion.div
@@ -126,7 +126,7 @@ export function Hero() {
             <motion.p
               variants={fadeUp}
               transition={{ duration: 0.6, ease: easeOut }}
-              className="mt-7 text-lg leading-[1.55] text-white/90 md:text-xl"
+              className="mt-5 text-lg leading-[1.55] text-white/90 md:text-xl"
             >
               Justice in the Courts.
               <br />
@@ -140,7 +140,7 @@ export function Hero() {
             <motion.div
               variants={fadeUp}
               transition={{ duration: 0.6, ease: easeOut }}
-              className="mt-9"
+              className="mt-7"
             >
               <Button
                 type="button"
@@ -174,7 +174,7 @@ export function Hero() {
                 animate={isReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
                 transition={{ duration: 0.5, delay: 0.6 + index * 0.08, ease: easeOut }}
                 className={cn(
-                  "px-5 py-7 text-center sm:px-6",
+                  "px-5 py-5 text-center sm:px-6",
                   index % 2 === 1 && "border-l border-white/10",
                   index >= 2 && "border-t border-white/10 md:border-t-0",
                   index >= 1 && "md:border-l md:border-white/10",

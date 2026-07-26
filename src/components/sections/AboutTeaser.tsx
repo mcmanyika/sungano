@@ -22,26 +22,26 @@ export function AboutTeaser() {
     <Section id="about" variant="muted" className="overflow-hidden">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
 
-      <div className="grid items-start gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 xl:gap-20">
+      <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10 xl:gap-12">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.65, ease: easeOut }}
         >
-          <h2 className="font-display text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl md:text-[2.75rem] md:leading-[1.15]">
+          <h2 className="font-display text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl md:text-[2.5rem] md:leading-[1.15]">
             Who We Are
           </h2>
-          <div className="mt-5 h-px w-12 bg-secondary" aria-hidden />
+          <div className="mt-3 h-px w-12 bg-secondary" aria-hidden />
 
-          <p className="mt-6 text-base leading-relaxed text-muted md:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">
             {aboutContent.whoWeAre.lead}
           </p>
-          <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">
+          <p className="mt-3 text-base leading-relaxed text-muted md:text-lg">
             {aboutContent.whoWeAre.body}
           </p>
 
-          <div className="mt-9">
+          <div className="mt-6">
             <Button href="/about" size="lg">
               Learn more about the Coalition
               <ArrowRight className="h-4 w-4" />
@@ -57,7 +57,7 @@ export function AboutTeaser() {
           className="relative"
         >
           <div
-            className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-primary/[0.06] via-transparent to-secondary/[0.08] md:-inset-8"
+            className="pointer-events-none absolute -inset-4 rounded-[1.75rem] bg-gradient-to-br from-primary/[0.06] via-transparent to-secondary/[0.08] md:-inset-6"
             aria-hidden
           />
 
@@ -66,7 +66,7 @@ export function AboutTeaser() {
               Founding Member Institutions
             </p>
 
-            <ul className="mt-8 space-y-0">
+            <ul className="mt-5 space-y-0">
               {aboutContent.foundingMembers.map((member, index) => {
                 const { label, acronym } = memberParts(member.name);
                 const content = (
@@ -107,12 +107,12 @@ export function AboutTeaser() {
                           href={member.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group flex items-start gap-4 border-t border-primary/10 py-4 transition-colors hover:border-secondary"
+                          className="group flex items-start gap-4 border-t border-primary/10 py-3 transition-colors hover:border-secondary"
                         >
                           {content}
                         </a>
                       ) : (
-                        <div className="group flex items-start gap-4 border-t border-primary/10 py-4">
+                        <div className="group flex items-start gap-4 border-t border-primary/10 py-3">
                           {content}
                         </div>
                       )}

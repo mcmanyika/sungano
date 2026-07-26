@@ -68,12 +68,12 @@ export function ContactUs() {
         description="Have a question, proposal, or request? Send our team a message and we will respond as soon as possible."
       />
 
-      <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
-        <div className={`h-fit p-6 sm:p-8 ${cardSurface}`}>
+      <div className="grid gap-6 lg:grid-cols-[0.7fr_1.3fr]">
+        <div className={`h-fit p-5 sm:p-6 ${cardSurface}`}>
           <h3 className="font-display text-xl font-bold text-neutral-900">
             Reach our team
           </h3>
-          <div className="mt-6 space-y-5">
+          <div className="mt-5 space-y-4">
             <a
               href="https://wa.me/14697992071"
               target="_blank"
@@ -102,7 +102,7 @@ export function ContactUs() {
 
         <form
           onSubmit={handleSubmit}
-          className={`space-y-4 p-6 sm:p-8 ${cardSurface}`}
+          className={`space-y-4 p-5 sm:p-6 ${cardSurface}`}
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="text-sm font-medium text-neutral-700">

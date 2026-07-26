@@ -18,7 +18,7 @@ export function HarareDeclaration() {
     <section
       ref={ref}
       id="declaration"
-      className="relative overflow-hidden py-28 md:py-40"
+      className="relative overflow-hidden py-16 md:py-20"
     >
       <motion.div
         style={{ y }}
@@ -51,14 +51,14 @@ export function HarareDeclaration() {
         transition={{ duration: 0.75, ease: easeOut }}
         className="relative z-10 mx-auto max-w-2xl px-5 text-center sm:px-8"
       >
-        <div className="mx-auto mb-6 h-px w-12 bg-secondary" aria-hidden />
-        <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-[2.75rem]">
+        <div className="mx-auto mb-4 h-px w-12 bg-secondary" aria-hidden />
+        <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-[2.5rem]">
           Stay Informed
         </h2>
-        <p className="mx-auto mt-5 max-w-md text-lg leading-relaxed text-white/80">
+        <p className="mx-auto mt-3 max-w-md text-base leading-relaxed text-white/80 md:text-lg">
           Subscribe for updates from the Coalition.
         </p>
-        <div className="mt-10 rounded-3xl border border-white/15 bg-white/10 p-5 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.45)] backdrop-blur-md sm:p-7">
+        <div className="mt-6 rounded-2xl border border-white/15 bg-white/10 p-4 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.45)] backdrop-blur-md sm:p-5">
           <EmailSubscribe source="harare-declaration" />
         </div>
       </motion.div>

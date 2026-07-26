@@ -66,8 +66,8 @@ const socialLinks = [
 export function Footer() {
   return (
     <footer className="border-t border-neutral-200 bg-neutral-900 text-neutral-300 dark:border-neutral-800">
-      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="group flex shrink-0 items-center gap-3">
@@ -155,7 +155,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-neutral-800 pt-8 text-center text-sm text-neutral-500">
+        <div className="mt-8 border-t border-neutral-800 pt-6 text-center text-sm text-neutral-500">
           <p>&copy; {new Date().getFullYear()} Sungano Ubumbano. All rights reserved.</p>
         </div>
       </div>
