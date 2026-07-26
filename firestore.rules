@@ -78,6 +78,159 @@ service cloud.firestore {
         && data.body is string;
     }
 
+    function isValidSiteLink(link) {
+      return link.keys().hasAll(['id', 'label', 'href'])
+        && link.id is string
+        && link.id.size() > 0
+        && link.id.size() <= 80
+        && link.label is string
+        && link.label.size() > 0
+        && link.label.size() <= 160
+        && link.href is string
+        && link.href.size() <= 500;
+    }
+
+    function isValidHeaderLink(link) {
+      return isValidSiteLink(link)
+        && link.keys().hasOnly(['id', 'label', 'href', 'megaMenu'])
+        && (!('megaMenu' in link) || link.megaMenu is bool);
+    }
+
+    function isValidHeaderLinkList(list) {
+      return list is list
+        && list.size() >= 1
+        && list.size() <= 12
+        && isValidHeaderLink(list[0])
+        && (list.size() < 2 || isValidHeaderLink(list[1]))
+        && (list.size() < 3 || isValidHeaderLink(list[2]))
+        && (list.size() < 4 || isValidHeaderLink(list[3]))
+        && (list.size() < 5 || isValidHeaderLink(list[4]))
+        && (list.size() < 6 || isValidHeaderLink(list[5]))
+        && (list.size() < 7 || isValidHeaderLink(list[6]))
+        && (list.size() < 8 || isValidHeaderLink(list[7]))
+        && (list.size() < 9 || isValidHeaderLink(list[8]))
+        && (list.size() < 10 || isValidHeaderLink(list[9]))
+        && (list.size() < 11 || isValidHeaderLink(list[10]))
+        && (list.size() < 12 || isValidHeaderLink(list[11]));
+    }
+
+    function isValidSiteLinkList(list, minSize, maxSize) {
+      return list is list
+        && list.size() >= minSize
+        && list.size() <= maxSize
+        && (list.size() < 1 || isValidSiteLink(list[0]))
+        && (list.size() < 2 || isValidSiteLink(list[1]))
+        && (list.size() < 3 || isValidSiteLink(list[2]))
+        && (list.size() < 4 || isValidSiteLink(list[3]))
+        && (list.size() < 5 || isValidSiteLink(list[4]))
+        && (list.size() < 6 || isValidSiteLink(list[5]))
+        && (list.size() < 7 || isValidSiteLink(list[6]))
+        && (list.size() < 8 || isValidSiteLink(list[7]))
+        && (list.size() < 9 || isValidSiteLink(list[8]))
+        && (list.size() < 10 || isValidSiteLink(list[9]))
+        && (list.size() < 11 || isValidSiteLink(list[10]))
+        && (list.size() < 12 || isValidSiteLink(list[11]))
+        && (list.size() < 13 || isValidSiteLink(list[12]))
+        && (list.size() < 14 || isValidSiteLink(list[13]))
+        && (list.size() < 15 || isValidSiteLink(list[14]));
+    }
+
+    function isValidSocialLink(link) {
+      return link.keys().hasAll(['id', 'platform', 'label', 'href'])
+        && link.keys().hasOnly(['id', 'platform', 'label', 'href'])
+        && link.id is string
+        && link.id.size() > 0
+        && link.id.size() <= 80
+        && link.platform in [
+          'facebook',
+          'x',
+          'youtube',
+          'instagram',
+          'tiktok',
+          'whatsapp'
+        ]
+        && link.label is string
+        && link.label.size() > 0
+        && link.label.size() <= 80
+        && link.href is string
+        && link.href.size() <= 500;
+    }
+
+    function isValidSocialLinkList(list) {
+      return list is list
+        && list.size() >= 0
+        && list.size() <= 12
+        && (list.size() < 1 || isValidSocialLink(list[0]))
+        && (list.size() < 2 || isValidSocialLink(list[1]))
+        && (list.size() < 3 || isValidSocialLink(list[2]))
+        && (list.size() < 4 || isValidSocialLink(list[3]))
+        && (list.size() < 5 || isValidSocialLink(list[4]))
+        && (list.size() < 6 || isValidSocialLink(list[5]))
+        && (list.size() < 7 || isValidSocialLink(list[6]))
+        && (list.size() < 8 || isValidSocialLink(list[7]))
+        && (list.size() < 9 || isValidSocialLink(list[8]))
+        && (list.size() < 10 || isValidSocialLink(list[9]))
+        && (list.size() < 11 || isValidSocialLink(list[10]))
+        && (list.size() < 12 || isValidSocialLink(list[11]));
+    }
+
+    function isValidAboutMenu(menu) {
+      return menu.keys().hasAll([
+          'intro',
+          'sectionTitle',
+          'sectionDescription',
+          'items'
+        ])
+        && menu.keys().hasOnly([
+          'intro',
+          'sectionTitle',
+          'sectionDescription',
+          'items'
+        ])
+        && isValidSiteLink(menu.intro)
+        && menu.intro.keys().hasOnly(['id', 'label', 'href'])
+        && menu.sectionTitle is string
+        && menu.sectionTitle.size() > 0
+        && menu.sectionTitle.size() <= 120
+        && menu.sectionDescription is string
+        && menu.sectionDescription.size() <= 300
+        && isValidSiteLinkList(menu.items, 0, 15);
+    }
+
+    function isValidFooterLinks(footer) {
+      return footer.keys().hasAll(['about', 'links', 'legal'])
+        && footer.keys().hasOnly(['about', 'links', 'legal'])
+        && isValidSiteLinkList(footer.about, 0, 12)
+        && isValidSiteLinkList(footer.links, 0, 12)
+        && isValidSiteLinkList(footer.legal, 0, 8);
+    }
+
+    function isValidNavigation(data) {
+      return data.keys().hasAll([
+          'header',
+          'donate',
+          'aboutMenu',
+          'footer',
+          'social',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'header',
+          'donate',
+          'aboutMenu',
+          'footer',
+          'social',
+          'updatedAt'
+        ])
+        && isValidHeaderLinkList(data.header)
+        && isValidSiteLink(data.donate)
+        && data.donate.keys().hasOnly(['id', 'label', 'href'])
+        && isValidAboutMenu(data.aboutMenu)
+        && isValidFooterLinks(data.footer)
+        && isValidSocialLinkList(data.social)
+        && data.updatedAt is timestamp;
+    }
+
     match /subscribers/{email} {
       allow read: if isAdmin();
       allow create, update: if request.resource.data.email == email
@@ -107,6 +260,12 @@ service cloud.firestore {
     match /content/welcome-video {
       allow read: if true;
       allow create, update: if isAdmin() && isValidWelcomeVideo(request.resource.data);
+    }
+
+    // Public site chrome links (header, about mega menu, footer, social).
+    match /content/navigation {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidNavigation(request.resource.data);
     }
 
     match /volunteers/{volunteerId} {

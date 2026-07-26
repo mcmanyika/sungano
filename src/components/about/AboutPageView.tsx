@@ -1,8 +1,10 @@
-import { Footer } from "@/components/layout/Footer";
-import { JoinCoalitionCta } from "@/components/about/JoinCoalitionCta";
 import { aboutContent } from "@/lib/about";
+import { standingCommittees } from "@/lib/committees";
 import { siteContainer } from "@/lib/layout";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { Footer } from "@/components/layout/Footer";
+import { JoinCoalitionCta } from "@/components/about/JoinCoalitionCta";
 
 function AboutBlock({
   id,
@@ -221,7 +223,22 @@ export function AboutPageView() {
                 The Coalition implements its work through nine Standing
                 Committees:
               </p>
-              <BulletList items={about.standingCommittees} />
+              <ul className="space-y-2.5">
+                {standingCommittees.map((committee) => (
+                  <li key={committee.slug} className="flex gap-3">
+                    <span
+                      className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary"
+                      aria-hidden
+                    />
+                    <Link
+                      href={`/committees/${committee.slug}`}
+                      className="font-medium text-primary underline-offset-2 hover:underline"
+                    >
+                      {committee.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
               <p>{about.standingCommitteesNote}</p>
             </AboutBlock>
 

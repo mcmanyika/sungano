@@ -3,7 +3,13 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { footerLinks } from "@/lib/data";
+import type { ComponentType } from "react";
+import { useSiteNavigation } from "@/hooks/useSiteNavigation";
+import {
+  isNavigableHref,
+  type SiteLink,
+  type SocialPlatform,
+} from "@/types/navigation";
 
 function FacebookIcon({ className }: { className?: string }) {
   return (
@@ -13,7 +19,6 @@ function FacebookIcon({ className }: { className?: string }) {
   );
 }
 
-/** X (Twitter) icon — not in Lucide under that name */
 function XIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
@@ -54,21 +59,44 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-const socialLinks = [
-  { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61591849589672", icon: FacebookIcon },
-  { label: "X", href: "https://x.com/sunganoyevanhu", icon: XIcon },
-  { label: "YouTube", href: "https://www.youtube.com/@SunganoUbumbano", icon: YoutubeIcon },
-  { label: "Instagram", href: "https://www.instagram.com/SunganoUbumbano", icon: InstagramIcon },
-  { label: "TikTok", href: "https://www.tiktok.com/@ubumbanosungano", icon: TikTokIcon },
-  { label: "WhatsApp", href: "https://wa.me/14697992071", icon: WhatsAppIcon },
-];
+const socialIcons: Record<
+  SocialPlatform,
+  ComponentType<{ className?: string }>
+> = {
+  facebook: FacebookIcon,
+  x: XIcon,
+  youtube: YoutubeIcon,
+  instagram: InstagramIcon,
+  tiktok: TikTokIcon,
+  whatsapp: WhatsAppIcon,
+};
+
+function FooterLink({ link }: { link: SiteLink }) {
+  if (!isNavigableHref(link.href)) {
+    return <span className="text-sm text-neutral-400">{link.label}</span>;
+  }
+
+  const href = link.href.startsWith("#") ? `/${link.href}` : link.href;
+  const external = href.startsWith("http");
+
+  return (
+    <a
+      href={href}
+      className="text-sm transition-colors hover:text-white"
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      {link.label}
+    </a>
+  );
+}
 
 export function Footer() {
+  const { navigation } = useSiteNavigation();
+
   return (
     <footer className="border-t border-neutral-200 bg-neutral-900 text-neutral-300 dark:border-neutral-800">
       <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="group flex shrink-0 items-center gap-3">
               <Image
@@ -77,7 +105,7 @@ export function Footer() {
                 width={168}
                 height={67}
                 className="h-12 w-auto shrink-0 rounded-md bg-white object-contain p-0.5 shadow-sm transition-transform group-hover:scale-[1.02] sm:h-14"
-              style={{ width: "auto" }}
+                style={{ width: "auto" }}
               />
               <span className="whitespace-nowrap font-display text-base font-bold leading-none text-white sm:text-lg">
                 Sungano Ubumbano
@@ -85,72 +113,59 @@ export function Footer() {
             </Link>
           </div>
 
-          {/* About links */}
           <div>
             <h3 className="mb-4 font-semibold text-white">About</h3>
             <ul className="space-y-2">
-              {footerLinks.about.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={
-                      link.href.startsWith("#") ? `/${link.href}` : link.href
-                    }
-                    className="text-sm hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </a>
+              {navigation.footer.about.map((link) => (
+                <li key={link.id}>
+                  <FooterLink link={link} />
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Links */}
           <div>
             <h3 className="mb-4 font-semibold text-white">Links</h3>
             <ul className="space-y-2">
-              {footerLinks.links.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-sm transition-colors hover:text-white"
-                    {...(link.href.startsWith("http")
-                      ? { target: "_blank", rel: "noopener noreferrer" }
-                      : {})}
-                  >
-                    {link.label}
-                  </a>
+              {navigation.footer.links.map((link) => (
+                <li key={link.id}>
+                  <FooterLink link={link} />
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Legal + Social */}
           <div>
             <h3 className="mb-4 font-semibold text-white">Connect</h3>
             <ul className="mb-6 space-y-2">
-              {footerLinks.legal.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} className="text-sm hover:text-white transition-colors">
-                    {link.label}
-                  </a>
+              {navigation.footer.legal.map((link) => (
+                <li key={link.id}>
+                  <FooterLink link={link} />
                 </li>
               ))}
             </ul>
             <div className="grid w-fit grid-cols-3 gap-3">
-              {socialLinks.map((social) => (
-                <motion.a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                  {...(social.href.startsWith("http")
-                    ? { target: "_blank", rel: "noopener noreferrer" }
-                    : {})}
-                  whileHover={{ scale: 1.1 }}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-800 text-neutral-400 transition-colors hover:bg-primary hover:text-white"
-                >
-                  <social.icon className="h-5 w-5" />
-                </motion.a>
-              ))}
+              {navigation.social.map((social) => {
+                const Icon = socialIcons[social.platform];
+                if (!isNavigableHref(social.href)) {
+                  return null;
+                }
+
+                return (
+                  <motion.a
+                    key={social.id}
+                    href={social.href}
+                    aria-label={social.label}
+                    {...(social.href.startsWith("http")
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                    whileHover={{ scale: 1.1 }}
+                    className="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-800 text-neutral-400 transition-colors hover:bg-primary hover:text-white"
+                  >
+                    <Icon className="h-5 w-5" />
+                  </motion.a>
+                );
+              })}
             </div>
           </div>
         </div>

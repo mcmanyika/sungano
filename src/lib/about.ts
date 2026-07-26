@@ -18,15 +18,19 @@ export const aboutContent = {
   },
   foundingMembers: [
     {
-      name: "Defend the Constitution Platform (DCP)",
-      href: "https://www.dcpzim.com",
-    },
-    {
       name: "Constitution Defenders Forum (CDF)",
       href: "https://www.cdfzim.org",
     },
     {
+      name: "Defend the Constitution Platform (DCP)",
+      href: "https://www.dcpzim.com",
+    },
+    {
       name: "National Constitutional Assembly (NCA)",
+      href: undefined,
+    },
+    {
+      name: "War Veterans Pressure Group",
       href: undefined,
     },
     {
@@ -35,10 +39,6 @@ export const aboutContent = {
     },
     {
       name: "Zimbabwe Constitution Movement (ZICOMO)",
-      href: undefined,
-    },
-    {
-      name: "War Veterans Pressure Group",
       href: undefined,
     },
   ],
@@ -173,17 +173,6 @@ export const aboutContent = {
       ],
       note: undefined,
     },
-  ],
-  standingCommittees: [
-    "Legal and Constitutional Affairs",
-    "Information and Communications",
-    "Mobilisation",
-    "Women and Gender",
-    "Youth and Students",
-    "Regional and International Relations",
-    "Solidarity and Support",
-    "Security",
-    "Finance and Administration",
   ],
   standingCommitteesNote:
     "The Coalition Executive Committee appoints the Chairperson and Deputy Chairperson of each Standing Committee. The Chairperson of the Information and Communications Committee serves as the operational Spokesperson of the Coalition, while the Convenor remains the Chief Spokesperson.",

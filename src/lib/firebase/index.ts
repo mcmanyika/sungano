@@ -32,6 +32,12 @@ export {
   subscribeToWelcomeVideo,
 } from "@/lib/firebase/welcome-video";
 export {
+  getDefaultSiteNavigation,
+  getSiteNavigation,
+  saveSiteNavigation,
+  subscribeToSiteNavigation,
+} from "@/lib/firebase/navigation";
+export {
   createVideo,
   deleteVideo,
   getAllVideos,

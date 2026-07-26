@@ -19,15 +19,6 @@ export const siteConfig = {
   email: "info@sungano-ubumbano.org",
 };
 
-export const navLinks = [
-  { label: "About", href: "/about" },
-  { label: "News", href: "#news" },
-  { label: "Videos", href: "#videos" },
-  { label: "Contact", href: "#contact" },
-];
-
-export const donateNavLink = { label: "Donate", href: "/donate" };
-
 export const timelineEvents = [
   {
     year: "2024",
@@ -152,21 +143,6 @@ export const newsArticles = [
     image: "/images/news-declaration.jpg",
   },
 ];
-
-export const footerLinks = {
-  about: [
-    { label: "About", href: "/about" },
-    { label: "News", href: "#news" },
-    { label: "Videos", href: "#videos" },
-    { label: "Organisations", href: "/about#join" },
-  ],
-  links: [
-    { label: "Defend the Constitution Platform", href: "https://www.dcpzim.com" },
-    { label: "Constitution Defenders Forum", href: "https://www.cdfzim.org" },
-    { label: "National Constitutional Assembly", href: "#" },
-  ],
-  legal: [{ label: "Privacy Policy", href: "#" }],
-};
 
 export const stats = [
   { label: "Provinces Active", value: 10, suffix: "" },
