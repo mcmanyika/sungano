@@ -86,7 +86,6 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationInput = {
       megaMenu: true,
     },
     { id: "header-news", label: "News", href: "#news" },
-    { id: "header-videos", label: "Videos", href: "#videos" },
     { id: "header-contact", label: "Contact", href: "#contact" },
   ],
   donate: { id: "header-donate", label: "Donate", href: "/donate" },

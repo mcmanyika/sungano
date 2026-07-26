@@ -62,11 +62,12 @@ export function ContactUs() {
   }
 
   return (
-    <Section id="contact" className="scroll-mt-24" variant="muted">
-      <SectionHeader
-        title="Contact us"
-        description="Have a question, proposal, or request? Send our team a message and we will respond as soon as possible."
-      />
+    <Section
+      id="contact"
+      className="scroll-mt-24 bg-white"
+      variant="default"
+    >
+      <SectionHeader title="Contact us" />
 
       <div className="grid gap-6 lg:grid-cols-[0.7fr_1.3fr]">
         <div className={`h-fit p-5 sm:p-6 ${cardSurface}`}>

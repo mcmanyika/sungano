@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { isFirebaseConfigured } from "@/lib/firebase/config";
 import { subscribeToPublishedNewsArticles } from "@/lib/firebase/news";
-import { siteConfig } from "@/lib/data";
 import { cardSurfaceInteractive } from "@/lib/styles";
 import { cn } from "@/lib/utils";
 import { easeOut } from "@/lib/animations";
@@ -44,7 +43,6 @@ export function NewsUpdates() {
     <Section id="news" variant="muted">
       <SectionHeader
         title="News & Updates"
-        description={`Latest news and developments from ${siteConfig.name}.`}
       />
 
       {loading ? (

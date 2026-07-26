@@ -3,7 +3,11 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import type { ComponentType } from "react";
+import { type ComponentType, useState } from "react";
+import {
+  isVideosFooterLink,
+  VideoGalleryModal,
+} from "@/components/ui/VideoGalleryModal";
 import { useSiteNavigation } from "@/hooks/useSiteNavigation";
 import {
   isNavigableHref,
@@ -71,7 +75,25 @@ const socialIcons: Record<
   whatsapp: WhatsAppIcon,
 };
 
-function FooterLink({ link }: { link: SiteLink }) {
+function FooterLink({
+  link,
+  onOpenVideos,
+}: {
+  link: SiteLink;
+  onOpenVideos: () => void;
+}) {
+  if (isVideosFooterLink(link)) {
+    return (
+      <button
+        type="button"
+        onClick={onOpenVideos}
+        className="text-sm transition-colors hover:text-white"
+      >
+        {link.label}
+      </button>
+    );
+  }
+
   if (!isNavigableHref(link.href)) {
     return <span className="text-sm text-neutral-400">{link.label}</span>;
   }
@@ -92,6 +114,7 @@ function FooterLink({ link }: { link: SiteLink }) {
 
 export function Footer() {
   const { navigation } = useSiteNavigation();
+  const [videosOpen, setVideosOpen] = useState(false);
 
   return (
     <footer className="border-t border-neutral-200 bg-neutral-900 text-neutral-300 dark:border-neutral-800">
@@ -118,7 +141,10 @@ export function Footer() {
             <ul className="space-y-2">
               {navigation.footer.about.map((link) => (
                 <li key={link.id}>
-                  <FooterLink link={link} />
+                  <FooterLink
+                    link={link}
+                    onOpenVideos={() => setVideosOpen(true)}
+                  />
                 </li>
               ))}
             </ul>
@@ -129,7 +155,10 @@ export function Footer() {
             <ul className="space-y-2">
               {navigation.footer.links.map((link) => (
                 <li key={link.id}>
-                  <FooterLink link={link} />
+                  <FooterLink
+                    link={link}
+                    onOpenVideos={() => setVideosOpen(true)}
+                  />
                 </li>
               ))}
             </ul>
@@ -140,7 +169,10 @@ export function Footer() {
             <ul className="mb-6 space-y-2">
               {navigation.footer.legal.map((link) => (
                 <li key={link.id}>
-                  <FooterLink link={link} />
+                  <FooterLink
+                    link={link}
+                    onOpenVideos={() => setVideosOpen(true)}
+                  />
                 </li>
               ))}
             </ul>
@@ -174,6 +206,11 @@ export function Footer() {
           <p>&copy; {new Date().getFullYear()} Sungano Ubumbano. All rights reserved.</p>
         </div>
       </div>
+
+      <VideoGalleryModal
+        open={videosOpen}
+        onClose={() => setVideosOpen(false)}
+      />
     </footer>
   );
 }

@@ -1,0 +1,22 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Path: gallery/{imageId}/{fileName}
+// Access:
+//   - read: public (homepage gallery)
+//   - write/delete: Admin SDK only (bypasses these rules via
+//     /api/admin/gallery/* after requireAdminFromRequest)
+//
+// ===============================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /gallery/{imageId}/{fileName} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

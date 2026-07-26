@@ -47,6 +47,20 @@ export {
   updateVideo,
 } from "@/lib/firebase/videos";
 export {
+  createImage,
+  deleteImage,
+  getAllImages,
+  getImage,
+  getPublishedImages,
+  subscribeToPublishedImages,
+  updateImage,
+} from "@/lib/firebase/images";
+export {
+  assertValidGalleryImageFile,
+  deleteGalleryImage,
+  uploadGalleryImage,
+} from "@/lib/firebase/storage";
+export {
   subscribeToAllDonations,
   subscribeToDonationsByEmail,
 } from "@/lib/firebase/donations";

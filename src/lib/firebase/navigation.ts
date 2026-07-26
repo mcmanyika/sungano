@@ -100,6 +100,24 @@ function mapSiteLinkList(
   );
 }
 
+function isImagesNavLink(link: { id: string; href: string }): boolean {
+  const href = link.href.replace(/^\//, "");
+  return (
+    link.id === "header-images" ||
+    link.id === "footer-images" ||
+    href === "#images"
+  );
+}
+
+function isVideosNavLink(link: { id: string; href: string }): boolean {
+  const href = link.href.replace(/^\//, "");
+  return (
+    link.id === "header-videos" ||
+    link.id === "footer-videos" ||
+    href === "#videos"
+  );
+}
+
 function mapHeaderLinks(value: unknown): HeaderLink[] {
   const fallback = DEFAULT_SITE_NAVIGATION.header;
 
@@ -107,17 +125,19 @@ function mapHeaderLinks(value: unknown): HeaderLink[] {
     return fallback.map((link) => ({ ...link }));
   }
 
-  return value.map((item, index) =>
-    mapHeaderLink(
-      item,
-      fallback[index] ?? {
-        id: `header-${index}`,
-        label: "Link",
-        href: "",
-        megaMenu: false,
-      },
-    ),
-  );
+  return value
+    .map((item, index) =>
+      mapHeaderLink(
+        item,
+        fallback[index] ?? {
+          id: `header-${index}`,
+          label: "Link",
+          href: "",
+          megaMenu: false,
+        },
+      ),
+    )
+    .filter((link) => !isImagesNavLink(link) && !isVideosNavLink(link));
 }
 
 function isSocialPlatform(value: string): value is SocialPlatform {
@@ -183,6 +203,34 @@ function mapAboutMenu(value: unknown): AboutMenuConfig {
 function mapFooter(value: unknown): FooterLinksConfig {
   const fallback = DEFAULT_SITE_NAVIGATION.footer;
   const data = asRecord(value);
+  const videosLink =
+    fallback.about.find((link) => link.id === "footer-videos") ?? {
+      id: "footer-videos",
+      label: "Videos",
+      href: "#videos",
+    };
+
+  function withVideosLink(links: SiteLink[]): SiteLink[] {
+    if (links.some((link) => isVideosNavLink(link))) {
+      return links;
+    }
+
+    const newsIndex = links.findIndex(
+      (link) =>
+        link.id === "footer-news" ||
+        link.href.replace(/^\//, "") === "#news",
+    );
+
+    if (newsIndex >= 0) {
+      return [
+        ...links.slice(0, newsIndex + 1),
+        { ...videosLink },
+        ...links.slice(newsIndex + 1),
+      ];
+    }
+
+    return [...links, { ...videosLink }];
+  }
 
   if (!data) {
     return {
@@ -193,7 +241,11 @@ function mapFooter(value: unknown): FooterLinksConfig {
   }
 
   return {
-    about: mapSiteLinkList(data.about, fallback.about),
+    about: withVideosLink(
+      mapSiteLinkList(data.about, fallback.about).filter(
+        (link) => !isImagesNavLink(link),
+      ),
+    ),
     links: mapSiteLinkList(data.links, fallback.links),
     legal: mapSiteLinkList(data.legal, fallback.legal),
   };

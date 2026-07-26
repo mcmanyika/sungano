@@ -8,6 +8,19 @@ const nextConfig: NextConfig = {
         hostname: "i.ytimg.com",
         pathname: "/vi/**",
       },
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+        pathname: "/v0/b/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.firebasestorage.app",
+      },
+      {
+        protocol: "https",
+        hostname: "*.appspot.com",
+      },
     ],
   },
 };

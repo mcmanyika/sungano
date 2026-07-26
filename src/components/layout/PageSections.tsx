@@ -9,14 +9,14 @@ import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
 import { Polls } from "@/components/sections/Polls";
-import { VideoGallery } from "@/components/sections/VideoGallery";
+import { ImageGallery } from "@/components/sections/ImageGallery";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
 const sections = [
   AboutTeaser,
   HarareDeclaration,
+  ImageGallery,
   NewsUpdates,
-  VideoGallery,
   Polls,
   ContactUs,
 ];

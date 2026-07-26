@@ -7,6 +7,7 @@ import {
   type App,
 } from "firebase-admin/app";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
+import { getStorage, type Storage } from "firebase-admin/storage";
 
 let adminApp: App | undefined;
 
@@ -20,6 +21,10 @@ function normalizePrivateKey(value: string): string {
     key = key.slice(1, -1);
   }
   return key.replace(/\\n/g, "\n");
+}
+
+function resolveStorageBucket(): string | undefined {
+  return process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET?.trim() || undefined;
 }
 
 function resolveCredential() {
@@ -52,9 +57,11 @@ export function getAdminApp(): App {
       adminApp = getApps()[0];
     } else {
       const { credential, projectId } = resolveCredential();
+      const storageBucket = resolveStorageBucket();
       adminApp = initializeApp({
         credential,
         ...(projectId ? { projectId } : {}),
+        ...(storageBucket ? { storageBucket } : {}),
       });
     }
   }
@@ -64,4 +71,20 @@ export function getAdminApp(): App {
 
 export function getAdminFirestore(): Firestore {
   return getFirestore(getAdminApp());
+}
+
+export function getAdminStorage(): Storage {
+  return getStorage(getAdminApp());
+}
+
+export function getAdminStorageBucketName(): string {
+  const bucket = resolveStorageBucket();
+
+  if (!bucket) {
+    throw new Error(
+      "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET is not configured.",
+    );
+  }
+
+  return bucket;
 }
