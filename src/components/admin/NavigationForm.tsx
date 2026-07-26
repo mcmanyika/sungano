@@ -218,7 +218,7 @@ export function NavigationForm() {
 
       <section className={`space-y-4 p-6 ${cardSurface} rounded-2xl`}>
         <h3 className="font-display text-lg font-semibold text-neutral-900">
-          Donate button
+          Donate Now button
         </h3>
         <div className="grid gap-3 sm:grid-cols-2">
           <div>

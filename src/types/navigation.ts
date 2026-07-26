@@ -88,7 +88,7 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationInput = {
     { id: "header-news", label: "News", href: "#news" },
     { id: "header-contact", label: "Contact", href: "#contact" },
   ],
-  donate: { id: "header-donate", label: "Donate", href: "/donate" },
+  donate: { id: "header-donate", label: "DONATE NOW", href: "/donate" },
   aboutMenu: {
     intro: {
       id: "about-intro",

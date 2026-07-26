@@ -252,9 +252,14 @@ function mapFooter(value: unknown): FooterLinksConfig {
 }
 
 function mapNavigation(data: Record<string, unknown>): SiteNavigation {
+  const donate = mapSiteLink(data.donate, DEFAULT_SITE_NAVIGATION.donate);
+
   return {
     header: mapHeaderLinks(data.header),
-    donate: mapSiteLink(data.donate, DEFAULT_SITE_NAVIGATION.donate),
+    donate: {
+      ...donate,
+      label: "DONATE NOW",
+    },
     aboutMenu: mapAboutMenu(data.aboutMenu),
     footer: mapFooter(data.footer),
     social: mapSocialLinks(data.social),
