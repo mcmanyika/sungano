@@ -103,14 +103,6 @@ export function Navbar() {
           >
             {donateNavLink.label}
           </a>
-          <Image
-            src="/images/zimbabwe-flag.svg"
-            alt="Flag of Zimbabwe"
-            width={36}
-            height={24}
-            className="hidden h-3.5 w-auto rounded-[3px] border border-neutral-200/70 shadow-sm sm:block"
-            priority
-          />
 
           <button
             type="button"
@@ -152,15 +144,6 @@ export function Navbar() {
                 >
                   {donateNavLink.label}
                 </a>
-              </li>
-              <li className="flex justify-end pt-3 sm:hidden">
-                <Image
-                  src="/images/zimbabwe-flag.svg"
-                  alt="Flag of Zimbabwe"
-                  width={36}
-                  height={24}
-                  className="h-3.5 w-auto rounded-[3px] border border-neutral-200/70 shadow-sm"
-                />
               </li>
             </ul>
           </motion.div>
