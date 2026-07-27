@@ -122,15 +122,31 @@ export function Hero() {
               transition={{ duration: 0.7, delay: 0.15, ease: easeOut }}
               className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none"
             >
-              <Image
-                src="/images/yellow_card_5.png"
-                alt=""
-                width={1536}
-                height={1024}
-                priority
-                className="h-auto w-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
-                sizes="(max-width: 1024px) 90vw, 40vw"
-              />
+              <motion.div
+                animate={
+                  isReady
+                    ? {
+                        y: [0, -10, 0],
+                        rotate: [-0.6, 0.6, -0.6],
+                      }
+                    : { y: 0, rotate: 0 }
+                }
+                transition={{
+                  duration: 4.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <Image
+                  src="/images/yellow_card_5.png"
+                  alt=""
+                  width={1536}
+                  height={1024}
+                  priority
+                  className="h-auto w-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
+                  sizes="(max-width: 1024px) 90vw, 40vw"
+                />
+              </motion.div>
             </motion.div>
           </div>
         </div>
