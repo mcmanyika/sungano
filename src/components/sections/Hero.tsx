@@ -66,53 +66,73 @@ export function Hero() {
         className={cn(siteContainer, "relative z-10 flex flex-1 flex-col")}
       >
         <div className="flex flex-1 flex-col justify-center py-4 md:py-6">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate={animateState}
-            className="max-w-3xl"
-          >
-            <motion.h1
-              variants={fadeUp}
-              transition={{ duration: 0.7, ease: easeOut }}
-              className="font-display text-[1.9rem] font-extrabold leading-[1.12] tracking-tight text-white drop-shadow-sm sm:text-[2.4rem] md:text-[2.75rem] lg:text-[3rem] xl:text-[3.25rem]"
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10 xl:gap-12">
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              animate={animateState}
+              className="min-w-0 max-w-3xl"
             >
-              People&apos;s Coalition for
-              <br />
-              <span className="text-neutral-950">Constitutional</span> Democracy
-            </motion.h1>
+              <motion.h1
+                variants={fadeUp}
+                transition={{ duration: 0.7, ease: easeOut }}
+                className="font-display text-[1.9rem] font-extrabold leading-[1.12] tracking-tight text-white drop-shadow-sm sm:text-[2.4rem] md:text-[2.75rem] lg:text-[3rem] xl:text-[3.25rem]"
+              >
+                People&apos;s Coalition for
+                <br />
+                <span className="text-neutral-950">Constitutional</span> Democracy
+              </motion.h1>
 
-            <motion.p
-              variants={fadeUp}
-              transition={{ duration: 0.6, ease: easeOut }}
-              className="mt-5 text-lg leading-[1.55] text-white/90 md:text-xl"
-            >
-              Justice in the Courts.
-              <br />
-              Sovereignty with the People.
-              <br />
-              <span className="font-semibold text-secondary-light">
-                Peacefully. Lawfully. Together.
-              </span>
-            </motion.p>
+              <motion.p
+                variants={fadeUp}
+                transition={{ duration: 0.6, ease: easeOut }}
+                className="mt-5 text-lg leading-[1.55] text-white/90 md:text-xl"
+              >
+                Justice in the Courts.
+                <br />
+                Sovereignty with the People.
+                <br />
+                <span className="font-semibold text-secondary-light">
+                  Peacefully. Lawfully. Together.
+                </span>
+              </motion.p>
+
+              <motion.div
+                variants={fadeUp}
+                transition={{ duration: 0.6, ease: easeOut }}
+                className="mt-7"
+              >
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setDeclarationOpen(true)}
+                  className="border-white/40 bg-white/15 text-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-md hover:border-white/70 hover:bg-white hover:text-primary"
+                >
+                  Read the Declaration
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </motion.div>
+            </motion.div>
 
             <motion.div
               variants={fadeUp}
-              transition={{ duration: 0.6, ease: easeOut }}
-              className="mt-7"
+              initial="hidden"
+              animate={animateState}
+              transition={{ duration: 0.7, delay: 0.15, ease: easeOut }}
+              className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none"
             >
-              <Button
-                type="button"
-                variant="outline"
-                size="lg"
-                onClick={() => setDeclarationOpen(true)}
-                className="border-white/40 bg-white/15 text-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-md hover:border-white/70 hover:bg-white hover:text-primary"
-              >
-                Read the Declaration
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+              <Image
+                src="/images/yellow_card_5.png"
+                alt=""
+                width={1536}
+                height={1024}
+                priority
+                className="h-auto w-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
+                sizes="(max-width: 1024px) 90vw, 40vw"
+              />
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </motion.div>
 
