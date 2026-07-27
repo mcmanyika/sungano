@@ -79,7 +79,7 @@ export function Hero() {
             >
               People&apos;s Coalition for
               <br />
-              Constitutional Democracy
+              <span className="text-neutral-950">Constitutional</span> Democracy
             </motion.h1>
 
             <motion.p
