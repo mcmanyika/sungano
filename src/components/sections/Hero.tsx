@@ -124,9 +124,19 @@ export function Hero() {
                 key={stat.label}
                 initial={{ opacity: 0, y: 16 }}
                 animate={isReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-                transition={{ duration: 0.5, delay: 0.6 + index * 0.08, ease: easeOut }}
+                whileHover={{
+                  y: -4,
+                  scale: 1.03,
+                  transition: { duration: 0.25, ease: easeOut },
+                }}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.6 + index * 0.08,
+                  ease: easeOut,
+                }}
                 className={cn(
-                  "px-5 py-5 text-center sm:px-6",
+                  "cursor-default px-5 py-5 text-center transition-colors sm:px-6",
+                  "hover:bg-white/10",
                   index % 2 === 1 && "border-l border-white/10",
                   index >= 2 && "border-t border-white/10 md:border-t-0",
                   index >= 1 && "md:border-l md:border-white/10",
