@@ -1,13 +1,13 @@
 "use client";
 
+import { Section, SectionHeader } from "@/components/ui/Section";
 import { StoreCatalog } from "@/components/store/StoreCatalog";
 
 export function StoreSection() {
   return (
-    <section id="store" className="scroll-mt-28 px-5 py-16 sm:px-8 sm:py-20">
-      <div className="mx-auto max-w-6xl">
-        <StoreCatalog limit={3} showViewAll />
-      </div>
-    </section>
+    <Section id="store" className="scroll-mt-28">
+      <SectionHeader title="Store" />
+      <StoreCatalog limit={3} showHeader={false} showViewAll />
+    </Section>
   );
 }

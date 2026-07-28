@@ -97,23 +97,14 @@ export function StoreCatalog({
   return (
     <div>
       {showHeader ? (
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-              Merchandise
-            </p>
-            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-              Store
-            </h2>
-          </div>
-          {showViewAll ? (
-            <Link
-              href="/store"
-              className="text-sm font-semibold text-primary transition hover:text-primary-light"
-            >
-              View all
-            </Link>
-          ) : null}
+        <div className="mb-8 mx-auto max-w-2xl text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+            Merchandise
+          </p>
+          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
+            Store
+          </h2>
+          <div className="mx-auto mt-3 h-px w-12 bg-secondary" aria-hidden />
         </div>
       ) : null}
 
@@ -168,6 +159,17 @@ export function StoreCatalog({
           ))}
         </div>
       )}
+
+      {showViewAll && !loading && !error && products.length > 0 ? (
+        <div className="mt-8 text-center">
+          <Link
+            href="/store"
+            className="text-sm font-semibold text-primary transition hover:text-primary-light"
+          >
+            View all
+          </Link>
+        </div>
+      ) : null}
 
       <AnimatePresence>
         {activeProduct ? (
