@@ -86,6 +86,7 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationInput = {
       megaMenu: true,
     },
     { id: "header-news", label: "News", href: "#news" },
+    { id: "header-store", label: "Store", href: "/store" },
     { id: "header-contact", label: "Contact", href: "#contact" },
   ],
   donate: { id: "header-donate", label: "DONATE NOW", href: "/donate" },
@@ -133,6 +134,7 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationInput = {
     about: [
       { id: "footer-about", label: "About", href: "/about" },
       { id: "footer-news", label: "News", href: "#news" },
+      { id: "footer-store", label: "Store", href: "/store" },
       { id: "footer-videos", label: "Videos", href: "#videos" },
       { id: "footer-committees", label: "Committees", href: "/committees" },
       {

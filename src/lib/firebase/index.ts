@@ -56,9 +56,20 @@ export {
   updateImage,
 } from "@/lib/firebase/images";
 export {
+  createProduct,
+  deleteProduct,
+  getAllProducts,
+  getProduct,
+  getPublishedProducts,
+  subscribeToPublishedProducts,
+  updateProduct,
+} from "@/lib/firebase/products";
+export {
   assertValidGalleryImageFile,
   deleteGalleryImage,
+  deleteStoreProductImage,
   uploadGalleryImage,
+  uploadStoreProductImage,
 } from "@/lib/firebase/storage";
 export {
   subscribeToAllDonations,

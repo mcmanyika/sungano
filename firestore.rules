@@ -88,6 +88,27 @@ service cloud.firestore {
         && data.published is bool;
     }
 
+    function isValidStoreProduct(data) {
+      return data.name is string
+        && data.name.size() > 0
+        && data.name.size() <= 200
+        && data.description is string
+        && data.description.size() <= 2000
+        && data.price is number
+        && data.price > 0
+        && data.price <= 100000
+        && data.currency is string
+        && data.currency in ['USD', 'ZAR', 'GBP', 'EUR']
+        && data.imageUrl is string
+        && data.imageUrl.size() > 0
+        && data.imageUrl.size() <= 2000
+        && data.storagePath is string
+        && data.storagePath.size() > 0
+        && data.storagePath.size() <= 500
+        && data.storagePath.matches('^store/.+')
+        && data.published is bool;
+    }
+
     function isValidDeclaration(data) {
       return data.headline is string
         && data.headline.size() > 0
@@ -539,6 +560,20 @@ service cloud.firestore {
       allow create: if isAdmin() && isValidGalleryImage(request.resource.data);
       allow update: if isAdmin() && isValidGalleryImage(request.resource.data);
       allow delete: if isAdmin();
+    }
+
+    match /products/{productId} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create: if isAdmin() && isValidStoreProduct(request.resource.data);
+      allow update: if isAdmin() && isValidStoreProduct(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Store orders are written server-side (Stripe webhook / sync). Admins
+    // may read them; clients cannot write.
+    match /storeOrders/{orderId} {
+      allow read: if isAdmin();
+      allow write: if false;
     }
 
     function isValidPartner(data) {

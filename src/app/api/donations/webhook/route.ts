@@ -5,6 +5,7 @@ import {
   recordDonation,
   recordDonationFromCheckoutSession,
 } from "@/lib/donations/record";
+import { recordStoreOrderFromCheckoutSession } from "@/lib/store/record";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/server";
 import type { DonationInterval } from "@/types/donation";
 
@@ -74,9 +75,14 @@ export async function POST(request: Request) {
 
   try {
     if (event.type === "checkout.session.completed") {
-      await recordDonationFromCheckoutSession(
-        event.data.object as Stripe.Checkout.Session,
-      );
+      const session = event.data.object as Stripe.Checkout.Session;
+      const sessionMeta = readMetadata(bag(session));
+
+      if (sessionMeta.checkoutType === "store") {
+        await recordStoreOrderFromCheckoutSession(session);
+      } else {
+        await recordDonationFromCheckoutSession(session);
+      }
     } else if (event.type === "invoice.paid") {
       const invoice = bag(event.data.object);
       const billingReason = String(invoice.billing_reason ?? "");
