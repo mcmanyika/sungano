@@ -12,7 +12,7 @@ export function StickySocialRail() {
   const { navigation } = useSiteNavigation();
 
   return (
-    <div className="pointer-events-none absolute inset-y-0 left-8 z-40 hidden w-12 pt-[max(7.5rem,calc(50svh-7rem))] min-[1200px]:block">
+    <div className="pointer-events-none absolute inset-y-0 right-8 z-40 hidden w-12 pt-[max(7.5rem,calc(50svh-7rem))] min-[1200px]:block">
       <motion.div
         variants={fadeUp}
         initial="hidden"
