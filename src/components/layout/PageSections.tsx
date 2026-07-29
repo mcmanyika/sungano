@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Footer } from "@/components/layout/Footer";
+import { StickySocialRail } from "@/components/layout/StickySocialRail";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { AboutTeaser } from "@/components/sections/AboutTeaser";
 import { ContactUs } from "@/components/sections/ContactUs";
@@ -28,7 +29,8 @@ export function PageSections() {
   const { isReady } = usePageLoad();
 
   return (
-    <>
+    <div className="relative">
+      <StickySocialRail />
       <Hero />
       <motion.main
         variants={staggerContainer}
@@ -49,6 +51,6 @@ export function PageSections() {
       >
         <Footer />
       </motion.div>
-    </>
+    </div>
   );
 }
