@@ -6,7 +6,7 @@ import { SocialLinks } from "@/components/ui/SocialLinks";
 import { useSiteNavigation } from "@/hooks/useSiteNavigation";
 import { easeOut, fadeUp } from "@/lib/animations";
 
-/** Vertical social rail: starts mid-hero, sticks under the navbar on scroll. */
+/** Vertical social rail: starts mid-hero, sticks under the navbar, ends before gallery. */
 export function StickySocialRail() {
   const { isReady } = usePageLoad();
   const { navigation } = useSiteNavigation();

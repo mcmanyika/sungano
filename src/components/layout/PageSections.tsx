@@ -15,7 +15,6 @@ import { StoreSection } from "@/components/sections/StoreSection";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
 const sections = [
-  AboutTeaser,
   ImageGallery,
   NewsUpdates,
   Polls,
@@ -29,9 +28,22 @@ export function PageSections() {
   const { isReady } = usePageLoad();
 
   return (
-    <div className="relative">
-      <StickySocialRail />
-      <Hero />
+    <>
+      {/* Rail only covers hero + about, so icons leave before the gallery. */}
+      <div className="relative">
+        <StickySocialRail />
+        <Hero />
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate={isReady ? "visible" : "hidden"}
+        >
+          <motion.div variants={staggerItem}>
+            <AboutTeaser />
+          </motion.div>
+        </motion.div>
+      </div>
+
       <motion.main
         variants={staggerContainer}
         initial="hidden"
@@ -51,6 +63,6 @@ export function PageSections() {
       >
         <Footer />
       </motion.div>
-    </div>
+    </>
   );
 }
