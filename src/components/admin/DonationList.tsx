@@ -2,6 +2,7 @@
 
 import { HandCoins, Loader2, Repeat } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { DonationCampaignForm } from "@/components/admin/DonationCampaignForm";
 import { DonationCharts } from "@/components/admin/DonationCharts";
 import { subscribeToAllDonations } from "@/lib/firebase/donations";
 import { cardSurface } from "@/lib/styles";
@@ -131,6 +132,8 @@ export function DonationList() {
           )}
         </div>
       </div>
+
+      <DonationCampaignForm />
 
       {!loading && !error ? <DonationCharts donations={donations} /> : null}
 

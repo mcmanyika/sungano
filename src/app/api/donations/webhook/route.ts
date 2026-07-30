@@ -115,6 +115,15 @@ export async function POST(request: Request) {
           receiptUrl: readString(invoice, "hosted_invoice_url"),
           createdAt: FieldValue.serverTimestamp(),
         });
+
+        try {
+          const { refreshDonationCampaignRaised } = await import(
+            "@/lib/donations/campaign"
+          );
+          await refreshDonationCampaignRaised();
+        } catch (refreshError) {
+          console.error("Donation campaign refresh failed", refreshError);
+        }
       }
     }
   } catch (error) {

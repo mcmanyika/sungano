@@ -6,6 +6,7 @@ import { StickySocialRail } from "@/components/layout/StickySocialRail";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { AboutTeaser } from "@/components/sections/AboutTeaser";
 import { ContactUs } from "@/components/sections/ContactUs";
+import { DonationTracker } from "@/components/sections/DonationTracker";
 import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
 import { NewsUpdates } from "@/components/sections/NewsUpdates";
@@ -19,6 +20,7 @@ const sections = [
   NewsUpdates,
   Polls,
   HarareDeclaration,
+  DonationTracker,
   StoreSection,
   ContactUs,
 ];

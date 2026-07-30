@@ -126,5 +126,16 @@ export async function recordDonationFromCheckoutSession(
     }
   }
 
+  if (status === "succeeded") {
+    try {
+      const { refreshDonationCampaignRaised } = await import(
+        "@/lib/donations/campaign"
+      );
+      await refreshDonationCampaignRaised();
+    } catch (error) {
+      console.error("Donation campaign refresh failed", error);
+    }
+  }
+
   return { id: sessionId, email };
 }

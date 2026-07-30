@@ -301,6 +301,29 @@ service cloud.firestore {
       allow create, update: if isAdmin() && isValidWelcomeVideo(request.resource.data);
     }
 
+    function isValidDonationCampaign(data) {
+      return data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 200
+        && data.description is string
+        && data.description.size() <= 2000
+        && data.goal is number
+        && data.goal > 0
+        && data.goal <= 100000000
+        && data.currency is string
+        && data.currency in ['USD', 'ZAR', 'GBP', 'EUR']
+        && data.published is bool
+        && data.raised is number
+        && data.raised >= 0
+        && data.donorCount is number
+        && data.donorCount >= 0;
+    }
+
+    match /content/donationCampaign {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidDonationCampaign(request.resource.data);
+    }
+
     // Public site chrome links (header, about mega menu, footer, social).
     match /content/navigation {
       allow read: if true;
