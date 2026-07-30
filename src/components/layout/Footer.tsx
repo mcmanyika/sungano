@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
 import { type ComponentType, useState } from "react";
 import {
   isVideosFooterLink,
@@ -119,23 +117,7 @@ export function Footer() {
   return (
     <footer className="border-t border-neutral-200 bg-neutral-900 text-neutral-300 dark:border-neutral-800">
       <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          <div className="lg:col-span-1">
-            <Link href="/" className="group flex shrink-0 items-center gap-3">
-              <Image
-                src="/images/logo.jpeg"
-                alt=""
-                width={168}
-                height={67}
-                className="h-12 w-auto shrink-0 rounded-md bg-white object-contain p-0.5 shadow-sm transition-transform group-hover:scale-[1.02] sm:h-14"
-                style={{ width: "auto" }}
-              />
-              <span className="whitespace-nowrap font-display text-base font-bold leading-none text-white sm:text-lg">
-                Sungano Ubumbano
-              </span>
-            </Link>
-          </div>
-
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <div>
             <h3 className="mb-4 font-semibold text-white">About</h3>
             <ul className="space-y-2">
