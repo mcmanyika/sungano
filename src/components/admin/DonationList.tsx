@@ -2,6 +2,7 @@
 
 import { HandCoins, Loader2, Repeat } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { DonationCharts } from "@/components/admin/DonationCharts";
 import { subscribeToAllDonations } from "@/lib/firebase/donations";
 import { cardSurface } from "@/lib/styles";
 import {
@@ -130,6 +131,8 @@ export function DonationList() {
           )}
         </div>
       </div>
+
+      {!loading && !error ? <DonationCharts donations={donations} /> : null}
 
       <div className={`p-4 ${cardSurface} rounded-2xl`}>
         <input

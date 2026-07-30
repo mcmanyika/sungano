@@ -121,7 +121,13 @@ export function Footer() {
           <div>
             <h3 className="mb-4 font-semibold text-white">About</h3>
             <ul className="space-y-2">
-              {navigation.footer.about.map((link) => (
+              {navigation.footer.about
+                .filter(
+                  (link) =>
+                    link.id !== "footer-committees" &&
+                    !link.label.toLowerCase().includes("committee"),
+                )
+                .map((link) => (
                 <li key={link.id}>
                   <FooterLink
                     link={link}

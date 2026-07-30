@@ -136,7 +136,6 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationInput = {
       { id: "footer-news", label: "News", href: "#news" },
       { id: "footer-store", label: "Store", href: "/store" },
       { id: "footer-videos", label: "Videos", href: "#videos" },
-      { id: "footer-committees", label: "Committees", href: "/committees" },
       {
         id: "footer-organisations",
         label: "Organisations",
