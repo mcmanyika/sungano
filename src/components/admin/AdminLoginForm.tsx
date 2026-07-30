@@ -37,7 +37,7 @@ export function AdminLoginForm() {
         return;
       }
 
-      router.replace("/admin/news");
+      router.replace("/admin/donations");
     } catch {
       setError("Invalid email or password.");
     } finally {
