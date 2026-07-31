@@ -3,10 +3,12 @@
 import { Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { ShareButtons } from "@/components/news/ShareButtons";
 import { Button } from "@/components/ui/Button";
 import { DonateModal } from "@/components/ui/DonateModal";
 import { Section } from "@/components/ui/Section";
 import { easeOut } from "@/lib/animations";
+import { siteConfig } from "@/lib/data";
 import { getDefaultDonationCampaign } from "@/lib/firebase/donation-campaign";
 import { formatDonationAmount } from "@/types/donation";
 import {
@@ -124,9 +126,6 @@ export function DonationTracker() {
                   raised
                 </span>
               </p>
-              <p className="text-sm font-medium text-muted">
-                Goal {goalLabel}
-              </p>
             </div>
 
             <div
@@ -146,19 +145,15 @@ export function DonationTracker() {
               />
             </div>
 
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-sm text-muted">
-              <p>
-                <span className="font-semibold text-neutral-800">
-                  {Math.round(percent)}%
-                </span>{" "}
-                of goal
-              </p>
-              {campaign.donorCount > 0 ? (
-                <p>
-                  {campaign.donorCount} gift
-                  {campaign.donorCount === 1 ? "" : "s"}
-                </p>
-              ) : null}
+            <div className="mt-5 flex justify-center">
+              <ShareButtons
+                url={`${siteConfig.url}/#donate-tracker`}
+                title={campaign.title}
+                description={
+                  campaign.description ||
+                  `Help us reach ${goalLabel}. ${raisedLabel} raised so far.`
+                }
+              />
             </div>
           </div>
 
