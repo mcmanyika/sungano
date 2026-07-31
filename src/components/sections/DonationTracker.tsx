@@ -62,7 +62,7 @@ export function DonationTracker() {
             : defaults.currency) as DonationCampaign["currency"],
           raised: Number(data.raised ?? 0),
           donorCount: Number(data.donorCount ?? 0),
-          published: data.published !== false,
+          published: Boolean(data.published),
           updatedAt: null,
         });
       } catch {

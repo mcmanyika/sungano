@@ -43,7 +43,7 @@ function mapCampaign(data: Record<string, unknown>): DonationCampaign {
       : "USD") as DonationCampaignCurrency,
     raised: Number(data.raised ?? 0),
     donorCount: Number(data.donorCount ?? 0),
-    published: data.published !== false,
+    published: Boolean(data.published),
     updatedAt: toDate(data.updatedAt),
   };
 }

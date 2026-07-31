@@ -9,6 +9,7 @@ import {
   saveDonationCampaign,
 } from "@/lib/firebase/donation-campaign";
 import { cardSurface } from "@/lib/styles";
+import { cn } from "@/lib/utils";
 import { DONATION_CURRENCIES, formatDonationAmount } from "@/types/donation";
 import {
   DEFAULT_DONATION_CAMPAIGN,
@@ -24,6 +25,7 @@ export function DonationCampaignForm() {
   const [donorCount, setDonorCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [toggling, setToggling] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -70,6 +72,28 @@ export function DonationCampaignForm() {
       setError("Unable to save. Check your admin permissions.");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleVisibilityToggle() {
+    const nextPublished = !form.published;
+    setToggling(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const nextForm = { ...form, published: nextPublished };
+      await saveDonationCampaign(nextForm);
+      setForm(nextForm);
+      setSuccess(
+        nextPublished
+          ? "Donation tracker is now visible on the landing page."
+          : "Donation tracker is hidden from the landing page.",
+      );
+    } catch {
+      setError("Unable to update landing page visibility.");
+    } finally {
+      setToggling(false);
     }
   }
 
@@ -143,6 +167,38 @@ export function DonationCampaignForm() {
           )}
           Refresh raised
         </Button>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-neutral-200 bg-neutral-50/80 px-4 py-4">
+        <div>
+          <p className="text-sm font-semibold text-neutral-900">
+            Show on landing page
+          </p>
+          <p className="mt-0.5 text-xs text-muted">
+            {form.published
+              ? "The donation tracker section is visible to visitors."
+              : "The donation tracker section is hidden from visitors."}
+          </p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={form.published}
+          aria-label="Show donation tracker on landing page"
+          disabled={toggling}
+          onClick={() => void handleVisibilityToggle()}
+          className={cn(
+            "relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 disabled:opacity-60",
+            form.published ? "bg-primary" : "bg-neutral-300",
+          )}
+        >
+          <span
+            className={cn(
+              "inline-block h-6 w-6 rounded-full bg-white shadow transition",
+              form.published ? "translate-x-7" : "translate-x-1",
+            )}
+          />
+        </button>
       </div>
 
       <div className="rounded-xl bg-neutral-50 px-4 py-3 text-sm text-neutral-700">
@@ -227,21 +283,6 @@ export function DonationCampaignForm() {
           </select>
         </div>
       </div>
-
-      <label className="flex items-center gap-3 text-sm text-neutral-700">
-        <input
-          type="checkbox"
-          checked={form.published}
-          onChange={(event) =>
-            setForm((current) => ({
-              ...current,
-              published: event.target.checked,
-            }))
-          }
-          className="h-4 w-4 rounded border-neutral-300 text-primary focus:ring-primary/20"
-        />
-        Published (visible on landing page)
-      </label>
 
       {error ? (
         <p className="text-sm font-medium text-red-600" role="alert">

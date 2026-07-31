@@ -25,7 +25,7 @@ export const DEFAULT_DONATION_CAMPAIGN: DonationCampaignInput = {
     "Help us reach this goal for civic education, community dialogues, and peaceful constitutional work.",
   goal: 50000,
   currency: "USD",
-  published: true,
+  published: false,
 };
 
 export function donationProgressPercent(raised: number, goal: number): number {

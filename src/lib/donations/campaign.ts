@@ -31,10 +31,7 @@ function readCampaignSettings(
     currency: ["USD", "ZAR", "GBP", "EUR"].includes(currency)
       ? currency
       : "USD",
-    published:
-      data == null
-        ? DEFAULT_DONATION_CAMPAIGN.published
-        : data.published !== false,
+    published: Boolean(data?.published),
   };
 }
 
