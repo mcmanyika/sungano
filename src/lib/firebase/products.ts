@@ -217,6 +217,26 @@ export async function updateProduct(
   }
 }
 
+export async function setProductPublished(
+  id: string,
+  published: boolean,
+): Promise<void> {
+  const db = getClientFirestore();
+  const existing = await getProduct(id);
+
+  if (!existing) {
+    throw new Error("Product not found.");
+  }
+
+  await updateDoc(doc(db, PRODUCTS_COLLECTION, id), {
+    published,
+    publishedAt: published
+      ? (existing.publishedAt ?? new Date())
+      : null,
+    updatedAt: serverTimestamp(),
+  });
+}
+
 export async function deleteProduct(id: string): Promise<void> {
   const db = getClientFirestore();
   const existing = await getProduct(id);

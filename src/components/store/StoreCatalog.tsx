@@ -1,25 +1,28 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { easeOut } from "@/lib/animations";
 import { isFirebaseConfigured } from "@/lib/firebase/config";
 import { subscribeToPublishedProducts } from "@/lib/firebase/products";
 import { startStoreCheckout } from "@/lib/store/checkout";
+import { cn } from "@/lib/utils";
 import { formatStorePrice, type StoreProduct } from "@/types/store";
 
 export function StoreCatalog({
   limit,
   showHeader = true,
   showViewAll = false,
+  layout = "grid",
 }: {
   limit?: number;
   showHeader?: boolean;
   showViewAll?: boolean;
+  layout?: "grid" | "horizontal";
 }) {
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,6 +30,22 @@ export function StoreCatalog({
   const [activeProduct, setActiveProduct] = useState<StoreProduct | null>(null);
   const [buyingId, setBuyingId] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState("");
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  const updateScrollButtons = useCallback(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      setCanScrollLeft(false);
+      setCanScrollRight(false);
+      return;
+    }
+
+    const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+    setCanScrollLeft(scroller.scrollLeft > 8);
+    setCanScrollRight(scroller.scrollLeft < maxScroll - 8);
+  }, []);
 
   useEffect(() => {
     if (!isFirebaseConfigured()) {
@@ -55,6 +74,26 @@ export function StoreCatalog({
   }, [limit]);
 
   useEffect(() => {
+    if (layout !== "horizontal" || loading || products.length === 0) {
+      return;
+    }
+
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return;
+    }
+
+    updateScrollButtons();
+    scroller.addEventListener("scroll", updateScrollButtons, { passive: true });
+    window.addEventListener("resize", updateScrollButtons);
+
+    return () => {
+      scroller.removeEventListener("scroll", updateScrollButtons);
+      window.removeEventListener("resize", updateScrollButtons);
+    };
+  }, [layout, loading, products.length, updateScrollButtons]);
+
+  useEffect(() => {
     if (!activeProduct) {
       return;
     }
@@ -74,6 +113,16 @@ export function StoreCatalog({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [activeProduct]);
+
+  function scrollByCard(direction: -1 | 1) {
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return;
+    }
+
+    const amount = Math.min(320, scroller.clientWidth * 0.8) * direction;
+    scroller.scrollBy({ left: amount, behavior: "smooth" });
+  }
 
   async function handleBuy(product: StoreProduct) {
     setCheckoutError("");
@@ -109,16 +158,104 @@ export function StoreCatalog({
       ) : null}
 
       {loading ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: limit ?? 3 }).map((_, index) => (
-            <div
-              key={index}
-              className="aspect-4/5 animate-pulse rounded-2xl bg-neutral-200"
-            />
-          ))}
-        </div>
+        layout === "horizontal" ? (
+          <div className="-mx-5 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex gap-5">
+              {Array.from({ length: limit ?? 4 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="aspect-4/5 w-[min(72vw,18rem)] shrink-0 animate-pulse rounded-2xl bg-neutral-200 sm:w-72"
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: limit ?? 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="aspect-4/5 animate-pulse rounded-2xl bg-neutral-200"
+              />
+            ))}
+          </div>
+        )
       ) : error ? (
         <p className="text-sm font-medium text-red-600">{error}</p>
+      ) : layout === "horizontal" ? (
+        <div className="relative">
+          <button
+            type="button"
+            aria-label="Scroll store left"
+            disabled={!canScrollLeft}
+            onClick={() => scrollByCard(-1)}
+            className={cn(
+              "absolute left-0 top-[38%] z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 shadow-md transition hover:border-primary/20 hover:text-primary sm:left-1 sm:inline-flex md:-left-2",
+              !canScrollLeft && "pointer-events-none opacity-0",
+            )}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            aria-label="Scroll store right"
+            disabled={!canScrollRight}
+            onClick={() => scrollByCard(1)}
+            className={cn(
+              "absolute right-0 top-[38%] z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 shadow-md transition hover:border-primary/20 hover:text-primary sm:right-1 sm:inline-flex md:-right-2",
+              !canScrollRight && "pointer-events-none opacity-0",
+            )}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          <div
+            ref={scrollerRef}
+            className="-mx-5 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          >
+            <div className="flex snap-x snap-mandatory gap-5">
+              {products.map((product, index) => (
+                <motion.button
+                  key={product.id}
+                  type="button"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{
+                    delay: index * 0.05,
+                    duration: 0.45,
+                    ease: easeOut,
+                  }}
+                  onClick={() => {
+                    setCheckoutError("");
+                    setActiveProduct(product);
+                  }}
+                  className="group w-[min(72vw,18rem)] shrink-0 snap-start text-left sm:w-72"
+                >
+                  <div className="relative aspect-4/5 overflow-hidden rounded-2xl bg-neutral-100 p-3 sm:p-4">
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.name}
+                        fill
+                        className="object-contain transition duration-500 group-hover:scale-[1.03]"
+                        sizes="288px"
+                        unoptimized
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-start justify-between gap-3">
+                    <h3 className="font-display text-xl font-bold text-neutral-900">
+                      {product.name}
+                    </h3>
+                    <p className="shrink-0 text-sm font-semibold text-neutral-800">
+                      {formatStorePrice(product.price, product.currency)}
+                    </p>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        </div>
       ) : (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product, index) => (

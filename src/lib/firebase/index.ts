@@ -61,6 +61,7 @@ export {
   getAllProducts,
   getProduct,
   getPublishedProducts,
+  setProductPublished,
   subscribeToPublishedProducts,
   updateProduct,
 } from "@/lib/firebase/products";

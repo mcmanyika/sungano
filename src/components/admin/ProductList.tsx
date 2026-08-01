@@ -5,8 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { getAllProducts } from "@/lib/firebase/products";
+import {
+  getAllProducts,
+  setProductPublished,
+} from "@/lib/firebase/products";
 import { cardSurface } from "@/lib/styles";
+import { cn } from "@/lib/utils";
 import {
   formatStoreDate,
   formatStorePrice,
@@ -17,6 +21,7 @@ export function ProductList() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   const loadProducts = useCallback(async () => {
     setLoading(true);
@@ -34,6 +39,33 @@ export function ProductList() {
   useEffect(() => {
     void loadProducts();
   }, [loadProducts]);
+
+  async function handleToggleActive(product: StoreProduct) {
+    const nextPublished = !product.published;
+    setTogglingId(product.id);
+    setError("");
+
+    try {
+      await setProductPublished(product.id, nextPublished);
+      setProducts((current) =>
+        current.map((item) =>
+          item.id === product.id
+            ? {
+                ...item,
+                published: nextPublished,
+                publishedAt: nextPublished
+                  ? (item.publishedAt ?? new Date())
+                  : null,
+              }
+            : item,
+        ),
+      );
+    } catch {
+      setError(`Unable to ${nextPublished ? "activate" : "deactivate"} this product.`);
+    } finally {
+      setTogglingId(null);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -110,7 +142,7 @@ export function ProductList() {
                             : "bg-neutral-100 text-neutral-600"
                         }`}
                       >
-                        {product.published ? "Published" : "Draft"}
+                        {product.published ? "Active" : "Deactivated"}
                       </span>
                       <span className="text-xs font-semibold text-neutral-700">
                         {formatStorePrice(product.price, product.currency)}
@@ -130,13 +162,49 @@ export function ProductList() {
                   </div>
                 </div>
 
-                <Link
-                  href={`/admin/store/${product.id}/edit`}
-                  className="inline-flex shrink-0 items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:border-primary/20 hover:text-primary"
-                >
-                  <Pencil className="h-4 w-4" />
-                  Edit
-                </Link>
+                <div className="flex shrink-0 flex-wrap items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-muted">
+                      {product.published ? "Active" : "Off"}
+                    </span>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={product.published}
+                      aria-label={
+                        product.published
+                          ? `Deactivate ${product.name}`
+                          : `Activate ${product.name}`
+                      }
+                      disabled={togglingId === product.id}
+                      onClick={() => void handleToggleActive(product)}
+                      className={cn(
+                        "relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 disabled:opacity-60",
+                        product.published ? "bg-primary" : "bg-neutral-300",
+                      )}
+                    >
+                      {togglingId === product.id ? (
+                        <Loader2 className="absolute inset-0 m-auto h-4 w-4 animate-spin text-white" />
+                      ) : (
+                        <span
+                          className={cn(
+                            "inline-block h-6 w-6 rounded-full bg-white shadow transition",
+                            product.published
+                              ? "translate-x-7"
+                              : "translate-x-1",
+                          )}
+                        />
+                      )}
+                    </button>
+                  </div>
+                  <Link
+                    href={`/admin/store/${product.id}/edit`}
+                    className="inline-flex shrink-0 items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:border-primary/20 hover:text-primary"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    Edit
+                  </Link>
+                </div>
               </div>
             ))}
           </div>

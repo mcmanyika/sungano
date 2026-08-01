@@ -271,21 +271,40 @@ export function ProductForm({ product, onDelete }: ProductFormProps) {
         </div>
       </div>
 
-      <label className="flex items-center gap-3 text-sm text-neutral-700">
-        <input
-          type="checkbox"
-          checked={form.published}
-          onChange={(event) => {
-            const published = event.target.checked;
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-neutral-200 bg-neutral-50/80 px-4 py-4">
+        <div>
+          <p className="text-sm font-semibold text-neutral-900">
+            Product active in store
+          </p>
+          <p className="mt-0.5 text-xs text-muted">
+            {form.published
+              ? "Visible on the public store and available for checkout."
+              : "Deactivated — hidden from the store and blocked from checkout."}
+          </p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={form.published}
+          aria-label="Activate product in store"
+          onClick={() => {
+            const published = !form.published;
             updateField("published", published);
             if (published && !form.publishedAt) {
               updateField("publishedAt", new Date());
             }
           }}
-          className="h-4 w-4 rounded border-neutral-300 text-primary focus:ring-primary/20"
-        />
-        Published (visible in store)
-      </label>
+          className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 ${
+            form.published ? "bg-primary" : "bg-neutral-300"
+          }`}
+        >
+          <span
+            className={`inline-block h-6 w-6 rounded-full bg-white shadow transition ${
+              form.published ? "translate-x-7" : "translate-x-1"
+            }`}
+          />
+        </button>
+      </div>
 
       {error && (
         <p className="text-sm font-medium text-red-600" role="alert">
