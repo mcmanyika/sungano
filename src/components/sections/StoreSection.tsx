@@ -7,7 +7,7 @@ export function StoreSection() {
   return (
     <Section id="store" className="scroll-mt-28">
       <SectionHeader title="Store" />
-      <StoreCatalog layout="horizontal" showHeader={false} showViewAll />
+      <StoreCatalog layout="grid" showHeader={false} showViewAll />
     </Section>
   );
 }

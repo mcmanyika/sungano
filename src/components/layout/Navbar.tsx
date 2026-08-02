@@ -240,7 +240,7 @@ export function Navbar() {
           <SiteChromeLink
             link={navigation.donate}
             isHome={isHome}
-            className="rounded-full bg-red-600 px-3.5 py-2 text-[13px] font-semibold text-white shadow-sm transition hover:bg-red-700 sm:px-4"
+            className="hidden rounded-full bg-red-600 px-3.5 py-2 text-[13px] font-semibold text-white shadow-sm transition hover:bg-red-700 sm:px-4 lg:inline-flex"
           />
 
           <button
@@ -387,14 +387,6 @@ export function Navbar() {
                   />
                 </li>
               ))}
-              <li className="pt-2">
-                <SiteChromeLink
-                  link={navigation.donate}
-                  isHome={isHome}
-                  onClick={() => setMobileOpen(false)}
-                  className="block rounded-full bg-red-600 px-3 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-red-700"
-                />
-              </li>
             </ul>
           </motion.div>
         )}
