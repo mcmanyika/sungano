@@ -13,7 +13,7 @@ export function volunteerConfirmationEmail(input: {
   const subject = `Thank you for registering — ${siteConfig.shortName}`;
   const html = emailLayout({
     title: subject,
-    preview: "We received your institutional registration.",
+    preview: "We received your volunteer registration.",
     bodyHtml: [
       paragraph(`Dear ${input.fullName},`),
       paragraph(
@@ -66,7 +66,7 @@ export function volunteerAdminNoticeEmail(input: {
     title: subject,
     preview: `${input.fullName} registered interest (${input.interest}).`,
     bodyHtml: `
-      ${paragraph("A new institutional registration was submitted on the website.")}
+      ${paragraph("A new volunteer registration was submitted on the website.")}
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">${rows}</table>
       ${messageBlock}
       ${button(`${siteUrl}/admin/volunteers`, "Open volunteers")}

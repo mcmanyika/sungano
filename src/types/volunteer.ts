@@ -1,3 +1,5 @@
+import type { VolunteerSource } from "@/types/whatsapp";
+
 export interface Volunteer {
   id: string;
   fullName: string;
@@ -6,6 +8,7 @@ export interface Volunteer {
   province: string;
   interest: string;
   message: string;
+  source: VolunteerSource;
   registeredAt: Date | null;
 }
 
@@ -33,7 +36,6 @@ export const VOLUNTEER_PROVINCES = [
 ] as const;
 
 export const VOLUNTEER_INTERESTS = [
-  "Institutional Membership",
   "Civic Education",
   "Community Mobilisation",
   "Communications & Media",
@@ -42,6 +44,7 @@ export const VOLUNTEER_INTERESTS = [
   "Women & Gender",
   "Logistics & Events",
   "General Support",
+  "Institutional Membership",
 ] as const;
 
 export function formatVolunteerDate(date: Date | null): string {

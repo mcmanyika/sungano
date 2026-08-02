@@ -11,15 +11,15 @@ export function VolunteerRegistration() {
 
   return (
     <>
-      <Section id="organisations" className="scroll-mt-28" variant="default">
+      <Section id="volunteer" className="scroll-mt-28" variant="default">
         <SectionHeader
-          title="Join the Coalition"
-          description="Membership is institutional. Duly constituted organisations that share our principles can register interest through an authorised representative."
+          title="Volunteer with Us"
+          description="Ordinary people across Zimbabwe and the diaspora can register to support civic education, community mobilisation, and peaceful, lawful constitutional work."
         />
 
         <div className="flex justify-center">
           <Button type="button" size="lg" onClick={() => setOpen(true)}>
-            Register institutional interest
+            Register as a volunteer
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
@@ -28,9 +28,9 @@ export function VolunteerRegistration() {
       <VolunteerModal
         open={open}
         onClose={() => setOpen(false)}
-        eyebrow="Join the Coalition"
-        title="Institutional registration"
-        description="Submit details for an authorised representative of your institution. Select Institutional Membership as your area of interest."
+        eyebrow="Get involved"
+        title="Volunteer registration"
+        description="Tell us who you are and how you’d like to help. We’ll follow up with next steps."
       />
     </>
   );

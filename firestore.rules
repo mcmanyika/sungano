@@ -49,7 +49,8 @@ service cloud.firestore {
         && data.interest is string
         && data.interest.size() > 0
         && data.message is string
-        && data.message.size() <= 2000;
+        && data.message.size() <= 2000
+        && (!('source' in data) || data.source == 'web' || data.source == 'whatsapp');
     }
 
     function isValidEvent(data) {
@@ -341,8 +342,27 @@ service cloud.firestore {
           'interest',
           'message',
           'registeredAt'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'fullName',
+          'email',
+          'phone',
+          'province',
+          'interest',
+          'message',
+          'registeredAt',
+          'source'
         ]);
       allow delete: if isAdmin();
+    }
+
+    // WhatsApp chatbot session state — Admin SDK only.
+    match /whatsappSessions/{sessionId} {
+      allow read, write: if false;
+    }
+
+    match /whatsappProcessedMessages/{messageId} {
+      allow read, write: if false;
     }
 
     function isValidComment(data) {

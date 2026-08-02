@@ -83,7 +83,7 @@ export function VolunteerRegisterForm({ className }: { className?: string }) {
               setForm((current) => ({ ...current, fullName: event.target.value }))
             }
             className={fieldClassName}
-            placeholder="Authorised representative"
+            placeholder="Your full name"
           />
         </div>
         <div>

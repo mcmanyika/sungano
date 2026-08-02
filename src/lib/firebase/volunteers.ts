@@ -35,6 +35,10 @@ function toDate(value: unknown): Date | null {
   return null;
 }
 
+function mapSource(value: unknown): Volunteer["source"] {
+  return value === "whatsapp" ? "whatsapp" : "web";
+}
+
 function mapVolunteer(id: string, data: Record<string, unknown>): Volunteer {
   return {
     id,
@@ -44,6 +48,7 @@ function mapVolunteer(id: string, data: Record<string, unknown>): Volunteer {
     province: String(data.province ?? ""),
     interest: String(data.interest ?? ""),
     message: String(data.message ?? ""),
+    source: mapSource(data.source),
     registeredAt: toDate(data.registeredAt),
   };
 }
@@ -81,6 +86,7 @@ export async function registerVolunteer(
       province,
       interest,
       message,
+      source: "web",
       registeredAt: serverTimestamp(),
     });
 

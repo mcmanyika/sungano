@@ -13,6 +13,7 @@ import { NewsUpdates } from "@/components/sections/NewsUpdates";
 import { Polls } from "@/components/sections/Polls";
 import { ImageGallery } from "@/components/sections/ImageGallery";
 import { StoreSection } from "@/components/sections/StoreSection";
+import { VolunteerRegistration } from "@/components/sections/VolunteerRegistration";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
 
 const sections = [
@@ -22,6 +23,7 @@ const sections = [
   HarareDeclaration,
   DonationTracker,
   StoreSection,
+  VolunteerRegistration,
   ContactUs,
 ];
 

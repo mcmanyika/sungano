@@ -173,6 +173,7 @@ export function VolunteerList() {
         volunteer.province,
         volunteer.interest,
         volunteer.message,
+        volunteer.source,
       ]
         .join(" ")
         .toLowerCase()
@@ -306,6 +307,7 @@ export function VolunteerList() {
                   <th className="px-5 py-3">Contact</th>
                   <th className="px-5 py-3">Province</th>
                   <th className="px-5 py-3">Interest</th>
+                  <th className="px-5 py-3">Source</th>
                   <th className="px-5 py-3">Registered</th>
                   <th className="px-5 py-3">
                     <span className="sr-only">Actions</span>
@@ -330,6 +332,9 @@ export function VolunteerList() {
                     </td>
                     <td className="px-5 py-4">{volunteer.province}</td>
                     <td className="px-5 py-4">{volunteer.interest}</td>
+                    <td className="px-5 py-4 capitalize text-muted">
+                      {volunteer.source}
+                    </td>
                     <td className="px-5 py-4 text-muted">
                       {formatVolunteerDate(volunteer.registeredAt)}
                     </td>
@@ -441,7 +446,15 @@ export function VolunteerList() {
                     {selected.interest}
                   </dd>
                 </div>
-                <div className="sm:col-span-2">
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
+                    Source
+                  </dt>
+                  <dd className="mt-1 text-sm capitalize text-neutral-800">
+                    {selected.source}
+                  </dd>
+                </div>
+                <div>
                   <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
                     Registered
                   </dt>
