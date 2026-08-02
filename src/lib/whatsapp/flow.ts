@@ -2,6 +2,11 @@ import "server-only";
 import { isEmailConfigured } from "@/lib/email/client";
 import { sendVolunteerEmails } from "@/lib/email/send";
 import { registerVolunteerAdmin } from "@/lib/firebase/volunteers-admin";
+import {
+  draftIsComplete,
+  runVolunteerChatTurn,
+} from "@/lib/openai/volunteer-chat";
+import { isOpenAIConfigured } from "@/lib/openai/config";
 import { sendWhatsAppText } from "@/lib/whatsapp/client";
 import {
   clearWhatsAppSession,
@@ -14,6 +19,7 @@ import {
   VOLUNTEER_PROVINCES,
 } from "@/types/volunteer";
 import type {
+  WhatsAppChatMessage,
   WhatsAppVolunteerDraft,
   WhatsAppVolunteerStep,
 } from "@/types/whatsapp";
@@ -123,12 +129,25 @@ function promptConfirm(draft: WhatsAppVolunteerDraft): string {
   ].join("\n");
 }
 
+function appendHistory(
+  history: WhatsAppChatMessage[],
+  userMessage: string,
+  assistantReply: string,
+): WhatsAppChatMessage[] {
+  const next: WhatsAppChatMessage[] = [
+    ...history,
+    { role: "user", content: userMessage },
+    { role: "assistant", content: assistantReply },
+  ];
+  return next.slice(-20);
+}
+
 async function reply(waId: string, body: string): Promise<void> {
   await sendWhatsAppText(waId, body);
 }
 
-async function beginRegistration(waId: string): Promise<void> {
-  await saveWhatsAppSession(waId, "name", {});
+async function beginGuidedRegistration(waId: string): Promise<void> {
+  await saveWhatsAppSession(waId, "name", {}, []);
   await reply(
     waId,
     [
@@ -137,6 +156,23 @@ async function beginRegistration(waId: string): Promise<void> {
       promptName(),
     ].join("\n"),
   );
+}
+
+async function beginOpenAIRegistration(waId: string): Promise<void> {
+  const opening = [
+    "Great — I can help you register as a volunteer.",
+    "What’s your full name?",
+    "",
+    "_You can also share a few details at once. Reply CANCEL anytime to stop._",
+  ].join("\n");
+
+  await saveWhatsAppSession(
+    waId,
+    "chat",
+    {},
+    [{ role: "assistant", content: opening }],
+  );
+  await reply(waId, opening);
 }
 
 async function completeRegistration(
@@ -179,48 +215,65 @@ async function completeRegistration(
   );
 }
 
-export async function handleWhatsAppVolunteerMessage(
-  waId: string,
-  text: string,
-  messageId?: string,
-): Promise<void> {
-  if (messageId) {
-    const alreadyHandled = await claimWhatsAppMessageId(messageId);
-    if (alreadyHandled) {
-      return;
-    }
+async function handleOpenAIChat(input: {
+  waId: string;
+  text: string;
+  draft: WhatsAppVolunteerDraft;
+  history: WhatsAppChatMessage[];
+}): Promise<boolean> {
+  const turn = await runVolunteerChatTurn({
+    waPhone: formatPhoneDisplay(input.waId),
+    userMessage: input.text,
+    draft: input.draft,
+    history: input.history,
+  });
+
+  if (!turn) {
+    return false;
   }
 
-  const normalised = text.trim();
-  const keyword = normalised.toLowerCase();
-
-  if (!normalised) {
-    return;
+  if (turn.action === "cancel") {
+    await clearWhatsAppSession(input.waId);
+    await reply(
+      input.waId,
+      turn.reply ||
+        "Registration cancelled. Reply *VOLUNTEER* anytime to start again.",
+    );
+    return true;
   }
 
-  if (CANCEL_KEYWORDS.has(keyword)) {
-    await clearWhatsAppSession(waId);
-    await reply(waId, "Registration cancelled. Reply *VOLUNTEER* anytime to start again.");
-    return;
+  if (turn.action === "restart") {
+    await beginOpenAIRegistration(input.waId);
+    return true;
   }
 
-  const session = await getWhatsAppSession(waId);
-  const step: WhatsAppVolunteerStep = session?.step ?? "idle";
-  const draft: WhatsAppVolunteerDraft = { ...(session?.draft ?? {}) };
-
-  if (step === "idle" || !session) {
-    if (START_KEYWORDS.has(keyword)) {
-      await beginRegistration(waId);
-      return;
-    }
-
-    await reply(waId, welcomeMessage());
-    return;
+  if (turn.action === "ready_to_confirm" && draftIsComplete(turn.draft)) {
+    const summary = promptConfirm(turn.draft);
+    const history = appendHistory(input.history, input.text, summary);
+    await saveWhatsAppSession(input.waId, "confirm", turn.draft, history);
+    await reply(input.waId, summary);
+    return true;
   }
 
-  if (START_KEYWORDS.has(keyword)) {
-    await beginRegistration(waId);
-    return;
+  const history = appendHistory(input.history, input.text, turn.reply);
+  await saveWhatsAppSession(input.waId, "chat", turn.draft, history);
+  await reply(input.waId, turn.reply);
+  return true;
+}
+
+async function handleGuidedFlow(input: {
+  waId: string;
+  text: string;
+  keyword: string;
+  step: WhatsAppVolunteerStep;
+  draft: WhatsAppVolunteerDraft;
+}): Promise<void> {
+  const { waId, text: normalised, keyword, draft } = input;
+  let step = input.step;
+
+  // Migrate OpenAI chat sessions to guided mode if OpenAI is unavailable.
+  if (step === "chat") {
+    step = "name";
   }
 
   switch (step) {
@@ -231,7 +284,7 @@ export async function handleWhatsAppVolunteerMessage(
       }
 
       draft.fullName = normalised;
-      await saveWhatsAppSession(waId, "email", draft);
+      await saveWhatsAppSession(waId, "email", draft, []);
       await reply(waId, promptEmail());
       return;
     }
@@ -244,7 +297,7 @@ export async function handleWhatsAppVolunteerMessage(
       }
 
       draft.email = email;
-      await saveWhatsAppSession(waId, "phone", draft);
+      await saveWhatsAppSession(waId, "phone", draft, []);
       await reply(waId, promptPhone(waId));
       return;
     }
@@ -262,7 +315,7 @@ export async function handleWhatsAppVolunteerMessage(
         return;
       }
 
-      await saveWhatsAppSession(waId, "province", draft);
+      await saveWhatsAppSession(waId, "province", draft, []);
       await reply(waId, promptProvince());
       return;
     }
@@ -278,7 +331,7 @@ export async function handleWhatsAppVolunteerMessage(
       }
 
       draft.province = province;
-      await saveWhatsAppSession(waId, "interest", draft);
+      await saveWhatsAppSession(waId, "interest", draft, []);
       await reply(waId, promptInterest());
       return;
     }
@@ -294,7 +347,7 @@ export async function handleWhatsAppVolunteerMessage(
       }
 
       draft.interest = interest;
-      await saveWhatsAppSession(waId, "message", draft);
+      await saveWhatsAppSession(waId, "message", draft, []);
       await reply(waId, promptMessage());
       return;
     }
@@ -303,13 +356,16 @@ export async function handleWhatsAppVolunteerMessage(
       if (keyword === "skip" || keyword === "-" || keyword === "none") {
         draft.message = "";
       } else if (normalised.length > 2000) {
-        await reply(waId, "Please keep your message under 2000 characters, or reply *SKIP*.");
+        await reply(
+          waId,
+          "Please keep your message under 2000 characters, or reply *SKIP*.",
+        );
         return;
       } else {
         draft.message = normalised;
       }
 
-      await saveWhatsAppSession(waId, "confirm", draft);
+      await saveWhatsAppSession(waId, "confirm", draft, []);
       await reply(waId, promptConfirm(draft));
       return;
     }
@@ -332,4 +388,133 @@ export async function handleWhatsAppVolunteerMessage(
       await reply(waId, welcomeMessage());
     }
   }
+}
+
+export async function handleWhatsAppVolunteerMessage(
+  waId: string,
+  text: string,
+  messageId?: string,
+): Promise<void> {
+  if (messageId) {
+    const alreadyHandled = await claimWhatsAppMessageId(messageId);
+    if (alreadyHandled) {
+      return;
+    }
+  }
+
+  const normalised = text.trim();
+  const keyword = normalised.toLowerCase();
+
+  if (!normalised) {
+    return;
+  }
+
+  if (CANCEL_KEYWORDS.has(keyword)) {
+    await clearWhatsAppSession(waId);
+    await reply(
+      waId,
+      "Registration cancelled. Reply *VOLUNTEER* anytime to start again.",
+    );
+    return;
+  }
+
+  const session = await getWhatsAppSession(waId);
+  const step: WhatsAppVolunteerStep = session?.step ?? "idle";
+  const draft: WhatsAppVolunteerDraft = { ...(session?.draft ?? {}) };
+  const history = session?.history ?? [];
+  const useOpenAI = isOpenAIConfigured();
+
+  if (step === "idle" || !session) {
+    if (START_KEYWORDS.has(keyword)) {
+      if (useOpenAI) {
+        await beginOpenAIRegistration(waId);
+      } else {
+        await beginGuidedRegistration(waId);
+      }
+      return;
+    }
+
+    if (useOpenAI) {
+      const handled = await handleOpenAIChat({
+        waId,
+        text: normalised,
+        draft: {},
+        history: [],
+      });
+      if (handled) {
+        return;
+      }
+    }
+
+    await reply(waId, welcomeMessage());
+    return;
+  }
+
+  if (START_KEYWORDS.has(keyword)) {
+    if (useOpenAI) {
+      await beginOpenAIRegistration(waId);
+    } else {
+      await beginGuidedRegistration(waId);
+    }
+    return;
+  }
+
+  if (step === "confirm") {
+    if (keyword === "yes" || keyword === "y" || keyword === "confirm") {
+      await completeRegistration(waId, draft);
+      return;
+    }
+
+    if (useOpenAI && !CANCEL_KEYWORDS.has(keyword)) {
+      // Let users correct details conversationally, then re-confirm.
+      const handled = await handleOpenAIChat({
+        waId,
+        text: normalised,
+        draft,
+        history,
+      });
+      if (handled) {
+        return;
+      }
+    }
+
+    await reply(
+      waId,
+      "Reply *YES* to submit your registration, or *CANCEL* to stop.",
+    );
+    return;
+  }
+
+  if (useOpenAI && step === "chat") {
+    const handled = await handleOpenAIChat({
+      waId,
+      text: normalised,
+      draft,
+      history,
+    });
+    if (handled) {
+      return;
+    }
+  }
+
+  // Prefer OpenAI mid-registration when configured, even for legacy step sessions.
+  if (useOpenAI) {
+    const handled = await handleOpenAIChat({
+      waId,
+      text: normalised,
+      draft,
+      history,
+    });
+    if (handled) {
+      return;
+    }
+  }
+
+  await handleGuidedFlow({
+    waId,
+    text: normalised,
+    keyword,
+    step,
+    draft,
+  });
 }

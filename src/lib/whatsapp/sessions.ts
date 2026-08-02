@@ -2,6 +2,7 @@ import "server-only";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getAdminFirestore } from "@/lib/firebase/admin";
 import type {
+  WhatsAppChatMessage,
   WhatsAppVolunteerDraft,
   WhatsAppVolunteerSession,
   WhatsAppVolunteerStep,
@@ -9,6 +10,7 @@ import type {
 
 const SESSIONS_COLLECTION = "whatsappSessions";
 const PROCESSED_COLLECTION = "whatsappProcessedMessages";
+const MAX_HISTORY = 20;
 
 function toDate(value: unknown): Date | null {
   if (value instanceof Timestamp) {
@@ -20,6 +22,25 @@ function toDate(value: unknown): Date | null {
   }
 
   return null;
+}
+
+function mapHistory(value: unknown): WhatsAppChatMessage[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter((item): item is WhatsAppChatMessage => {
+      if (!item || typeof item !== "object") {
+        return false;
+      }
+      const row = item as Record<string, unknown>;
+      return (
+        (row.role === "user" || row.role === "assistant") &&
+        typeof row.content === "string"
+      );
+    })
+    .slice(-MAX_HISTORY);
 }
 
 function mapSession(
@@ -37,6 +58,7 @@ function mapSession(
       ? data.step
       : "idle") as WhatsAppVolunteerStep,
     draft,
+    history: mapHistory(data.history),
     updatedAt: toDate(data.updatedAt),
   };
 }
@@ -60,6 +82,7 @@ export async function saveWhatsAppSession(
   waId: string,
   step: WhatsAppVolunteerStep,
   draft: WhatsAppVolunteerDraft,
+  history: WhatsAppChatMessage[] = [],
 ): Promise<void> {
   await getAdminFirestore()
     .collection(SESSIONS_COLLECTION)
@@ -68,6 +91,7 @@ export async function saveWhatsAppSession(
       {
         step,
         draft,
+        history: history.slice(-MAX_HISTORY),
         updatedAt: FieldValue.serverTimestamp(),
       },
       { merge: true },
