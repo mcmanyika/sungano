@@ -194,11 +194,5 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationInput = {
       label: "TikTok",
       href: "https://www.tiktok.com/@ubumbanosungano",
     },
-    {
-      id: "social-whatsapp",
-      platform: "whatsapp",
-      label: "WhatsApp",
-      href: "https://wa.me/14697992071",
-    },
   ],
 };

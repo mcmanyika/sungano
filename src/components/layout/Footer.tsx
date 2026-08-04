@@ -167,7 +167,10 @@ export function Footer() {
             <div className="grid w-fit grid-cols-3 gap-3">
               {navigation.social.map((social) => {
                 const Icon = socialIcons[social.platform];
-                if (!isNavigableHref(social.href)) {
+                if (
+                  social.platform === "whatsapp" ||
+                  !isNavigableHref(social.href)
+                ) {
                   return null;
                 }
 

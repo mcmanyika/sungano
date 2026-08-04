@@ -84,7 +84,9 @@ export function SocialLinks({
   linkClassName?: string;
   iconClassName?: string;
 }) {
-  const visible = links.filter((link) => isNavigableHref(link.href));
+  const visible = links.filter(
+    (link) => link.platform !== "whatsapp" && isNavigableHref(link.href),
+  );
 
   if (visible.length === 0) {
     return null;

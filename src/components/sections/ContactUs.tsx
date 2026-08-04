@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, MapPin, MessageCircle } from "lucide-react";
+import { Loader2, MapPin } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Section, SectionHeader } from "@/components/ui/Section";
@@ -75,20 +75,6 @@ export function ContactUs() {
             Reach our team
           </h3>
           <div className="mt-5 space-y-4">
-            <a
-              href="https://wa.me/14697992071"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-start gap-3 text-sm text-neutral-700 transition hover:text-primary"
-            >
-              <MessageCircle className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-              <span>
-                <strong className="block font-semibold text-neutral-900">
-                  WhatsApp
-                </strong>
-                +1 469 799 2071
-              </span>
-            </a>
             <div className="flex items-start gap-3 text-sm text-neutral-700">
               <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
               <span>
