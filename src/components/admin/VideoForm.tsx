@@ -24,6 +24,7 @@ function toInput(video?: GalleryVideo): GalleryVideoInput {
     description: video?.description ?? "",
     youtubeId: video?.youtubeId ?? "",
     published: video?.published ?? false,
+    isHero: video?.isHero ?? false,
     publishedAt: video?.publishedAt ?? null,
   };
 }
@@ -154,10 +155,24 @@ export function VideoForm({ video, onDelete }: VideoFormProps) {
             if (published && !form.publishedAt) {
               updateField("publishedAt", new Date());
             }
+            if (!published) {
+              updateField("isHero", false);
+            }
           }}
           className="h-4 w-4 rounded border-neutral-300 text-primary focus:ring-primary/20"
         />
         Published (visible in gallery)
+      </label>
+
+      <label className="flex items-center gap-3 text-sm text-neutral-700">
+        <input
+          type="checkbox"
+          checked={form.isHero}
+          disabled={!form.published}
+          onChange={(event) => updateField("isHero", event.target.checked)}
+          className="h-4 w-4 rounded border-neutral-300 text-primary focus:ring-primary/20 disabled:opacity-50"
+        />
+        Homepage hero video (Who We Are section)
       </label>
 
       {error && (

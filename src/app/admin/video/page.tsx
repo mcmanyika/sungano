@@ -1,17 +1,6 @@
-import { WelcomeVideoForm } from "@/components/admin/WelcomeVideoForm";
+import { redirect } from "next/navigation";
 
+/** Hero video is now chosen from the Videos listing. */
 export default function AdminVideoPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="font-display text-2xl font-bold text-neutral-900">
-          Hero video
-        </h2>
-        <p className="mt-1 text-sm text-muted">
-          Manage the welcome video shown in the homepage hero.
-        </p>
-      </div>
-      <WelcomeVideoForm />
-    </div>
-  );
+  redirect("/admin/videos");
 }

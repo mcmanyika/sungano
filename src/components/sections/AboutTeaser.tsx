@@ -8,45 +8,25 @@ import { Section } from "@/components/ui/Section";
 import { YouTubeEmbed } from "@/components/ui/YouTubeEmbed";
 import { aboutContent } from "@/lib/about";
 import { easeOut } from "@/lib/animations";
-import {
-  getDefaultWelcomeVideo,
-  getWelcomeVideo,
-  subscribeToWelcomeVideo,
-} from "@/lib/firebase/welcome-video";
-import type { WelcomeVideo } from "@/types/welcome-video";
+import { isFirebaseConfigured } from "@/lib/firebase/config";
+import { subscribeToPublishedHeroVideo } from "@/lib/firebase/videos";
+import type { GalleryVideo } from "@/types/video";
 
 export function AboutTeaser() {
-  const [welcomeVideo, setWelcomeVideo] = useState<WelcomeVideo>(
-    getDefaultWelcomeVideo,
-  );
-  const showVideo =
-    Boolean(welcomeVideo.youtubeId.trim()) && welcomeVideo.published;
+  const [heroVideo, setHeroVideo] = useState<GalleryVideo | null>(null);
+  const showVideo = Boolean(heroVideo?.youtubeId.trim());
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function loadVideo() {
-      try {
-        const video = await getWelcomeVideo();
-        if (!cancelled) {
-          setWelcomeVideo(video);
-        }
-      } catch {
-        // Subscription below will retry live updates.
-      }
+    if (!isFirebaseConfigured()) {
+      setHeroVideo(null);
+      return;
     }
 
-    void loadVideo();
-    const unsubscribe = subscribeToWelcomeVideo((video) => {
-      if (!cancelled) {
-        setWelcomeVideo(video);
-      }
+    const unsubscribe = subscribeToPublishedHeroVideo((video) => {
+      setHeroVideo(video);
     });
 
-    return () => {
-      cancelled = true;
-      unsubscribe();
-    };
+    return unsubscribe;
   }, []);
 
   return (
@@ -147,7 +127,7 @@ export function AboutTeaser() {
           </motion.div>
         </motion.div>
 
-        {showVideo ? (
+        {showVideo && heroVideo ? (
           <motion.div
             initial={{ opacity: 0, y: 28, scale: 0.98 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -170,8 +150,8 @@ export function AboutTeaser() {
 
             <div className="relative">
               <YouTubeEmbed
-                videoId={welcomeVideo.youtubeId}
-                title={welcomeVideo.title || "Welcome video"}
+                videoId={heroVideo.youtubeId}
+                title={heroVideo.title || "Welcome video"}
               />
             </div>
           </motion.div>

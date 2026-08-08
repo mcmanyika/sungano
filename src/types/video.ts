@@ -6,6 +6,7 @@ export interface GalleryVideo {
   description: string;
   youtubeId: string;
   published: boolean;
+  isHero: boolean;
   publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
@@ -16,6 +17,7 @@ export interface GalleryVideoInput {
   description: string;
   youtubeId: string;
   published: boolean;
+  isHero: boolean;
   publishedAt: Date | null;
 }
 

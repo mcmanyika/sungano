@@ -38,11 +38,14 @@ export {
   subscribeToSiteNavigation,
 } from "@/lib/firebase/navigation";
 export {
+  clearHeroVideo,
   createVideo,
   deleteVideo,
   getAllVideos,
   getPublishedVideos,
   getVideo,
+  setHeroVideo,
+  subscribeToPublishedHeroVideo,
   subscribeToPublishedVideos,
   updateVideo,
 } from "@/lib/firebase/videos";

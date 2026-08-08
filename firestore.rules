@@ -68,7 +68,8 @@ service cloud.firestore {
         && data.description is string
         && data.youtubeId is string
         && data.youtubeId.size() > 0
-        && data.published is bool;
+        && data.published is bool
+        && (!('isHero' in data) || data.isHero is bool);
     }
 
     function isValidGalleryImage(data) {

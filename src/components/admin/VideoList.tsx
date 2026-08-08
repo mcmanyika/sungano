@@ -1,10 +1,14 @@
 "use client";
 
-import { Loader2, Pencil, Plus, RefreshCw } from "lucide-react";
+import { Loader2, Pencil, Plus, RefreshCw, Star } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { getAllVideos } from "@/lib/firebase/videos";
+import {
+  clearHeroVideo,
+  getAllVideos,
+  setHeroVideo,
+} from "@/lib/firebase/videos";
 import { cardSurface } from "@/lib/styles";
 import { formatVideoDate, type GalleryVideo } from "@/types/video";
 
@@ -12,6 +16,7 @@ export function VideoList() {
   const [videos, setVideos] = useState<GalleryVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [heroUpdatingId, setHeroUpdatingId] = useState<string | null>(null);
 
   const loadVideos = useCallback(async () => {
     setLoading(true);
@@ -30,6 +35,24 @@ export function VideoList() {
     void loadVideos();
   }, [loadVideos]);
 
+  async function handleHeroToggle(video: GalleryVideo) {
+    setHeroUpdatingId(video.id);
+    setError("");
+
+    try {
+      if (video.isHero) {
+        await clearHeroVideo(video.id);
+      } else {
+        await setHeroVideo(video.id);
+      }
+      await loadVideos();
+    } catch {
+      setError("Unable to update the hero video.");
+    } finally {
+      setHeroUpdatingId(null);
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -38,7 +61,8 @@ export function VideoList() {
             Video gallery
           </h2>
           <p className="mt-1 text-sm text-muted">
-            Publish YouTube videos for the homepage gallery.
+            Publish YouTube videos for the homepage gallery. Mark one as the
+            hero video for the Who We Are section.
           </p>
         </div>
 
@@ -94,6 +118,11 @@ export function VideoList() {
                     >
                       {video.published ? "Published" : "Draft"}
                     </span>
+                    {video.isHero ? (
+                      <span className="rounded-full bg-secondary/15 px-2.5 py-0.5 text-[11px] font-semibold text-neutral-800">
+                        Hero
+                      </span>
+                    ) : null}
                     {video.publishedAt && (
                       <span className="text-xs text-muted">
                         {formatVideoDate(video.publishedAt)}
@@ -108,13 +137,34 @@ export function VideoList() {
                   </p>
                 </div>
 
-                <Link
-                  href={`/admin/videos/${video.id}/edit`}
-                  className="inline-flex shrink-0 items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:border-primary/20 hover:text-primary"
-                >
-                  <Pencil className="h-4 w-4" />
-                  Edit
-                </Link>
+                <div className="flex shrink-0 flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => void handleHeroToggle(video)}
+                    disabled={heroUpdatingId === video.id}
+                    className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition disabled:opacity-50 ${
+                      video.isHero
+                        ? "border-secondary/40 bg-secondary/10 text-neutral-900 hover:bg-secondary/20"
+                        : "border-neutral-200 text-neutral-700 hover:border-primary/20 hover:text-primary"
+                    }`}
+                  >
+                    {heroUpdatingId === video.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Star
+                        className={`h-4 w-4 ${video.isHero ? "fill-secondary text-secondary" : ""}`}
+                      />
+                    )}
+                    {video.isHero ? "Unset hero" : "Set as hero"}
+                  </button>
+                  <Link
+                    href={`/admin/videos/${video.id}/edit`}
+                    className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:border-primary/20 hover:text-primary"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    Edit
+                  </Link>
+                </div>
               </div>
             ))}
           </div>

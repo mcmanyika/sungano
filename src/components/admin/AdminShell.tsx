@@ -20,7 +20,6 @@ import {
   ScrollText,
   ShoppingBag,
   UserPlus,
-  Video,
   type LucideIcon,
 } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
@@ -61,7 +60,7 @@ const navGroups: AdminNavGroup[] = [
       {
         href: "/admin/videos",
         label: "Videos",
-        description: "Gallery clips",
+        description: "Gallery & hero clip",
         icon: Clapperboard,
       },
       {
@@ -69,12 +68,6 @@ const navGroups: AdminNavGroup[] = [
         label: "Images",
         description: "Homepage gallery",
         icon: ImageIcon,
-      },
-      {
-        href: "/admin/video",
-        label: "Hero video",
-        description: "Welcome embed",
-        icon: Video,
       },
       {
         href: "/admin/declaration",
@@ -159,10 +152,6 @@ const navGroups: AdminNavGroup[] = [
 ];
 
 function isActivePath(pathname: string, href: string) {
-  if (href === "/admin/video") {
-    return pathname === "/admin/video";
-  }
-
   return pathname.startsWith(href);
 }
 
