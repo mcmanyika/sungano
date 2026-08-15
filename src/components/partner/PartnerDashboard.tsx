@@ -1,20 +1,23 @@
 "use client";
 
 import type { User } from "firebase/auth";
-import { Heart, Loader2, LogOut, Receipt } from "lucide-react";
+import { CreditCard, Heart, Loader2, LogOut, Receipt } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { DonateModal } from "@/components/ui/DonateModal";
 import { logout } from "@/hooks/useAuth";
+import { siteConfig } from "@/lib/data";
 import { subscribeToDonationsByEmail } from "@/lib/firebase/donations";
 import { getPartnerProfile } from "@/lib/firebase/partners";
-import { siteConfig } from "@/lib/data";
+import { startMembershipCardCheckout } from "@/lib/membership-card/checkout";
 import type { Donation } from "@/types/donation";
 import {
   describeInterval,
   formatDonationAmount,
   formatDonationDate,
 } from "@/types/donation";
+import { MEMBERSHIP_CARD_DISPLAY_PRICE } from "@/types/membership-card";
 import type { PartnerProfile } from "@/types/partner";
 
 interface PartnerDashboardProps {
@@ -29,13 +32,20 @@ const statusStyles: Record<string, string> = {
 };
 
 export function PartnerDashboard({ user }: PartnerDashboardProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [profile, setProfile] = useState<PartnerProfile | null>(null);
   const [donations, setDonations] = useState<Donation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [donateOpen, setDonateOpen] = useState(false);
+  const [orderingCard, setOrderingCard] = useState(false);
+  const [cardMessage, setCardMessage] = useState("");
+  const [cardError, setCardError] = useState("");
 
   const email = user.email ?? "";
+  const cardStatus = searchParams.get("card");
+  const cardSessionId = searchParams.get("session_id");
 
   useEffect(() => {
     void getPartnerProfile(user.uid).then(setProfile);
@@ -57,6 +67,30 @@ export function PartnerDashboard({ user }: PartnerDashboardProps) {
     return unsubscribe;
   }, [email]);
 
+  useEffect(() => {
+    if (cardStatus === "success") {
+      setCardMessage(
+        "Thank you — your membership card order was received. We’ll follow up with shipping details.",
+      );
+      if (cardSessionId?.startsWith("cs_")) {
+        void fetch("/api/membership-card/sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId: cardSessionId }),
+        }).catch(() => {
+          // Webhook is primary; sync is best-effort.
+        });
+      }
+      router.replace("/partner", { scroll: false });
+      return;
+    }
+
+    if (cardStatus === "cancelled") {
+      setCardError("Membership card checkout was cancelled.");
+      router.replace("/partner", { scroll: false });
+    }
+  }, [cardStatus, cardSessionId, router]);
+
   const totalsByCurrency = useMemo(() => {
     const totals = new Map<string, number>();
     for (const donation of donations) {
@@ -74,6 +108,31 @@ export function PartnerDashboard({ user }: PartnerDashboardProps) {
   const displayName =
     profile?.organisation || user.displayName || email || "Partner";
 
+  async function handleOrderMembershipCard() {
+    if (!email) {
+      setCardError("Your account needs an email address to order a card.");
+      return;
+    }
+
+    setOrderingCard(true);
+    setCardError("");
+    setCardMessage("");
+
+    const result = await startMembershipCardCheckout({
+      buyerName: profile?.organisation || user.displayName || "",
+      email,
+      partnerId: user.uid,
+    });
+
+    if (!result.ok) {
+      setCardError(result.error);
+      setOrderingCard(false);
+      return;
+    }
+
+    window.location.href = result.url;
+  }
+
   return (
     <div className="min-h-svh bg-background">
       <div className="mx-auto max-w-4xl px-5 py-24 sm:px-8">
@@ -87,7 +146,22 @@ export function PartnerDashboard({ user }: PartnerDashboardProps) {
             </h1>
             <p className="mt-1 text-sm text-muted">{email}</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={orderingCard}
+              onClick={() => void handleOrderMembershipCard()}
+            >
+              {orderingCard ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <CreditCard className="h-4 w-4" />
+              )}
+              {orderingCard
+                ? "Redirecting…"
+                : `Order membership card — $${MEMBERSHIP_CARD_DISPLAY_PRICE}`}
+            </Button>
             <Button type="button" onClick={() => setDonateOpen(true)}>
               <Heart className="h-4 w-4" />
               Donate
@@ -103,7 +177,61 @@ export function PartnerDashboard({ user }: PartnerDashboardProps) {
           </div>
         </div>
 
-        {/* Totals */}
+        {cardMessage ? (
+          <p
+            role="status"
+            className="mt-6 rounded-2xl border border-accent/20 bg-accent/10 px-4 py-3 text-sm font-medium text-accent"
+          >
+            {cardMessage}
+          </p>
+        ) : null}
+        {cardError ? (
+          <p
+            role="alert"
+            className="mt-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
+          >
+            {cardError}
+          </p>
+        ) : null}
+
+        <div className="mt-8 rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/[0.04] via-white to-secondary/10 p-5 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
+                Membership card
+              </p>
+              <h2 className="mt-1 font-display text-xl font-bold text-neutral-900">
+                Order your physical card
+              </h2>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
+                Secure checkout via Stripe. Price is{" "}
+                <span className="font-semibold text-neutral-800">
+                  ${MEMBERSHIP_CARD_DISPLAY_PRICE} USD
+                </span>
+                . Available only in the partner portal.
+              </p>
+            </div>
+            <Button
+              type="button"
+              size="lg"
+              disabled={orderingCard}
+              onClick={() => void handleOrderMembershipCard()}
+            >
+              {orderingCard ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Redirecting
+                </>
+              ) : (
+                <>
+                  <CreditCard className="h-4 w-4" />
+                  Pay ${MEMBERSHIP_CARD_DISPLAY_PRICE}
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           <div className="rounded-2xl border border-neutral-200/70 bg-white/80 p-5">
             <p className="text-xs font-semibold uppercase tracking-wide text-muted">
@@ -136,7 +264,6 @@ export function PartnerDashboard({ user }: PartnerDashboardProps) {
           </div>
         </div>
 
-        {/* History */}
         <div className="mt-10">
           <h2 className="mb-4 font-display text-xl font-bold text-neutral-900">
             Donation history

@@ -620,6 +620,14 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Membership card orders (partner portal) — Admin SDK writes only.
+    match /membershipCardOrders/{orderId} {
+      allow read: if isAdmin()
+        || (request.auth != null
+            && resource.data.email == request.auth.token.email);
+      allow write: if false;
+    }
+
     function isValidPartner(data) {
       return data.organisation is string
         && data.organisation.size() > 0

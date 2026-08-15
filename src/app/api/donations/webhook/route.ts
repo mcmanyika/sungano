@@ -6,6 +6,7 @@ import {
   recordDonationFromCheckoutSession,
 } from "@/lib/donations/record";
 import { recordStoreOrderFromCheckoutSession } from "@/lib/store/record";
+import { recordMembershipCardOrderFromCheckoutSession } from "@/lib/membership-card/record";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/server";
 import type { DonationInterval } from "@/types/donation";
 
@@ -80,6 +81,8 @@ export async function POST(request: Request) {
 
       if (sessionMeta.checkoutType === "store") {
         await recordStoreOrderFromCheckoutSession(session);
+      } else if (sessionMeta.checkoutType === "membership_card") {
+        await recordMembershipCardOrderFromCheckoutSession(session);
       } else {
         await recordDonationFromCheckoutSession(session);
       }

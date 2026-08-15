@@ -1,9 +1,18 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import { Suspense } from "react";
 import { PartnerAuth } from "@/components/partner/PartnerAuth";
 import { PartnerDashboard } from "@/components/partner/PartnerDashboard";
 import { useAuth } from "@/hooks/useAuth";
+
+function PartnerDashboardFallback() {
+  return (
+    <div className="flex min-h-svh items-center justify-center bg-background">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    </div>
+  );
+}
 
 export function PartnerPortal() {
   const { user, loading, configured } = useAuth();
@@ -20,16 +29,16 @@ export function PartnerPortal() {
   }
 
   if (loading) {
-    return (
-      <div className="flex min-h-svh items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <PartnerDashboardFallback />;
   }
 
   if (!user) {
     return <PartnerAuth />;
   }
 
-  return <PartnerDashboard user={user} />;
+  return (
+    <Suspense fallback={<PartnerDashboardFallback />}>
+      <PartnerDashboard user={user} />
+    </Suspense>
+  );
 }
