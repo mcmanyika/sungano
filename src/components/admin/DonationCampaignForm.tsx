@@ -8,6 +8,7 @@ import {
   getDonationCampaign,
   saveDonationCampaign,
 } from "@/lib/firebase/donation-campaign";
+import { setLandingSectionVisible } from "@/lib/firebase/landing-sections";
 import { cardSurface } from "@/lib/styles";
 import { cn } from "@/lib/utils";
 import { DONATION_CURRENCIES, formatDonationAmount } from "@/types/donation";
@@ -84,6 +85,7 @@ export function DonationCampaignForm() {
     try {
       const nextForm = { ...form, published: nextPublished };
       await saveDonationCampaign(nextForm);
+      await setLandingSectionVisible("donationTracker", nextPublished);
       setForm(nextForm);
       setSuccess(
         nextPublished

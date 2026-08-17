@@ -92,7 +92,7 @@ export function NewsArticleView() {
       <main className="min-h-svh bg-background pt-28 pb-16">
         <div className="mx-auto max-w-3xl px-5 sm:px-8">
           <Link
-            href="/#news"
+            href="/news"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted transition hover:text-primary"
           >
             <ArrowLeft className="h-4 w-4" />

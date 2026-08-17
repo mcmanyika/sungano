@@ -326,6 +326,24 @@ service cloud.firestore {
       allow create, update: if isAdmin() && isValidDonationCampaign(request.resource.data);
     }
 
+    function isValidLandingSections(data) {
+      return data.hero is bool
+        && data.about is bool
+        && data.gallery is bool
+        && data.news is bool
+        && data.polls is bool
+        && data.stayInformed is bool
+        && data.donationTracker is bool
+        && data.store is bool
+        && data.volunteer is bool
+        && data.contact is bool;
+    }
+
+    match /content/landingSections {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidLandingSections(request.resource.data);
+    }
+
     // Public site chrome links (header, about mega menu, footer, social).
     match /content/navigation {
       allow read: if true;

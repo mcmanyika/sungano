@@ -79,6 +79,13 @@ export {
   subscribeToAllDonations,
   subscribeToDonationsByEmail,
 } from "@/lib/firebase/donations";
+export {
+  getDefaultLandingSections,
+  getLandingSections,
+  saveLandingSections,
+  setLandingSectionVisible,
+  subscribeToLandingSections,
+} from "@/lib/firebase/landing-sections";
 export { getPartnerProfile, registerPartner } from "@/lib/firebase/partners";
 export {
   createComment,

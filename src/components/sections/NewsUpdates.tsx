@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Calendar } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Calendar } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { isFirebaseConfigured } from "@/lib/firebase/config";
@@ -103,6 +103,18 @@ export function NewsUpdates() {
           ))}
         </div>
       )}
+
+      {!loading && !error && articles.length > 0 ? (
+        <div className="mt-8 flex justify-center">
+          <Link
+            href="/news"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition hover:gap-3"
+          >
+            View all news
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      ) : null}
     </Section>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { type ComponentType, useEffect, useState } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { StickySocialRail } from "@/components/layout/StickySocialRail";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
@@ -15,46 +16,69 @@ import { ImageGallery } from "@/components/sections/ImageGallery";
 import { StoreSection } from "@/components/sections/StoreSection";
 import { VolunteerRegistration } from "@/components/sections/VolunteerRegistration";
 import { fadeIn, staggerContainer, staggerItem } from "@/lib/animations";
+import {
+  getDefaultLandingSections,
+  subscribeToLandingSections,
+} from "@/lib/firebase/landing-sections";
+import type { LandingSectionId, LandingSections } from "@/types/landing-sections";
 
-const sections = [
-  ImageGallery,
-  NewsUpdates,
-  Polls,
-  HarareDeclaration,
-  DonationTracker,
-  StoreSection,
-  VolunteerRegistration,
-  ContactUs,
+const gatedSections: Array<{
+  id: LandingSectionId;
+  Section: ComponentType;
+}> = [
+  { id: "gallery", Section: ImageGallery },
+  { id: "news", Section: NewsUpdates },
+  { id: "polls", Section: Polls },
+  { id: "stayInformed", Section: HarareDeclaration },
+  { id: "donationTracker", Section: DonationTracker },
+  { id: "store", Section: StoreSection },
+  { id: "volunteer", Section: VolunteerRegistration },
+  { id: "contact", Section: ContactUs },
 ];
 
 /** Staggered section reveal after the loading screen completes */
 export function PageSections() {
   const { isReady } = usePageLoad();
+  const [visibility, setVisibility] = useState<LandingSections>(
+    getDefaultLandingSections,
+  );
+
+  useEffect(() => {
+    return subscribeToLandingSections(setVisibility);
+  }, []);
+
+  const showHero = visibility.hero;
+  const showAbout = visibility.about;
+  const showRail = showHero || showAbout;
+  const visibleSections = gatedSections.filter(({ id }) => visibility[id]);
 
   return (
     <>
-      {/* Rail only covers hero + about, so icons leave before the gallery. */}
-      <div className="relative">
-        <StickySocialRail />
-        <Hero />
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isReady ? "visible" : "hidden"}
-        >
-          <motion.div variants={staggerItem}>
-            <AboutTeaser />
-          </motion.div>
-        </motion.div>
-      </div>
+      {showRail || showHero || showAbout ? (
+        <div className="relative">
+          {showRail ? <StickySocialRail /> : null}
+          {showHero ? <Hero /> : null}
+          {showAbout ? (
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              animate={isReady ? "visible" : "hidden"}
+            >
+              <motion.div variants={staggerItem}>
+                <AboutTeaser />
+              </motion.div>
+            </motion.div>
+          ) : null}
+        </div>
+      ) : null}
 
       <motion.main
         variants={staggerContainer}
         initial="hidden"
         animate={isReady ? "visible" : "hidden"}
       >
-        {sections.map((Section) => (
-          <motion.div key={Section.name} variants={staggerItem}>
+        {visibleSections.map(({ id, Section }) => (
+          <motion.div key={id} variants={staggerItem}>
             <Section />
           </motion.div>
         ))}

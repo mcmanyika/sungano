@@ -85,7 +85,7 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationInput = {
       href: "/about",
       megaMenu: true,
     },
-    { id: "header-news", label: "News", href: "#news" },
+    { id: "header-news", label: "News", href: "/news" },
     { id: "header-store", label: "Store", href: "/store" },
     { id: "header-contact", label: "Contact", href: "#contact" },
   ],
@@ -133,7 +133,7 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationInput = {
   footer: {
     about: [
       { id: "footer-about", label: "About", href: "/about" },
-      { id: "footer-news", label: "News", href: "#news" },
+      { id: "footer-news", label: "News", href: "/news" },
       { id: "footer-store", label: "Store", href: "/store" },
       { id: "footer-videos", label: "Videos", href: "#videos" },
       {

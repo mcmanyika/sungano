@@ -43,6 +43,14 @@ function asRecord(value: unknown): Record<string, unknown> | null {
   return null;
 }
 
+function newsPageHref(href: string): string {
+  const value = href.trim();
+  if (value === "#news" || value === "/#news") {
+    return "/news";
+  }
+  return value;
+}
+
 function mapSiteLink(
   value: unknown,
   fallback: SiteLink,
@@ -53,10 +61,16 @@ function mapSiteLink(
     return { ...fallback };
   }
 
+  const id = String(data.id ?? fallback.id);
+  const href = String(data.href ?? fallback.href);
+
   return {
-    id: String(data.id ?? fallback.id),
+    id,
     label: String(data.label ?? fallback.label),
-    href: String(data.href ?? fallback.href),
+    href:
+      id === "header-news" || id === "footer-news"
+        ? "/news"
+        : newsPageHref(href),
   };
 }
 
@@ -218,7 +232,8 @@ function mapFooter(value: unknown): FooterLinksConfig {
     const newsIndex = links.findIndex(
       (link) =>
         link.id === "footer-news" ||
-        link.href.replace(/^\//, "") === "#news",
+        link.href.replace(/^\//, "") === "#news" ||
+        link.href === "/news",
     );
 
     if (newsIndex >= 0) {

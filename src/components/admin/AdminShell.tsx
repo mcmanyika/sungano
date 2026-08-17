@@ -11,6 +11,7 @@ import {
   HandCoins,
   ImageIcon,
   Inbox,
+  LayoutDashboard,
   Loader2,
   LogOut,
   Mail,
@@ -45,6 +46,12 @@ const navGroups: AdminNavGroup[] = [
     id: "content",
     label: "Content",
     items: [
+      {
+        href: "/admin/landing",
+        label: "Landing page",
+        description: "Show or hide sections",
+        icon: LayoutDashboard,
+      },
       {
         href: "/admin/news",
         label: "News",
