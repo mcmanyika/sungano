@@ -228,6 +228,8 @@ export function volunteerReplyEmail(input: {
   const greeting = input.recipientName.trim()
     ? `Dear ${input.recipientName.trim()},`
     : "Dear friend,";
+  const bodyHasGreeting =
+    /^(dear|hello|hi|good morning|good afternoon)\b/i.test(input.body.trim());
 
   const bodyHtml = input.body
     .split(/\n{2,}/)
@@ -252,7 +254,7 @@ export function volunteerReplyEmail(input: {
   const html = emailLayout({
     title: input.subject,
     preview: input.body.replace(/\s+/g, " ").slice(0, 120),
-    bodyHtml: `${paragraph(greeting)}${bodyHtml}${original}`,
+    bodyHtml: `${bodyHasGreeting ? "" : paragraph(greeting)}${bodyHtml}${original}`,
   });
 
   return { subject: input.subject.trim(), html };

@@ -7,11 +7,13 @@ import {
   MessageSquare,
   RefreshCw,
   Reply,
+  Sparkles,
   Trash2,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { siteConfig } from "@/lib/data";
+import { requestEmailReplyDraft } from "@/lib/email/request-reply-draft";
 import { getClientAuth } from "@/lib/firebase/client";
 import {
   deleteContactMessage,
@@ -37,6 +39,7 @@ export function ContactMessageList() {
   const [replyingTo, setReplyingTo] = useState<ContactMessage | null>(null);
   const [replySubject, setReplySubject] = useState("");
   const [replyBody, setReplyBody] = useState("");
+  const [replyGenerating, setReplyGenerating] = useState(false);
   const [replyError, setReplyError] = useState("");
   const [replySuccess, setReplySuccess] = useState("");
 
@@ -111,9 +114,52 @@ export function ContactMessageList() {
   function openReply(message: ContactMessage) {
     setReplyingTo(message);
     setReplySubject(`Re: ${message.subject}`);
-    setReplyBody(`Dear ${message.fullName},\n\nThank you for contacting ${siteConfig.shortName}.\n\n`);
+    setReplyBody("");
     setReplyError("");
     setReplySuccess("");
+    void generateReplyDraft(message);
+  }
+
+  async function generateReplyDraft(message?: ContactMessage) {
+    const target = message ?? replyingTo;
+    if (!target) {
+      return;
+    }
+
+    setReplyGenerating(true);
+    setReplyError("");
+    setReplySuccess("");
+
+    try {
+      const draft = await requestEmailReplyDraft({
+        recipientName: target.fullName,
+        subject: `Re: ${target.subject}`,
+        originalText: [
+          "Website contact form",
+          `Name: ${target.fullName}`,
+          `Email: ${target.email}`,
+          `Phone: ${target.phone || "(none)"}`,
+          `Topic: ${target.topic}`,
+          `Subject: ${target.subject}`,
+          `Message: ${target.message}`,
+        ].join("\n"),
+      });
+
+      if (!draft.ok) {
+        setReplyError(draft.error);
+        setReplyBody(
+          `Dear ${target.fullName},\n\nThank you for contacting ${siteConfig.shortName}.\n\n`,
+        );
+        return;
+      }
+
+      setReplySubject(draft.subject);
+      setReplyBody(draft.body);
+    } catch {
+      setReplyError("Network error while generating a reply.");
+    } finally {
+      setReplyGenerating(false);
+    }
   }
 
   async function handleReply() {
@@ -235,19 +281,48 @@ export function ContactMessageList() {
             className="h-11 w-full rounded-xl border border-neutral-200 px-4 text-sm outline-none focus:border-primary"
             aria-label="Reply subject"
           />
-          <textarea
-            rows={7}
-            value={replyBody}
-            onChange={(event) => setReplyBody(event.target.value)}
-            className="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm outline-none focus:border-primary"
-            aria-label="Reply message"
-          />
+          <div>
+            <div className="mb-1.5 flex items-center justify-between gap-3">
+              <p className="text-sm font-medium text-neutral-700">Message</p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => void generateReplyDraft()}
+                disabled={replyGenerating || busyId === replyingTo.id}
+              >
+                {replyGenerating ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Sparkles className="h-4 w-4" />
+                )}
+                {replyGenerating ? "Generating" : "Generate with AI"}
+              </Button>
+            </div>
+            <textarea
+              rows={7}
+              value={replyBody}
+              onChange={(event) => setReplyBody(event.target.value)}
+              placeholder={
+                replyGenerating
+                  ? "Generating a reply…"
+                  : "Write a reply or generate one with AI"
+              }
+              className="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm outline-none focus:border-primary"
+              aria-label="Reply message"
+            />
+          </div>
           <div className="flex gap-2">
             <Button
               type="button"
               size="sm"
               onClick={() => void handleReply()}
-              disabled={busyId === replyingTo.id}
+              disabled={
+                busyId === replyingTo.id ||
+                replyGenerating ||
+                !replySubject.trim() ||
+                !replyBody.trim()
+              }
             >
               {busyId === replyingTo.id ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -261,6 +336,7 @@ export function ContactMessageList() {
               size="sm"
               variant="outline"
               onClick={() => setReplyingTo(null)}
+              disabled={replyGenerating || busyId === replyingTo.id}
             >
               Cancel
             </Button>

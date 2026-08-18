@@ -1,6 +1,6 @@
 "use client";
 
-import { Inbox, Loader2, MailOpen, RefreshCw, Reply } from "lucide-react";
+import { Inbox, Loader2, MailOpen, RefreshCw, Reply, Sparkles } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { getClientAuth } from "@/lib/firebase/client";
@@ -11,9 +11,11 @@ import {
 import { siteConfig } from "@/lib/data";
 import { cardSurface } from "@/lib/styles";
 import { cn } from "@/lib/utils";
+import { requestEmailReplyDraft } from "@/lib/email/request-reply-draft";
 import {
   formatInboundDate,
   parseSenderDisplay,
+  resolveInboxReplyRecipient,
   type InboundEmail,
 } from "@/types/inbound-email";
 
@@ -28,6 +30,7 @@ export function InboundEmailInbox() {
   const [replySubject, setReplySubject] = useState("");
   const [replyBody, setReplyBody] = useState("");
   const [replySending, setReplySending] = useState(false);
+  const [replyGenerating, setReplyGenerating] = useState(false);
   const [replyError, setReplyError] = useState("");
   const [replySuccess, setReplySuccess] = useState("");
 
@@ -55,6 +58,10 @@ export function InboundEmailInbox() {
   const selected = useMemo(
     () => emails.find((email) => email.id === selectedId) ?? null,
     [emails, selectedId],
+  );
+  const replyRecipient = useMemo(
+    () => (selected ? resolveInboxReplyRecipient(selected) : null),
+    [selected],
   );
 
   const unreadCount = useMemo(
@@ -119,7 +126,6 @@ export function InboundEmailInbox() {
       return;
     }
 
-    const sender = parseSenderDisplay(selected.from);
     setReplyOpen(true);
     setReplyError("");
     setReplySuccess("");
@@ -128,7 +134,40 @@ export function InboundEmailInbox() {
         ? selected.subject
         : `Re: ${selected.subject}`,
     );
-    setReplyBody(`Dear ${sender.name},\n\n`);
+    setReplyBody("");
+    void generateReplyDraft();
+  }
+
+  async function generateReplyDraft() {
+    if (!selected) {
+      return;
+    }
+
+    const recipient = resolveInboxReplyRecipient(selected);
+    setReplyGenerating(true);
+    setReplyError("");
+    setReplySuccess("");
+
+    try {
+      const draft = await requestEmailReplyDraft({
+        recipientName: recipient.name,
+        subject: selected.subject,
+        originalText: selected.text,
+        originalHtml: selected.html,
+      });
+
+      if (!draft.ok) {
+        setReplyError(draft.error);
+        return;
+      }
+
+      setReplySubject(draft.subject);
+      setReplyBody(draft.body);
+    } catch {
+      setReplyError("Network error while generating a reply.");
+    } finally {
+      setReplyGenerating(false);
+    }
   }
 
   async function handleReply() {
@@ -148,7 +187,7 @@ export function InboundEmailInbox() {
         return;
       }
 
-      const sender = parseSenderDisplay(selected.from);
+      const recipient = resolveInboxReplyRecipient(selected);
       const token = await user.getIdToken();
       const response = await fetch("/api/email/reply", {
         method: "POST",
@@ -157,8 +196,8 @@ export function InboundEmailInbox() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          to: sender.email,
-          recipientName: sender.name,
+          to: recipient.email,
+          recipientName: recipient.name,
           subject: replySubject,
           body: replyBody,
           originalMessage: selected.text || selected.subject,
@@ -175,7 +214,7 @@ export function InboundEmailInbox() {
         return;
       }
 
-      setReplySuccess(`Reply sent to ${sender.email}.`);
+      setReplySuccess(`Reply sent to ${recipient.email}.`);
       setReplyOpen(false);
     } catch {
       setReplyError("Network error. Please try again.");
@@ -239,8 +278,8 @@ export function InboundEmailInbox() {
         </div>
       ) : (
         <div className={`overflow-hidden rounded-2xl ${cardSurface}`}>
-          <div className="grid min-h-[28rem] lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
-            <div className="max-h-[36rem] overflow-y-auto border-b border-neutral-200/80 lg:border-b-0 lg:border-r">
+          <div className="grid min-h-[40rem] lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
+            <div className="max-h-[min(70vh,52rem)] overflow-y-auto border-b border-neutral-200/80 lg:border-b-0 lg:border-r">
               {emails.map((email) => {
                 const sender = parseSenderDisplay(email.from);
                 const active = email.id === selectedId;
@@ -286,7 +325,7 @@ export function InboundEmailInbox() {
               })}
             </div>
 
-            <div className="flex max-h-[36rem] flex-col overflow-y-auto p-5 sm:p-6">
+            <div className="flex max-h-[min(70vh,52rem)] flex-col overflow-y-auto p-5 sm:p-6">
               {selected ? (
                 <>
                   <div className="flex flex-wrap items-start justify-between gap-3">
@@ -325,6 +364,10 @@ export function InboundEmailInbox() {
 
                   {replyOpen ? (
                     <div className="mt-5 space-y-4 rounded-xl border border-neutral-200 bg-neutral-50/70 p-4">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                        Reply to {replyRecipient?.name}{" "}
+                        &lt;{replyRecipient?.email}&gt;
+                      </p>
                       <div>
                         <label
                           htmlFor="inbox-reply-subject"
@@ -342,17 +385,38 @@ export function InboundEmailInbox() {
                         />
                       </div>
                       <div>
-                        <label
-                          htmlFor="inbox-reply-body"
-                          className="mb-1.5 block text-sm font-medium text-neutral-700"
-                        >
-                          Message
-                        </label>
+                        <div className="mb-1.5 flex items-center justify-between gap-3">
+                          <label
+                            htmlFor="inbox-reply-body"
+                            className="block text-sm font-medium text-neutral-700"
+                          >
+                            Message
+                          </label>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => void generateReplyDraft()}
+                            disabled={replyGenerating || replySending}
+                          >
+                            {replyGenerating ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Sparkles className="h-4 w-4" />
+                            )}
+                            {replyGenerating ? "Generating" : "Generate with AI"}
+                          </Button>
+                        </div>
                         <textarea
                           id="inbox-reply-body"
                           rows={8}
                           value={replyBody}
                           onChange={(event) => setReplyBody(event.target.value)}
+                          placeholder={
+                            replyGenerating
+                              ? "Generating a reply…"
+                              : "Write a reply or generate one with AI"
+                          }
                           className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
                         />
                       </div>
@@ -369,7 +433,7 @@ export function InboundEmailInbox() {
                           type="button"
                           variant="outline"
                           onClick={() => setReplyOpen(false)}
-                          disabled={replySending}
+                          disabled={replySending || replyGenerating}
                         >
                           Cancel
                         </Button>
@@ -378,6 +442,7 @@ export function InboundEmailInbox() {
                           onClick={() => void handleReply()}
                           disabled={
                             replySending ||
+                            replyGenerating ||
                             !replySubject.trim() ||
                             !replyBody.trim()
                           }

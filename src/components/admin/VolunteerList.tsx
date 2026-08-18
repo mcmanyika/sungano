@@ -6,6 +6,7 @@ import {
   MapPin,
   RefreshCw,
   Reply,
+  Sparkles,
   Trash2,
   UserPlus,
   Users,
@@ -15,6 +16,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { easeOut } from "@/lib/animations";
 import { getClientAuth } from "@/lib/firebase/client";
+import { requestEmailReplyDraft } from "@/lib/email/request-reply-draft";
 import { deleteVolunteer, getAllVolunteers } from "@/lib/firebase/volunteers";
 import { cardSurface } from "@/lib/styles";
 import { siteConfig } from "@/lib/data";
@@ -31,6 +33,7 @@ export function VolunteerList() {
   const [replySubject, setReplySubject] = useState("");
   const [replyBody, setReplyBody] = useState("");
   const [replySending, setReplySending] = useState(false);
+  const [replyGenerating, setReplyGenerating] = useState(false);
   const [replyError, setReplyError] = useState("");
   const [replySuccess, setReplySuccess] = useState("");
 
@@ -98,11 +101,51 @@ export function VolunteerList() {
     setReplyError("");
     setReplySuccess("");
     setReplySubject(`Re: Your registration with ${siteConfig.shortName}`);
-    setReplyBody(
-      selected.message?.trim()
-        ? `Thank you for writing to us.\n\n`
-        : `Thank you for registering your interest with ${siteConfig.shortName}.\n\n`,
-    );
+    setReplyBody("");
+    void generateReplyDraft();
+  }
+
+  async function generateReplyDraft() {
+    if (!selected) {
+      return;
+    }
+
+    setReplyGenerating(true);
+    setReplyError("");
+    setReplySuccess("");
+
+    try {
+      const draft = await requestEmailReplyDraft({
+        recipientName: selected.fullName,
+        subject: `Re: Your registration with ${siteConfig.shortName}`,
+        originalText: [
+          "Volunteer registration",
+          `Name: ${selected.fullName}`,
+          `Email: ${selected.email}`,
+          `Phone: ${selected.phone}`,
+          `Province: ${selected.province}`,
+          `Interest: ${selected.interest}`,
+          `Message: ${selected.message?.trim() || "(none)"}`,
+        ].join("\n"),
+      });
+
+      if (!draft.ok) {
+        setReplyError(draft.error);
+        setReplyBody(
+          selected.message?.trim()
+            ? `Thank you for writing to us.\n\n`
+            : `Thank you for registering your interest with ${siteConfig.shortName}.\n\n`,
+        );
+        return;
+      }
+
+      setReplySubject(draft.subject);
+      setReplyBody(draft.body);
+    } catch {
+      setReplyError("Network error while generating a reply.");
+    } finally {
+      setReplyGenerating(false);
+    }
   }
 
   async function handleReply() {
@@ -501,17 +544,38 @@ export function VolunteerList() {
                     />
                   </div>
                   <div>
-                    <label
-                      htmlFor="volunteer-reply-body"
-                      className="mb-1.5 block text-sm font-medium text-neutral-700"
-                    >
-                      Message
-                    </label>
+                    <div className="mb-1.5 flex items-center justify-between gap-3">
+                      <label
+                        htmlFor="volunteer-reply-body"
+                        className="block text-sm font-medium text-neutral-700"
+                      >
+                        Message
+                      </label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => void generateReplyDraft()}
+                        disabled={replyGenerating || replySending}
+                      >
+                        {replyGenerating ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Sparkles className="h-4 w-4" />
+                        )}
+                        {replyGenerating ? "Generating" : "Generate with AI"}
+                      </Button>
+                    </div>
                     <textarea
                       id="volunteer-reply-body"
                       rows={7}
                       value={replyBody}
                       onChange={(event) => setReplyBody(event.target.value)}
+                      placeholder={
+                        replyGenerating
+                          ? "Generating a reply…"
+                          : "Write a reply or generate one with AI"
+                      }
                       className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
                     />
                   </div>
@@ -528,7 +592,7 @@ export function VolunteerList() {
                         setReplyOpen(false);
                         setReplyError("");
                       }}
-                      disabled={replySending}
+                      disabled={replySending || replyGenerating}
                     >
                       Cancel
                     </Button>
@@ -537,6 +601,7 @@ export function VolunteerList() {
                       onClick={() => void handleReply()}
                       disabled={
                         replySending ||
+                        replyGenerating ||
                         !replySubject.trim() ||
                         !replyBody.trim()
                       }
