@@ -8,6 +8,7 @@ import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { Button } from "@/components/ui/Button";
 import { DeclarationModal } from "@/components/ui/DeclarationModal";
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
+import { VolunteerRegisterForm } from "@/components/ui/VolunteerRegisterForm";
 import { easeOut, fadeUp, staggerContainer } from "@/lib/animations";
 import { stats } from "@/lib/data";
 import { siteContainer } from "@/lib/layout";
@@ -30,7 +31,7 @@ export function Hero() {
     <section
       ref={ref}
       id="hero"
-      className="relative flex min-h-svh flex-col overflow-hidden pt-24"
+      className="relative flex min-h-svh flex-col overflow-x-hidden pt-24"
     >
       <motion.div
         style={{ y: bgY }}
@@ -55,7 +56,7 @@ export function Hero() {
         style={{ opacity }}
         className={cn(siteContainer, "relative z-10 flex flex-1 flex-col")}
       >
-        <div className="flex flex-1 flex-col justify-center py-4 md:py-6">
+        <div className="flex flex-1 flex-col justify-center py-6 md:py-8">
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10 xl:gap-12">
             <motion.div
               variants={staggerContainer}
@@ -112,31 +113,33 @@ export function Hero() {
               transition={{ duration: 0.7, delay: 0.15, ease: easeOut }}
               className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none"
             >
-              <motion.div
-                animate={
-                  isReady
-                    ? {
-                        y: [0, -10, 0],
-                        rotate: [-0.6, 0.6, -0.6],
-                      }
-                    : { y: 0, rotate: 0 }
-                }
-                transition={{
-                  duration: 4.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <Image
-                  src="/images/yellow_card_5.png"
-                  alt=""
-                  width={1536}
-                  height={1024}
-                  priority
-                  className="h-auto w-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
-                  sizes="(max-width: 1024px) 90vw, 40vw"
+              <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-primary-dark/45 p-5 shadow-[0_24px_60px_rgba(10,45,107,0.4)] backdrop-blur-xl sm:p-6">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/12 via-[#0F3D91]/30 to-[#0a2d6b]/45"
                 />
-              </motion.div>
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-[#C9A227]/30 blur-3xl"
+                />
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -bottom-12 -left-8 h-36 w-36 rounded-full bg-[#1F8A70]/28 blur-3xl"
+                />
+                <div className="relative">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-secondary-light">
+                    Get involved
+                  </p>
+                  <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-white">
+                    Volunteer with us
+                  </h2>
+                  <p className="mt-1.5 mb-4 text-sm leading-relaxed text-white/75">
+                    Register to support civic education, community mobilisation,
+                    and peaceful constitutional work.
+                  </p>
+                  <VolunteerRegisterForm compact tone="hero" />
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
