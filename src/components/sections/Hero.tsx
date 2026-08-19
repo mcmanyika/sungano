@@ -130,13 +130,9 @@ export function Hero() {
                   <p className="text-xs font-semibold uppercase tracking-[0.14em] text-secondary-light">
                     Get involved
                   </p>
-                  <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-white">
-                    Volunteer with us
+                  <h2 className="mt-1 mb-4 font-display text-2xl font-bold tracking-tight text-white">
+                    VOLUNTEER WITH US
                   </h2>
-                  <p className="mt-1.5 mb-4 text-sm leading-relaxed text-white/75">
-                    Register to support civic education, community mobilisation,
-                    and peaceful constitutional work.
-                  </p>
                   <VolunteerRegisterForm compact tone="hero" />
                 </div>
               </div>
