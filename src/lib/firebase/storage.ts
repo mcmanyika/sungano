@@ -124,6 +124,64 @@ export async function uploadStoreProductImage(
   };
 }
 
+export async function uploadHeroBannerImage(
+  file: File,
+): Promise<{ imageUrl: string; storagePath: string }> {
+  assertValidGalleryImageFile(file);
+
+  const token = await getAdminIdToken();
+  const formData = new FormData();
+  formData.set("file", file);
+
+  const response = await fetch("/api/admin/hero/upload", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  const data = (await response.json()) as {
+    imageUrl?: string;
+    storagePath?: string;
+    error?: string;
+  };
+
+  if (!response.ok || !data.imageUrl || !data.storagePath) {
+    throw new Error(data.error || "Unable to upload hero banner.");
+  }
+
+  return {
+    imageUrl: data.imageUrl,
+    storagePath: data.storagePath,
+  };
+}
+
+export async function deleteHeroBannerImage(storagePath: string): Promise<void> {
+  const path = storagePath.trim();
+
+  if (!path) {
+    return;
+  }
+
+  const token = await getAdminIdToken();
+  const response = await fetch("/api/admin/hero/delete", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ storagePath: path }),
+  });
+
+  if (!response.ok) {
+    const data = (await response.json().catch(() => null)) as {
+      error?: string;
+    } | null;
+    throw new Error(data?.error || "Unable to delete hero banner from storage.");
+  }
+}
+
 export async function deleteStoreProductImage(
   storagePath: string,
 ): Promise<void> {

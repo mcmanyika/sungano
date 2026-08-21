@@ -8,8 +8,13 @@ import {
 import { getClientFirestore } from "@/lib/firebase/client";
 import { isFirebaseConfigured } from "@/lib/firebase/config";
 import {
+  deleteHeroBannerImage,
+  uploadHeroBannerImage,
+} from "@/lib/firebase/storage";
+import {
   DEFAULT_LANDING_SECTIONS,
   LANDING_SECTION_IDS,
+  isHeroVariant,
   type LandingSectionId,
   type LandingSections,
 } from "@/types/landing-sections";
@@ -33,6 +38,14 @@ function mapLandingSections(data: Record<string, unknown>): LandingSections {
       next[id] = Boolean(data[id]);
     }
   }
+
+  next.heroVariant = isHeroVariant(data.heroVariant)
+    ? data.heroVariant
+    : "default";
+  next.heroBannerUrl =
+    typeof data.heroBannerUrl === "string" ? data.heroBannerUrl.trim() : "";
+  next.heroBannerPath =
+    typeof data.heroBannerPath === "string" ? data.heroBannerPath.trim() : "";
 
   return next;
 }
@@ -93,6 +106,11 @@ export async function saveLandingSections(
     payload[id] = Boolean(sections[id]);
   }
 
+  payload.heroVariant =
+    sections.heroVariant === "banner" ? "banner" : "default";
+  payload.heroBannerUrl = sections.heroBannerUrl.trim().slice(0, 2000);
+  payload.heroBannerPath = sections.heroBannerPath.trim().slice(0, 200);
+
   await setDoc(landingSectionsRef(), payload, {
     merge: true,
   });
@@ -105,5 +123,50 @@ export async function setLandingSectionVisible(
   const current = await getLandingSections();
   const next = { ...current, [id]: visible };
   await saveLandingSections(next);
+  return next;
+}
+
+export async function saveHeroBannerImage(file: File): Promise<LandingSections> {
+  const current = await getLandingSections();
+  const uploaded = await uploadHeroBannerImage(file);
+  const previousPath = current.heroBannerPath;
+
+  try {
+    const next: LandingSections = {
+      ...current,
+      heroBannerUrl: uploaded.imageUrl,
+      heroBannerPath: uploaded.storagePath,
+    };
+    await saveLandingSections(next);
+
+    if (previousPath && previousPath !== uploaded.storagePath) {
+      await deleteHeroBannerImage(previousPath).catch(() => {
+        // Previous file cleanup is best-effort.
+      });
+    }
+
+    return next;
+  } catch (error) {
+    await deleteHeroBannerImage(uploaded.storagePath).catch(() => {});
+    throw error;
+  }
+}
+
+export async function clearHeroBannerImage(): Promise<LandingSections> {
+  const current = await getLandingSections();
+  const previousPath = current.heroBannerPath;
+  const next: LandingSections = {
+    ...current,
+    heroBannerUrl: "",
+    heroBannerPath: "",
+  };
+  await saveLandingSections(next);
+
+  if (previousPath) {
+    await deleteHeroBannerImage(previousPath).catch(() => {
+      // Storage cleanup is best-effort after the document is updated.
+    });
+  }
+
   return next;
 }

@@ -57,7 +57,12 @@ export function PageSections() {
       {showRail || showHero || showAbout ? (
         <div className="relative">
           {showRail ? <StickySocialRail /> : null}
-          {showHero ? <Hero /> : null}
+          {showHero ? (
+            <Hero
+              variant={visibility.heroVariant}
+              bannerUrl={visibility.heroBannerUrl}
+            />
+          ) : null}
           {showAbout ? (
             <motion.div
               variants={staggerContainer}

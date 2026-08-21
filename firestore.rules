@@ -336,7 +336,14 @@ service cloud.firestore {
         && data.donationTracker is bool
         && data.store is bool
         && data.volunteer is bool
-        && data.contact is bool;
+        && data.contact is bool
+        && data.heroVariant is string
+        && data.heroVariant in ['default', 'banner']
+        && data.heroBannerUrl is string
+        && data.heroBannerUrl.size() <= 2000
+        && data.heroBannerPath is string
+        && data.heroBannerPath.size() <= 200
+        && (data.heroBannerPath == '' || data.heroBannerPath.matches('^hero/banner/.+'));
     }
 
     match /content/landingSections {

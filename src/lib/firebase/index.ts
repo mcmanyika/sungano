@@ -82,6 +82,8 @@ export {
 export {
   getDefaultLandingSections,
   getLandingSections,
+  saveHeroBannerImage,
+  clearHeroBannerImage,
   saveLandingSections,
   setLandingSectionVisible,
   subscribeToLandingSections,

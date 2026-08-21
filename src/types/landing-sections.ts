@@ -13,7 +13,28 @@ export const LANDING_SECTION_IDS = [
 
 export type LandingSectionId = (typeof LANDING_SECTION_IDS)[number];
 
-export type LandingSections = Record<LandingSectionId, boolean>;
+export const HERO_VARIANTS = ["default", "banner"] as const;
+export type HeroVariant = (typeof HERO_VARIANTS)[number];
+
+export type LandingSections = Record<LandingSectionId, boolean> & {
+  heroVariant: HeroVariant;
+  heroBannerUrl: string;
+  heroBannerPath: string;
+};
+
+export const HERO_VARIANT_META: Record<
+  HeroVariant,
+  { label: string; description: string }
+> = {
+  default: {
+    label: "Default",
+    description: "Current banner with volunteer registration.",
+  },
+  banner: {
+    label: "Banner",
+    description: "Full-width banner with the same copy and stats. Upload a custom image below.",
+  },
+};
 
 export const LANDING_SECTION_META: Record<
   LandingSectionId,
@@ -72,8 +93,18 @@ export const DEFAULT_LANDING_SECTIONS: LandingSections = {
   store: true,
   volunteer: true,
   contact: true,
+  heroVariant: "default",
+  heroBannerUrl: "",
+  heroBannerPath: "",
 };
 
 export function isLandingSectionId(value: string): value is LandingSectionId {
   return (LANDING_SECTION_IDS as readonly string[]).includes(value);
+}
+
+export function isHeroVariant(value: unknown): value is HeroVariant {
+  return (
+    typeof value === "string" &&
+    (HERO_VARIANTS as readonly string[]).includes(value)
+  );
 }
