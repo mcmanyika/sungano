@@ -72,7 +72,17 @@ export function Hero({
         className={cn(siteContainer, "relative z-10 flex flex-1 flex-col")}
       >
         <div className="flex flex-1 flex-col justify-center py-6 md:py-8">
-          {isBanner ? null : (
+          {isBanner ? (
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              animate={animateState}
+              transition={{ duration: 0.7, delay: 0.15, ease: easeOut }}
+              className="relative ml-auto w-full max-w-md"
+            >
+              <HeroVolunteerCard />
+            </motion.div>
+          ) : (
             <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10 xl:gap-12">
               <motion.div
                 variants={staggerContainer}
@@ -130,29 +140,7 @@ export function Hero({
                 transition={{ duration: 0.7, delay: 0.15, ease: easeOut }}
                 className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none"
               >
-                <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-primary-dark/45 p-5 shadow-[0_24px_60px_rgba(10,45,107,0.4)] backdrop-blur-xl sm:p-6">
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/12 via-[#0F3D91]/30 to-[#0a2d6b]/45"
-                  />
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-[#C9A227]/30 blur-3xl"
-                  />
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute -bottom-12 -left-8 h-36 w-36 rounded-full bg-[#1F8A70]/28 blur-3xl"
-                  />
-                  <div className="relative">
-                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-secondary-light">
-                      Get involved
-                    </p>
-                    <h2 className="mt-1 mb-4 font-display text-2xl font-bold tracking-tight text-white">
-                      VOLUNTEER WITH US
-                    </h2>
-                    <VolunteerRegisterForm compact tone="hero" />
-                  </div>
-                </div>
+                <HeroVolunteerCard />
               </motion.div>
             </div>
           )}
@@ -214,5 +202,33 @@ export function Hero({
         onClose={() => setDeclarationOpen(false)}
       />
     </section>
+  );
+}
+
+function HeroVolunteerCard() {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-primary-dark/45 p-5 shadow-[0_24px_60px_rgba(10,45,107,0.4)] backdrop-blur-xl sm:p-6">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/12 via-[#0F3D91]/30 to-[#0a2d6b]/45"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-[#C9A227]/30 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-12 -left-8 h-36 w-36 rounded-full bg-[#1F8A70]/28 blur-3xl"
+      />
+      <div className="relative">
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-secondary-light">
+          Get involved
+        </p>
+        <h2 className="mt-1 mb-4 font-display text-2xl font-bold tracking-tight text-white">
+          VOLUNTEER WITH US
+        </h2>
+        <VolunteerRegisterForm compact tone="hero" />
+      </div>
+    </div>
   );
 }
