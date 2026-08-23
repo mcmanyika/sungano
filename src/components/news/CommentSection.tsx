@@ -3,10 +3,7 @@
 import { Loader2, MessageSquare } from "lucide-react";
 import { type FormEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import {
-  createComment,
-  subscribeToApprovedComments,
-} from "@/lib/firebase/comments";
+import { subscribeToApprovedComments } from "@/lib/firebase/comments";
 import {
   formatCommentDate,
   type Comment,
@@ -55,15 +52,30 @@ export function CommentSection({
     setStatus("loading");
     setMessage("");
 
-    const result = await createComment({
-      articleId,
-      articleTitle,
-      authorName,
-      email,
-      body,
-    });
+    try {
+      const response = await fetch("/api/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          articleId,
+          articleTitle,
+          authorName,
+          email,
+          body,
+        }),
+      });
+      const data = (await response.json().catch(() => ({}))) as {
+        error?: string;
+      };
 
-    if (result.ok) {
+      if (!response.ok) {
+        setStatus("error");
+        setMessage(
+          data.error ?? "Please enter your name, a valid email, and a comment.",
+        );
+        return;
+      }
+
       setStatus("success");
       setMessage(
         "Thank you. Your comment was submitted and will appear after review.",
@@ -71,19 +83,10 @@ export function CommentSection({
       setAuthorName("");
       setEmail("");
       setBody("");
-      return;
+    } catch {
+      setStatus("error");
+      setMessage("Something went wrong. Please try again.");
     }
-
-    setStatus("error");
-    if (result.reason === "invalid") {
-      setMessage("Please enter your name, a valid email, and a comment.");
-      return;
-    }
-    if (result.reason === "not-configured") {
-      setMessage("Comments are not available right now.");
-      return;
-    }
-    setMessage("Something went wrong. Please try again.");
   }
 
   return (

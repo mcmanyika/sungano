@@ -100,6 +100,7 @@ export async function hydrateInboundEmail(emailId: string): Promise<{
 export async function syncInboundEmailsFromResend(limit = 50): Promise<{
   synced: number;
   failed: number;
+  ids: string[];
   error?: string;
 }> {
   const resend = getResend();
@@ -109,12 +110,14 @@ export async function syncInboundEmailsFromResend(limit = 50): Promise<{
     return {
       synced: 0,
       failed: 0,
+      ids: [],
       error: error?.message ?? "Could not list received emails.",
     };
   }
 
   let synced = 0;
   let failed = 0;
+  const ids: string[] = [];
 
   for (const item of data.data) {
     // Only sync mail addressed to the public inbox address.
@@ -125,6 +128,7 @@ export async function syncInboundEmailsFromResend(limit = 50): Promise<{
     const hydrated = await hydrateInboundEmail(item.id);
     if (hydrated.ok) {
       synced += 1;
+      ids.push(item.id);
     } else {
       failed += 1;
       await upsertInboundEmailFromMeta({
@@ -142,5 +146,5 @@ export async function syncInboundEmailsFromResend(limit = 50): Promise<{
     }
   }
 
-  return { synced, failed };
+  return { synced, failed, ids };
 }

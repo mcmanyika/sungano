@@ -8,6 +8,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { getClientFirestore } from "@/lib/firebase/client";
+import { isAgentStatus } from "@/types/agent";
 import { isInboxRecipient, type InboundEmail } from "@/types/inbound-email";
 
 const COLLECTION = "inboundEmails";
@@ -40,6 +41,10 @@ function mapInboundEmail(
     read: Boolean(data.read),
     contentPending: Boolean(data.contentPending),
     receivedAt: receivedAt instanceof Timestamp ? receivedAt.toDate() : null,
+    agentStatus: isAgentStatus(data.agentStatus) ? data.agentStatus : "",
+    agentDraftSubject: String(data.agentDraftSubject ?? ""),
+    agentDraftBody: String(data.agentDraftBody ?? ""),
+    agentError: String(data.agentError ?? ""),
   };
 }
 

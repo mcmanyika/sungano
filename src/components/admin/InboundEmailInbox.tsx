@@ -11,7 +11,7 @@ import {
 import { siteConfig } from "@/lib/data";
 import { cardSurface } from "@/lib/styles";
 import { cn } from "@/lib/utils";
-import { requestEmailReplyDraft } from "@/lib/email/request-reply-draft";
+import { requestInboxAgentDraft } from "@/lib/email/request-agent-draft";
 import {
   formatInboundDate,
   parseSenderDisplay,
@@ -129,6 +129,17 @@ export function InboundEmailInbox() {
     setReplyOpen(true);
     setReplyError("");
     setReplySuccess("");
+    if (selected.agentDraftBody?.trim()) {
+      setReplySubject(
+        selected.agentDraftSubject?.trim() ||
+          (selected.subject.toLowerCase().startsWith("re:")
+            ? selected.subject
+            : `Re: ${selected.subject}`),
+      );
+      setReplyBody(selected.agentDraftBody.trim());
+      return;
+    }
+
     setReplySubject(
       selected.subject.toLowerCase().startsWith("re:")
         ? selected.subject
@@ -143,18 +154,12 @@ export function InboundEmailInbox() {
       return;
     }
 
-    const recipient = resolveInboxReplyRecipient(selected);
     setReplyGenerating(true);
     setReplyError("");
     setReplySuccess("");
 
     try {
-      const draft = await requestEmailReplyDraft({
-        recipientName: recipient.name,
-        subject: selected.subject,
-        originalText: selected.text,
-        originalHtml: selected.html,
-      });
+      const draft = await requestInboxAgentDraft("email", selected.id);
 
       if (!draft.ok) {
         setReplyError(draft.error);
@@ -319,6 +324,11 @@ export function InboundEmailInbox() {
                     </p>
                     <p className="mt-1 text-xs text-muted">
                       {formatInboundDate(email.receivedAt)}
+                      {email.agentStatus === "drafted"
+                        ? " · AI draft ready"
+                        : email.agentStatus === "queued"
+                          ? " · Drafting"
+                          : ""}
                     </p>
                   </button>
                 );
@@ -345,6 +355,11 @@ export function InboundEmailInbox() {
                         {selected.to.length > 0
                           ? ` · To ${selected.to.join(", ")}`
                           : ""}
+                        {selected.agentStatus === "drafted"
+                          ? " · AI draft ready — review before sending"
+                          : selected.agentStatus === "queued"
+                            ? " · AI is drafting a reply"
+                            : ""}
                       </p>
                     </div>
                     <Button type="button" onClick={openReply}>

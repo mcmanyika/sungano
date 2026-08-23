@@ -1,9 +1,11 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import { draftInboundEmailReply } from "@/lib/agent/inbox";
 import { getResend, isEmailConfigured } from "@/lib/email/client";
 import {
   hydrateInboundEmail,
   upsertInboundEmailFromMeta,
 } from "@/lib/email/inbound";
+import { isOpenAIConfigured } from "@/lib/openai/config";
 import { isInboxRecipient } from "@/types/inbound-email";
 
 export const runtime = "nodejs";
@@ -97,6 +99,10 @@ export async function POST(request: Request) {
         contentPending: true,
         warning: hydrated.error,
       });
+    }
+
+    if (isOpenAIConfigured()) {
+      after(() => draftInboundEmailReply(emailId));
     }
 
     return NextResponse.json({ received: true, id: emailId });

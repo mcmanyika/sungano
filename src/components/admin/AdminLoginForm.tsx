@@ -37,7 +37,7 @@ export function AdminLoginForm() {
         return;
       }
 
-      router.replace("/admin/donations");
+      router.replace("/admin");
     } catch {
       setError("Invalid email or password.");
     } finally {
@@ -55,7 +55,7 @@ export function AdminLoginForm() {
           Sign in to {siteConfig.shortName}
         </h1>
         <p className="mt-2 text-sm text-muted">
-          Manage news articles and site content.
+          Review stats, queues, and site data.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">

@@ -38,6 +38,7 @@ function parseModelJson(content: string): { subject?: string; body?: string } | 
 }
 
 export interface EmailReplyDraftInput {
+  channel?: "email" | "comment";
   recipientName: string;
   subject: string;
   originalText?: string;
@@ -64,6 +65,7 @@ export async function generateEmailReplyDraft(
         "Be warm, professional, and concise. Do not invent facts, promises, dates, or legal advice.",
         "If this is a volunteer registration acknowledgement or an internal 'New registration' notice, thank the volunteer, confirm receipt, and say the team will follow up with next steps.",
         "If this is a general enquiry or contact form message, acknowledge what they wrote and say the team will follow up if more detail is needed.",
+        "If this is a website article comment, thank them for commenting, acknowledge the substance of what they wrote, and say the team reviews comments before they appear publicly.",
         "Write the reply to the person named in the original message, never to the organisation mailbox.",
         "Plain text only. Short paragraphs. Do not include a greeting or sign-off; the email template already adds those.",
         "Respond with JSON only: {\"subject\":\"string\",\"body\":\"string\"}.",
@@ -73,6 +75,7 @@ export async function generateEmailReplyDraft(
     {
       role: "user" as const,
       content: JSON.stringify({
+        channel: input.channel ?? "email",
         recipientName: input.recipientName,
         subject: input.subject,
         originalMessage: original.slice(0, 6000),

@@ -1,3 +1,5 @@
+import type { AgentStatus } from "@/types/agent";
+
 export interface InboundAttachment {
   id: string;
   filename: string;
@@ -18,6 +20,10 @@ export interface InboundEmail {
   read: boolean;
   contentPending: boolean;
   receivedAt: Date | null;
+  agentStatus?: AgentStatus | "";
+  agentDraftSubject?: string;
+  agentDraftBody?: string;
+  agentError?: string;
 }
 
 export function formatInboundDate(date: Date | null): string {

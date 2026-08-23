@@ -17,7 +17,8 @@ export function AdminEmailsView() {
           Emails
         </h2>
         <p className="mt-1 text-sm text-muted">
-          Read inbound messages and send updates to subscribers.
+          Read inbound messages, review AI drafts, and send updates to
+          subscribers.
         </p>
       </div>
 

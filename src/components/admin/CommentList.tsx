@@ -1,9 +1,11 @@
 "use client";
 
-import { Check, Loader2, MessageSquare, Trash2, X } from "lucide-react";
+import { Check, Loader2, Mail, MessageSquare, Sparkles, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { requestInboxAgentDraft } from "@/lib/email/request-agent-draft";
+import { getClientAuth } from "@/lib/firebase/client";
 import {
   deleteComment,
   setCommentApproved,
@@ -20,6 +22,12 @@ export function CommentList() {
   const [error, setError] = useState("");
   const [filter, setFilter] = useState<Filter>("pending");
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [replyingTo, setReplyingTo] = useState<Comment | null>(null);
+  const [replySubject, setReplySubject] = useState("");
+  const [replyBody, setReplyBody] = useState("");
+  const [replyGenerating, setReplyGenerating] = useState(false);
+  const [replyError, setReplyError] = useState("");
+  const [replySuccess, setReplySuccess] = useState("");
 
   useEffect(() => {
     const unsubscribe = subscribeToAllComments(
@@ -50,6 +58,89 @@ export function CommentList() {
     }
     return comments;
   }, [comments, filter]);
+
+  function openReply(comment: Comment) {
+    setReplyingTo(comment);
+    setReplyError("");
+    setReplySuccess("");
+    setReplySubject(
+      comment.agentDraftSubject?.trim() ||
+        `Re: Your comment on ${comment.articleTitle || "our article"}`,
+    );
+    setReplyBody(comment.agentDraftBody?.trim() ?? "");
+    if (!comment.agentDraftBody?.trim()) {
+      void generateReplyDraft(comment);
+    }
+  }
+
+  async function generateReplyDraft(comment: Comment) {
+    setReplyGenerating(true);
+    setReplyError("");
+    setReplySuccess("");
+
+    try {
+      const draft = await requestInboxAgentDraft("comment", comment.id);
+      if (!draft.ok) {
+        setReplyError(draft.error);
+        return;
+      }
+      setReplySubject(draft.subject);
+      setReplyBody(draft.body);
+    } catch {
+      setReplyError("Network error while generating a reply.");
+    } finally {
+      setReplyGenerating(false);
+    }
+  }
+
+  async function handleReply() {
+    if (!replyingTo || !replySubject.trim() || !replyBody.trim()) {
+      setReplyError("Subject and message are required.");
+      return;
+    }
+
+    setBusyId(replyingTo.id);
+    setReplyError("");
+    setReplySuccess("");
+
+    try {
+      const user = getClientAuth().currentUser;
+      if (!user) {
+        setReplyError("You must be signed in as an admin.");
+        return;
+      }
+
+      const response = await fetch("/api/email/reply", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${await user.getIdToken()}`,
+        },
+        body: JSON.stringify({
+          to: replyingTo.email,
+          recipientName: replyingTo.authorName,
+          subject: replySubject,
+          body: replyBody,
+          originalMessage: replyingTo.body,
+        }),
+      });
+      const data = (await response.json().catch(() => ({}))) as {
+        error?: string;
+      };
+
+      if (!response.ok) {
+        setReplyError(data.error ?? "Could not send reply.");
+        return;
+      }
+
+      setReplySuccess(`Reply sent to ${replyingTo.email}.`);
+      setReplyingTo(null);
+    } catch {
+      setReplyError("Network error. Please try again.");
+    } finally {
+      setBusyId(null);
+    }
+  }
 
   async function handleApprove(id: string, approved: boolean) {
     setBusyId(id);
@@ -87,7 +178,7 @@ export function CommentList() {
             Comments
           </h2>
           <p className="mt-1 text-sm text-muted">
-            Moderate article comments before they appear publicly.
+            Moderate article comments and review AI reply drafts before sending.
             {pendingCount > 0 ? ` ${pendingCount} pending.` : ""}
           </p>
         </div>
@@ -116,9 +207,14 @@ export function CommentList() {
         </div>
       </div>
 
-      {error && (
-        <p className="text-sm font-medium text-red-600" role="alert">
-          {error}
+      {(error || replyError || replySuccess) && (
+        <p
+          className={`text-sm font-medium ${
+            error || replyError ? "text-red-600" : "text-accent"
+          }`}
+          role={error || replyError ? "alert" : "status"}
+        >
+          {error || replyError || replySuccess}
         </p>
       )}
 
@@ -177,6 +273,84 @@ export function CommentList() {
               <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-neutral-700">
                 {comment.body}
               </p>
+              {comment.agentStatus === "drafted" ? (
+                <p className="mt-2 text-xs font-medium text-accent">
+                  AI draft ready — review before sending.
+                </p>
+              ) : comment.agentStatus === "queued" ? (
+                <p className="mt-2 text-xs text-muted">AI is drafting a reply.</p>
+              ) : null}
+
+              {replyingTo?.id === comment.id ? (
+                <div className="mt-4 space-y-3 rounded-xl border border-neutral-200 bg-neutral-50/80 p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                      Reply to {comment.email}
+                    </p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => void generateReplyDraft(comment)}
+                      disabled={replyGenerating || busyId === comment.id}
+                    >
+                      {replyGenerating ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Sparkles className="h-4 w-4" />
+                      )}
+                      {replyGenerating ? "Generating" : "Generate with AI"}
+                    </Button>
+                  </div>
+                  <input
+                    value={replySubject}
+                    onChange={(event) => setReplySubject(event.target.value)}
+                    className="h-11 w-full rounded-xl border border-neutral-200 bg-white px-4 text-sm outline-none focus:border-primary"
+                    aria-label="Reply subject"
+                  />
+                  <textarea
+                    rows={6}
+                    value={replyBody}
+                    onChange={(event) => setReplyBody(event.target.value)}
+                    placeholder={
+                      replyGenerating
+                        ? "Generating a reply…"
+                        : "Write a reply or generate one with AI"
+                    }
+                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none focus:border-primary"
+                    aria-label="Reply message"
+                  />
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => void handleReply()}
+                      disabled={
+                        busyId === comment.id ||
+                        replyGenerating ||
+                        !replySubject.trim() ||
+                        !replyBody.trim()
+                      }
+                    >
+                      {busyId === comment.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Mail className="h-4 w-4" />
+                      )}
+                      Send reply
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setReplyingTo(null)}
+                      disabled={replyGenerating || busyId === comment.id}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : null}
 
               <div className="mt-4 flex flex-wrap gap-2">
                 {!comment.approved ? (
@@ -209,6 +383,16 @@ export function CommentList() {
                     Unpublish
                   </Button>
                 )}
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={busyId === comment.id}
+                  onClick={() => openReply(comment)}
+                >
+                  <Mail className="h-4 w-4" />
+                  Reply by email
+                </Button>
                 <Button
                   type="button"
                   size="sm"

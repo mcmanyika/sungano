@@ -1,3 +1,5 @@
+import type { AgentStatus } from "@/types/agent";
+
 export interface Comment {
   id: string;
   articleId: string;
@@ -7,6 +9,10 @@ export interface Comment {
   body: string;
   approved: boolean;
   createdAt: Date | null;
+  agentStatus?: AgentStatus | "";
+  agentDraftSubject?: string;
+  agentDraftBody?: string;
+  agentError?: string;
 }
 
 export interface CommentInput {

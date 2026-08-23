@@ -1,7 +1,9 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import { draftInboundEmailReply } from "@/lib/agent/inbox";
 import { requireAdminFromRequest } from "@/lib/email/admin-auth";
 import { isEmailConfigured } from "@/lib/email/client";
 import { syncInboundEmailsFromResend } from "@/lib/email/inbound";
+import { isOpenAIConfigured } from "@/lib/openai/config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,6 +34,12 @@ export async function POST(request: Request) {
       },
       { status: 502 },
     );
+  }
+
+  if (isOpenAIConfigured()) {
+    for (const id of result.ids) {
+      after(() => draftInboundEmailReply(id));
+    }
   }
 
   return NextResponse.json({

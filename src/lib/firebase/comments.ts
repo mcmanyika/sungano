@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { getClientFirestore } from "@/lib/firebase/client";
 import { isFirebaseConfigured } from "@/lib/firebase/config";
+import { isAgentStatus } from "@/types/agent";
 import type { Comment, CommentInput } from "@/types/comment";
 
 const COLLECTION = "comments";
@@ -38,6 +39,10 @@ function mapComment(id: string, data: Record<string, unknown>): Comment {
     body: String(data.body ?? ""),
     approved: Boolean(data.approved),
     createdAt: createdAt instanceof Timestamp ? createdAt.toDate() : null,
+    agentStatus: isAgentStatus(data.agentStatus) ? data.agentStatus : "",
+    agentDraftSubject: String(data.agentDraftSubject ?? ""),
+    agentDraftBody: String(data.agentDraftBody ?? ""),
+    agentError: String(data.agentError ?? ""),
   };
 }
 
