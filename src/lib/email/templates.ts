@@ -1,4 +1,5 @@
 import { siteConfig } from "@/lib/data";
+import { prepareBroadcastBody } from "@/lib/email/broadcast-html";
 import { button, emailLayout, escapeHtml, paragraph } from "@/lib/email/layout";
 import {
   describeInterval,
@@ -192,26 +193,20 @@ export function broadcastEmail(input: {
   subject: string;
   body: string;
   unsubscribeUrl: string;
+  includeVolunteers?: boolean;
 }): { subject: string; html: string } {
-  const bodyHtml = input.body
-    .split(/\n{2,}/)
-    .map((block) => block.trim())
-    .filter(Boolean)
-    .map(
-      (block) =>
-        `<p style="margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;">${block
-          .split("\n")
-          .map((line) => escapeHtml(line))
-          .join("<br />")}</p>`,
-    )
-    .join("");
+  const content = prepareBroadcastBody(input.body);
 
   const html = emailLayout({
     title: input.subject,
-    preview: input.body.replace(/\s+/g, " ").slice(0, 120),
-    bodyHtml,
+    preview: content.preview,
+    bodyHtml: content.html,
     footerExtraHtml: `<p style="margin:16px 0 0;">
-      You are receiving this because you subscribed to updates from ${escapeHtml(siteConfig.shortName)}.
+      You are receiving this because you ${
+        input.includeVolunteers
+          ? "subscribed to updates or registered as a volunteer with"
+          : "subscribed to updates from"
+      } ${escapeHtml(siteConfig.shortName)}.
       <a href="${escapeHtml(input.unsubscribeUrl)}" style="color:#0F3D91;text-decoration:underline;">Unsubscribe</a>
     </p>`,
   });

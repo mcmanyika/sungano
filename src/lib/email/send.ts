@@ -167,6 +167,7 @@ export async function sendBroadcast(input: {
   subject: string;
   body: string;
   recipients: string[];
+  includeVolunteers?: boolean;
 }): Promise<{ sent: number; failed: number; error?: string }> {
   if (!isEmailConfigured()) {
     return { sent: 0, failed: 0, error: "Email is not configured." };
@@ -206,6 +207,7 @@ export async function sendBroadcast(input: {
             subject: input.subject,
             body: input.body,
             unsubscribeUrl,
+            includeVolunteers: input.includeVolunteers,
           });
 
           return {

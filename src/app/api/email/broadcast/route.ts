@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdminFromRequest } from "@/lib/email/admin-auth";
 import { isEmailConfigured } from "@/lib/email/client";
+import { isEmptyHtml } from "@/lib/email/html-text";
 import { sendBroadcast } from "@/lib/email/send";
 import { getAdminFirestore } from "@/lib/firebase/admin";
 
@@ -21,13 +22,21 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { subject?: unknown; body?: unknown; testEmail?: unknown };
+  let body: {
+    subject?: unknown;
+    body?: unknown;
+    testEmail?: unknown;
+    includeSubscribers?: unknown;
+    includeVolunteers?: unknown;
+  };
 
   try {
     body = (await request.json()) as {
       subject?: unknown;
       body?: unknown;
       testEmail?: unknown;
+      includeSubscribers?: unknown;
+      includeVolunteers?: unknown;
     };
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
@@ -36,15 +45,24 @@ export async function POST(request: Request) {
   const subject =
     typeof body.subject === "string" ? body.subject.trim().slice(0, 200) : "";
   const message =
-    typeof body.body === "string" ? body.body.trim().slice(0, 20000) : "";
+    typeof body.body === "string" ? body.body.trim().slice(0, 50000) : "";
   const testEmail =
     typeof body.testEmail === "string"
       ? body.testEmail.trim().toLowerCase()
       : "";
+  const includeSubscribers = body.includeSubscribers !== false;
+  const includeVolunteers = body.includeVolunteers === true;
 
-  if (!subject || !message) {
+  if (!subject || !message || isEmptyHtml(message)) {
     return NextResponse.json(
       { error: "Subject and message are required." },
+      { status: 400 },
+    );
+  }
+
+  if (!testEmail && !includeSubscribers && !includeVolunteers) {
+    return NextResponse.json(
+      { error: "Choose subscribers, volunteers, or both." },
       { status: 400 },
     );
   }
@@ -60,16 +78,37 @@ export async function POST(request: Request) {
     }
     recipients = [testEmail];
   } else {
-    const snapshot = await getAdminFirestore().collection("subscribers").get();
-    recipients = snapshot.docs
-      .map((doc) => String(doc.data().email ?? doc.id).trim().toLowerCase())
-      .filter(Boolean);
+    const db = getAdminFirestore();
+    const emails = new Set<string>();
+
+    if (includeSubscribers) {
+      const snapshot = await db.collection("subscribers").get();
+      for (const doc of snapshot.docs) {
+        const email = String(doc.data().email ?? doc.id).trim().toLowerCase();
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          emails.add(email);
+        }
+      }
+    }
+
+    if (includeVolunteers) {
+      const snapshot = await db.collection("volunteers").get();
+      for (const doc of snapshot.docs) {
+        const email = String(doc.data().email ?? "").trim().toLowerCase();
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          emails.add(email);
+        }
+      }
+    }
+
+    recipients = Array.from(emails);
   }
 
   const result = await sendBroadcast({
     subject,
     body: message,
     recipients,
+    includeVolunteers,
   });
 
   if (result.error && result.sent === 0) {

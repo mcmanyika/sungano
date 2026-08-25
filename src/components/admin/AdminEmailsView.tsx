@@ -18,7 +18,7 @@ export function AdminEmailsView() {
         </h2>
         <p className="mt-1 text-sm text-muted">
           Read inbound messages, review AI drafts, and send updates to
-          subscribers.
+          subscribers and volunteers.
         </p>
       </div>
 
