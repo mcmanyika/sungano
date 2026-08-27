@@ -106,6 +106,9 @@ export async function saveLandingSections(
     payload[id] = Boolean(sections[id]);
   }
 
+  // Kept for existing Firestore rules; the homepage no longer renders this section.
+  payload.hallOfShame = false;
+
   payload.heroVariant =
     sections.heroVariant === "banner" ? "banner" : "default";
   payload.heroBannerUrl = sections.heroBannerUrl.trim().slice(0, 2000);

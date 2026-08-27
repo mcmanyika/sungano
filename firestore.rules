@@ -337,6 +337,7 @@ service cloud.firestore {
         && data.store is bool
         && data.volunteer is bool
         && data.contact is bool
+        && data.hallOfShame is bool
         && data.heroVariant is string
         && data.heroVariant in ['default', 'banner']
         && data.heroBannerUrl is string
@@ -685,14 +686,18 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Inbound emails are written by the Resend webhook (Admin SDK). Admins can
-    // read them and mark them as read; no other client writes are allowed.
-    match /inboundEmails/{emailId} {
+    // Confidential incident reports — Admin SDK writes only. Reporter
+    // identity never belongs in a public collection.
+    match /violationReports/{reportId} {
       allow read: if isAdmin();
-      allow update: if isAdmin()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
-        && request.resource.data.read is bool;
-      allow create, delete: if false;
+      allow write: if false;
+    }
+
+    // Published Hall of Shame cards are sanitized (no reporter PII) and
+    // written only by the admin publish API.
+    match /hallOfShame/{caseId} {
+      allow read: if true;
+      allow write: if false;
     }
   }
 }

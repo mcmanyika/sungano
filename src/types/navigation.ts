@@ -86,6 +86,7 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationInput = {
       megaMenu: true,
     },
     { id: "header-news", label: "News", href: "/news" },
+    { id: "header-hall-of-shame", label: "Hall of Shame", href: "/hall-of-shame" },
     { id: "header-store", label: "Store", href: "/store" },
     { id: "header-contact", label: "Contact", href: "#contact" },
   ],
@@ -134,6 +135,7 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationInput = {
     about: [
       { id: "footer-about", label: "About", href: "/about" },
       { id: "footer-news", label: "News", href: "/news" },
+      { id: "footer-hall-of-shame", label: "Hall of Shame", href: "/hall-of-shame" },
       { id: "footer-store", label: "Store", href: "/store" },
       { id: "footer-videos", label: "Videos", href: "#videos" },
       {

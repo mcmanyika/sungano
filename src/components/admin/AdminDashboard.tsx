@@ -10,6 +10,7 @@ import {
   Mail,
   MessageSquare,
   RefreshCw,
+  ShieldAlert,
   UserPlus,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -33,6 +34,7 @@ import { subscribeToContactMessages } from "@/lib/firebase/contacts";
 import { isFirebaseConfigured } from "@/lib/firebase/config";
 import { subscribeToAllDonations } from "@/lib/firebase/donations";
 import { getAllEvents } from "@/lib/firebase/events";
+import { subscribeToAllViolationReports } from "@/lib/firebase/hall-of-shame";
 import { subscribeToInboundEmails } from "@/lib/firebase/inbound-emails";
 import { getAllNewsArticles } from "@/lib/firebase/news";
 import { subscribeToAllPolls } from "@/lib/firebase/polls";
@@ -48,6 +50,7 @@ import {
   type Donation,
 } from "@/types/donation";
 import { formatEventDate, type EventItem } from "@/types/event";
+import type { ViolationReport } from "@/types/hall-of-shame";
 import type { InboundEmail } from "@/types/inbound-email";
 import type { NewsArticle } from "@/types/news";
 import type { Poll } from "@/types/poll";
@@ -220,6 +223,7 @@ export function AdminDashboard() {
   const [contacts, setContacts] = useState<ContactMessage[]>([]);
   const [emails, setEmails] = useState<InboundEmail[]>([]);
   const [polls, setPolls] = useState<Poll[]>([]);
+  const [violationReports, setViolationReports] = useState<ViolationReport[]>([]);
   const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [articles, setArticles] = useState<NewsArticle[]>([]);
@@ -271,6 +275,7 @@ export function AdminDashboard() {
       contacts: false,
       emails: false,
       polls: false,
+      violations: false,
     };
 
     function markLive(key: keyof typeof loaded) {
@@ -331,6 +336,16 @@ export function AdminDashboard() {
           markLive("polls");
         },
       ),
+      subscribeToAllViolationReports(
+        (next) => {
+          setViolationReports(next);
+          markLive("violations");
+        },
+        () => {
+          setError("Unable to load Hall of Shame reports.");
+          markLive("violations");
+        },
+      ),
     ];
 
     return () => {
@@ -356,6 +371,9 @@ export function AdminDashboard() {
 
   const unreadEmails = emails.filter((email) => !email.read);
   const pendingComments = comments.filter((comment) => !comment.approved);
+  const pendingViolations = violationReports.filter(
+    (report) => report.status === "pending",
+  );
   const newContacts = contacts.filter((contact) => contact.status === "new");
   const failedDrafts =
     emails.filter((email) => email.agentStatus === "failed").length +
@@ -493,6 +511,12 @@ export function AdminDashboard() {
       label: "New contacts",
       count: newContacts.length,
       icon: Mail,
+    },
+    {
+      href: "/admin/hall-of-shame",
+      label: "Pending Hall of Shame",
+      count: pendingViolations.length,
+      icon: ShieldAlert,
     },
     {
       href: "/admin/emails",
@@ -652,6 +676,13 @@ export function AdminDashboard() {
           label="News"
           value={String(publishedArticles.length)}
           hint={`${newsViews.toLocaleString()} article views`}
+        />
+        <StatCard
+          href="/admin/hall-of-shame"
+          label="Hall of Shame"
+          value={String(pendingViolations.length)}
+          hint={`${violationReports.filter((report) => report.status === "published").length} published`}
+          tone={pendingViolations.length > 0 ? "alert" : "default"}
         />
         <StatCard
           href="/admin/store"

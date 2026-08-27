@@ -15,6 +15,15 @@ rules_version = '2';
 //   - read: public (merchandise images)
 //   - write/delete: Admin SDK only via /api/admin/products/*
 //
+// Path: hall-of-shame/pending/{reportId}/{fileName}
+// Access:
+//   - read/write: Admin SDK only (unpublished evidence)
+//
+// Path: hall-of-shame/published/{reportId}/{fileName}
+// Access:
+//   - read: public (moderated Hall of Shame photos)
+//   - write/delete: Admin SDK only
+//
 // ===============================================================
 
 service firebase.storage {
@@ -25,6 +34,15 @@ service firebase.storage {
     }
 
     match /store/{productId}/{fileName} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /hall-of-shame/pending/{reportId}/{fileName} {
+      allow read, write: if false;
+    }
+
+    match /hall-of-shame/published/{reportId}/{fileName} {
       allow read: if true;
       allow write: if false;
     }
