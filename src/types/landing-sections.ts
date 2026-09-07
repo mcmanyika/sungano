@@ -1,5 +1,6 @@
 export const LANDING_SECTION_IDS = [
   "hero",
+  "stats",
   "about",
   "gallery",
   "news",
@@ -32,7 +33,7 @@ export const HERO_VARIANT_META: Record<
   },
   banner: {
     label: "Banner",
-    description: "Full-width banner with the same copy and stats. Upload a custom image below.",
+    description: "Full-width banner with volunteer registration. Upload a custom image below.",
   },
 };
 
@@ -42,7 +43,12 @@ export const LANDING_SECTION_META: Record<
 > = {
   hero: {
     label: "Hero",
-    description: "Top banner, declaration button, and stats.",
+    description: "Top banner, declaration button, and volunteer registration.",
+  },
+  stats: {
+    label: "Hero stats",
+    description:
+      "Provinces, events, citizens, and partners counters under the hero. Only shows when Hero is on.",
   },
   about: {
     label: "Who We Are",
@@ -84,6 +90,7 @@ export const LANDING_SECTION_META: Record<
 
 export const DEFAULT_LANDING_SECTIONS: LandingSections = {
   hero: true,
+  stats: false,
   about: true,
   gallery: true,
   news: true,

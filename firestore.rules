@@ -337,6 +337,7 @@ service cloud.firestore {
         && data.store is bool
         && data.volunteer is bool
         && data.contact is bool
+        && (!('stats' in data) || data.stats is bool)
         && data.hallOfShame is bool
         && data.heroVariant is string
         && data.heroVariant in ['default', 'banner']

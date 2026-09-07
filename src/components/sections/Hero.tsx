@@ -18,9 +18,11 @@ import type { HeroVariant } from "@/types/landing-sections";
 export function Hero({
   variant = "default",
   bannerUrl = "",
+  showStats = false,
 }: {
   variant?: HeroVariant;
   bannerUrl?: string;
+  showStats?: boolean;
 }) {
   const { isReady } = usePageLoad();
   const [declarationOpen, setDeclarationOpen] = useState(false);
@@ -147,43 +149,45 @@ export function Hero({
         </div>
       </motion.div>
 
-      <div className="relative z-10 mt-auto w-full border-t border-white/15 bg-primary-dark/70 backdrop-blur-xl">
-        <div className={siteContainer}>
-          <div className="grid grid-cols-2 md:grid-cols-4">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 16 }}
-                animate={isReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-                whileHover={{
-                  y: -4,
-                  scale: 1.03,
-                  transition: { duration: 0.25, ease: easeOut },
-                }}
-                transition={{
-                  duration: 0.5,
-                  delay: 0.6 + index * 0.08,
-                  ease: easeOut,
-                }}
-                className={cn(
-                  "cursor-default px-5 py-5 text-center transition-colors sm:px-6",
-                  "hover:bg-white/10",
-                  index % 2 === 1 && "border-l border-white/10",
-                  index >= 2 && "border-t border-white/10 md:border-t-0",
-                  index >= 1 && "md:border-l md:border-white/10",
-                )}
-              >
-                <p className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
-                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                </p>
-                <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/75">
-                  {stat.label}
-                </p>
-              </motion.div>
-            ))}
+      {showStats ? (
+        <div className="relative z-10 mt-auto w-full border-t border-white/15 bg-primary-dark/70 backdrop-blur-xl">
+          <div className={siteContainer}>
+            <div className="grid grid-cols-2 md:grid-cols-4">
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={isReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+                  whileHover={{
+                    y: -4,
+                    scale: 1.03,
+                    transition: { duration: 0.25, ease: easeOut },
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.6 + index * 0.08,
+                    ease: easeOut,
+                  }}
+                  className={cn(
+                    "cursor-default px-5 py-5 text-center transition-colors sm:px-6",
+                    "hover:bg-white/10",
+                    index % 2 === 1 && "border-l border-white/10",
+                    index >= 2 && "border-t border-white/10 md:border-t-0",
+                    index >= 1 && "md:border-l md:border-white/10",
+                  )}
+                >
+                  <p className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
+                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                  </p>
+                  <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/75">
+                    {stat.label}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
 
       <motion.a
         href="#about"
@@ -191,7 +195,10 @@ export function Hero({
         initial="hidden"
         animate={animateState}
         transition={{ duration: 0.6, delay: 0.9, ease: easeOut }}
-        className="absolute bottom-[5.75rem] left-1/2 z-20 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-neutral-200/80 bg-white/80 text-neutral-400 shadow-sm backdrop-blur-sm transition-colors hover:border-primary/20 hover:text-primary max-md:hidden"
+        className={cn(
+          "absolute left-1/2 z-20 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-neutral-200/80 bg-white/80 text-neutral-400 shadow-sm backdrop-blur-sm transition-colors hover:border-primary/20 hover:text-primary max-md:hidden",
+          showStats ? "bottom-[5.75rem]" : "bottom-8",
+        )}
         aria-label="Scroll to learn more"
       >
         <ChevronDown className="h-5 w-5 animate-bounce" />

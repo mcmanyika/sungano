@@ -61,6 +61,7 @@ export function PageSections() {
             <Hero
               variant={visibility.heroVariant}
               bannerUrl={visibility.heroBannerUrl}
+              showStats={visibility.stats}
             />
           ) : null}
           {showAbout ? (
