@@ -91,10 +91,7 @@ export function ContactUs() {
         }}
       >
         <motion.div variants={fadeUp} className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
-            Get in touch
-          </p>
-          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl md:text-[2.5rem] md:leading-[1.15]">
+          <h2 className="font-display text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl md:text-[2.5rem] md:leading-[1.15]">
             Contact us
           </h2>
           <div
