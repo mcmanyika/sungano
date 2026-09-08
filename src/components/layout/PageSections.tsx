@@ -7,6 +7,7 @@ import { StickySocialRail } from "@/components/layout/StickySocialRail";
 import { usePageLoad } from "@/components/providers/PageLoadProvider";
 import { AboutTeaser } from "@/components/sections/AboutTeaser";
 import { ContactUs } from "@/components/sections/ContactUs";
+import { FoundingMembersSection } from "@/components/sections/FoundingMembersSection";
 import { DonationTracker } from "@/components/sections/DonationTracker";
 import { HarareDeclaration } from "@/components/sections/HarareDeclaration";
 import { Hero } from "@/components/sections/Hero";
@@ -26,6 +27,7 @@ const gatedSections: Array<{
   id: LandingSectionId;
   Section: ComponentType;
 }> = [
+  { id: "foundingMembers", Section: FoundingMembersSection },
   { id: "gallery", Section: ImageGallery },
   { id: "news", Section: NewsUpdates },
   { id: "polls", Section: Polls },

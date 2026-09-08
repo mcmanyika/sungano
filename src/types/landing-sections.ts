@@ -2,6 +2,7 @@ export const LANDING_SECTION_IDS = [
   "hero",
   "stats",
   "about",
+  "foundingMembers",
   "gallery",
   "news",
   "polls",
@@ -54,6 +55,10 @@ export const LANDING_SECTION_META: Record<
     label: "Who We Are",
     description: "Coalition intro and welcome video.",
   },
+  foundingMembers: {
+    label: "Founding members",
+    description: "The six institutions that established the Coalition.",
+  },
   gallery: {
     label: "Photo gallery",
     description: "Homepage image gallery.",
@@ -92,6 +97,7 @@ export const DEFAULT_LANDING_SECTIONS: LandingSections = {
   hero: true,
   stats: false,
   about: true,
+  foundingMembers: true,
   gallery: true,
   news: true,
   polls: true,
