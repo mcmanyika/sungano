@@ -7,7 +7,7 @@ import { ShareButtons } from "@/components/news/ShareButtons";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { siteConfig } from "@/lib/data";
 import { castVote, subscribeToPublishedPolls } from "@/lib/firebase/polls";
-import { cardSurface } from "@/lib/styles";
+import { landingCard } from "@/lib/styles";
 import {
   pollOptionPercent,
   pollVotedStorageKey,
@@ -91,7 +91,7 @@ function PollCard({ poll }: { poll: Poll }) {
   return (
     <article
       id={`poll-${poll.id}`}
-      className={`scroll-mt-28 p-5 sm:p-6 ${cardSurface}`}
+      className={`scroll-mt-28 p-5 sm:p-6 ${landingCard}`}
     >
       <h3 className="font-display text-xl font-bold text-neutral-900 md:text-2xl">
         {poll.question}

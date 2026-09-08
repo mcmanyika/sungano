@@ -127,7 +127,7 @@ export function Hero({
                     variant="outline"
                     size="lg"
                     onClick={() => setDeclarationOpen(true)}
-                    className="border-white/40 bg-white/15 text-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-md hover:border-white/70 hover:bg-white hover:text-primary"
+                    className="border-white/40 bg-white/15 text-white backdrop-blur-md hover:border-white/70 hover:bg-white hover:text-primary"
                   >
                     Read the Declaration
                     <ArrowRight className="h-4 w-4" />
@@ -214,28 +214,14 @@ export function Hero({
 
 function HeroVolunteerCard() {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-primary-dark/45 p-5 shadow-[0_24px_60px_rgba(10,45,107,0.4)] backdrop-blur-xl sm:p-6">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/12 via-[#0F3D91]/30 to-[#0a2d6b]/45"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-[#C9A227]/30 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-12 -left-8 h-36 w-36 rounded-full bg-[#1F8A70]/28 blur-3xl"
-      />
-      <div className="relative">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-secondary-light">
-          Get involved
-        </p>
-        <h2 className="mt-1 mb-4 font-display text-2xl font-bold tracking-tight text-white">
-          VOLUNTEER WITH US
-        </h2>
-        <VolunteerRegisterForm compact tone="hero" />
-      </div>
+    <div className="rounded-2xl border border-white/25 bg-primary-dark/50 p-5 backdrop-blur-md sm:p-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-secondary-light">
+        Get involved
+      </p>
+      <h2 className="mt-1 mb-4 font-display text-2xl font-bold tracking-tight text-white">
+        VOLUNTEER WITH US
+      </h2>
+      <VolunteerRegisterForm compact tone="hero" />
     </div>
   );
 }

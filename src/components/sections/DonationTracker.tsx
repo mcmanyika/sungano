@@ -137,7 +137,7 @@ export function DonationTracker() {
               aria-label={`Donation progress ${Math.round(percent)} percent`}
             >
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-primary via-primary-light to-accent"
+                className="h-full rounded-full bg-primary"
                 initial={{ width: 0 }}
                 whileInView={{ width: `${percent}%` }}
                 viewport={{ once: true }}

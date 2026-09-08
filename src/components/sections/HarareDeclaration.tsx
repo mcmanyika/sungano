@@ -58,7 +58,7 @@ export function HarareDeclaration() {
         <p className="mx-auto mt-3 max-w-md text-base leading-relaxed text-white/80 md:text-lg">
           Subscribe for updates from the Coalition.
         </p>
-        <div className="mt-6 rounded-2xl border border-white/15 bg-white/10 p-4 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.45)] backdrop-blur-md sm:p-5">
+        <div className="mt-6 rounded-2xl border border-white/20 bg-white/10 p-4 sm:p-5">
           <EmailSubscribe source="harare-declaration" />
         </div>
       </motion.div>

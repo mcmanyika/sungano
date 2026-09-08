@@ -6,14 +6,13 @@ import { Button } from "@/components/ui/Button";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { aboutContent } from "@/lib/about";
 import { easeOut } from "@/lib/animations";
-import { cardSurface, cardSurfaceInteractive } from "@/lib/styles";
+import { landingCard, landingCardInteractive } from "@/lib/styles";
 import { cn } from "@/lib/utils";
 
 export function FoundingMembersSection() {
   return (
     <Section id="founding-members" variant="muted" className="scroll-mt-28">
       <SectionHeader
-        eyebrow="The Coalition"
         title="Founding member institutions"
         description="The Coalition was established by these institutions. Each keeps its own identity, leadership, and programmes."
       />
@@ -22,13 +21,13 @@ export function FoundingMembersSection() {
         {aboutContent.foundingMembers.map((member, index) => {
           const cardClassName = cn(
             "flex h-full items-start justify-between gap-3 p-5",
-            member.href ? cardSurfaceInteractive : cardSurface,
+            member.href ? landingCardInteractive : landingCard,
           );
 
           const content = (
             <>
               <div className="min-w-0">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
                   Founding member
                 </p>
                 <p className="mt-2 font-display text-lg font-bold tracking-tight text-neutral-900">

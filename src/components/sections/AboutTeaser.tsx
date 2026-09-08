@@ -30,17 +30,7 @@ export function AboutTeaser() {
   }, []);
 
   return (
-    <Section id="about" variant="default" className="overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-0 -z-10"
-        aria-hidden
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#eef3fb] via-background to-[#f4f7f2]" />
-        <div className="absolute -left-24 top-8 h-72 w-72 rounded-full bg-primary/8 blur-3xl" />
-        <div className="absolute -right-16 bottom-0 h-80 w-80 rounded-full bg-secondary/15 blur-3xl" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-      </div>
-
+    <Section id="about" variant="default">
       <div
         className={
           showVideo
@@ -89,7 +79,7 @@ export function AboutTeaser() {
                 transition: { duration: 0.55, ease: easeOut },
               },
             }}
-            className="mt-4 h-1 w-14 origin-left rounded-full bg-gradient-to-r from-secondary to-secondary-light"
+            className="mt-3 h-px w-12 origin-left bg-secondary"
             aria-hidden
           />
 
@@ -135,25 +125,11 @@ export function AboutTeaser() {
             transition={{ duration: 0.7, delay: 0.12, ease: easeOut }}
             className="relative min-w-0"
           >
-            <div
-              className="absolute -inset-3 rounded-[1.75rem] bg-gradient-to-br from-primary/12 via-transparent to-secondary/20 sm:-inset-4"
-              aria-hidden
+            <YouTubeEmbed
+              videoId={heroVideo.youtubeId}
+              title={heroVideo.title || "Welcome video"}
+              variant="hero"
             />
-            <div
-              className="absolute -bottom-3 -right-3 hidden h-24 w-24 rounded-br-[1.5rem] border-b-2 border-r-2 border-secondary/50 sm:block"
-              aria-hidden
-            />
-            <div
-              className="absolute -left-3 -top-3 hidden h-16 w-16 rounded-tl-[1.5rem] border-l-2 border-t-2 border-primary/30 sm:block"
-              aria-hidden
-            />
-
-            <div className="relative">
-              <YouTubeEmbed
-                videoId={heroVideo.youtubeId}
-                title={heroVideo.title || "Welcome video"}
-              />
-            </div>
           </motion.div>
         ) : null}
       </div>

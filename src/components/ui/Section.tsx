@@ -14,7 +14,7 @@ interface SectionProps {
 
 const variantStyles = {
   default: "bg-transparent",
-  muted: "bg-white/50 backdrop-blur-sm",
+  muted: "bg-neutral-50",
   dark: "bg-primary text-white",
   primary:
     "bg-gradient-to-br from-primary via-primary to-primary-dark text-white",

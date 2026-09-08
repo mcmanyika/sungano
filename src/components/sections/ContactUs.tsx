@@ -73,13 +73,7 @@ export function ContactUs() {
   }
 
   return (
-    <Section id="contact" className="scroll-mt-24 overflow-hidden" variant="default">
-      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
-        <div className="absolute inset-0 bg-gradient-to-br from-[#eef3fb] via-background to-white" />
-        <div className="absolute -right-20 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute -left-16 bottom-0 h-64 w-64 rounded-full bg-secondary/15 blur-3xl" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-      </div>
+    <Section id="contact" className="scroll-mt-24" variant="default">
 
       <motion.div
         initial="hidden"
@@ -94,10 +88,7 @@ export function ContactUs() {
           <h2 className="font-display text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl md:text-[2.5rem] md:leading-[1.15]">
             Contact us
           </h2>
-          <div
-            className="mx-auto mt-4 h-1 w-14 rounded-full bg-gradient-to-r from-secondary to-secondary-light"
-            aria-hidden
-          />
+          <div className="mx-auto mt-3 h-px w-12 bg-secondary" aria-hidden />
           <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">
             Questions, partnerships, or support — send a message and our team
             will respond.
@@ -107,18 +98,8 @@ export function ContactUs() {
         <div className="mt-10 grid items-stretch gap-6 lg:mt-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-8">
           <motion.aside
             variants={fadeUp}
-            className="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-primary via-primary to-primary-dark p-6 text-white shadow-[0_20px_50px_-24px_rgba(15,61,145,0.55)] sm:p-8"
+            className="rounded-2xl bg-primary p-6 text-white sm:p-8"
           >
-            <div
-              className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-secondary/25 blur-2xl"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute -bottom-16 left-8 h-44 w-44 rounded-full bg-white/10 blur-2xl"
-              aria-hidden
-            />
-
-            <div className="relative">
               <h3 className="font-display text-2xl font-bold tracking-tight">
                 Reach our team
               </h3>
@@ -131,9 +112,9 @@ export function ContactUs() {
                 href="https://wa.me/14697992071"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group mt-8 flex items-center gap-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/15 backdrop-blur-sm transition hover:bg-white/15"
+                className="group mt-8 flex items-center gap-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/15 transition hover:bg-white/15"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-secondary text-neutral-900 shadow-sm">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-secondary text-neutral-900">
                   <MessageCircle className="h-5 w-5" />
                 </span>
                 <span className="min-w-0 flex-1 text-left">
@@ -158,13 +139,12 @@ export function ContactUs() {
                   </p>
                 </div>
               </div>
-            </div>
           </motion.aside>
 
           <motion.form
             variants={fadeUp}
             onSubmit={handleSubmit}
-            className="rounded-[1.5rem] border border-primary/8 bg-white/80 p-5 shadow-[0_16px_40px_-28px_rgba(15,61,145,0.35)] backdrop-blur-sm sm:p-7"
+            className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-7"
           >
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="text-sm font-medium text-neutral-700">

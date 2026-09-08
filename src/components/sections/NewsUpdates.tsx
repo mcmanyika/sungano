@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { isFirebaseConfigured } from "@/lib/firebase/config";
 import { subscribeToPublishedNewsArticles } from "@/lib/firebase/news";
-import { cardSurfaceInteractive } from "@/lib/styles";
+import { landingCardInteractive } from "@/lib/styles";
 import { cn } from "@/lib/utils";
 import { easeOut } from "@/lib/animations";
 import { formatNewsDate, type NewsArticle } from "@/types/news";
@@ -50,16 +50,16 @@ export function NewsUpdates() {
           {Array.from({ length: 3 }).map((_, index) => (
             <div
               key={index}
-              className={cn(cardSurfaceInteractive, "h-40 animate-pulse rounded-2xl")}
+              className={cn(landingCardInteractive, "h-40 animate-pulse rounded-2xl")}
             />
           ))}
         </div>
       ) : error ? (
-        <div className={cn(cardSurfaceInteractive, "rounded-2xl p-8 text-center")}>
+        <div className={cn(landingCardInteractive, "rounded-2xl p-8 text-center")}>
           <p className="text-sm font-medium text-red-600">{error}</p>
         </div>
       ) : articles.length === 0 ? (
-        <div className={cn(cardSurfaceInteractive, "rounded-2xl p-8 text-center")}>
+        <div className={cn(landingCardInteractive, "rounded-2xl p-8 text-center")}>
           <p className="text-neutral-700">No news articles published yet.</p>
         </div>
       ) : (
@@ -75,7 +75,7 @@ export function NewsUpdates() {
               <Link
                 href={`/news/${article.id}`}
                 className={cn(
-                  cardSurfaceInteractive,
+                  landingCardInteractive,
                   "group relative flex h-full flex-col overflow-hidden rounded-2xl p-6",
                 )}
               >
